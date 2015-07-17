@@ -78,9 +78,9 @@ function [] = eval_single(config, mid, prev_file, pred_file, eval_file)
   %
   % 'pr':  pre-computed precision-recall curves for macro-averaging prcurve,
   %        fmax, fmax_bst.
-	%
-	% 'wpr': pre-computed weighted (precision-recall) curves for macro-averaging
-	%        wprcurve, wfmax, wfmax_bst.
+  %
+  % 'wpr': pre-computed weighted (precision-recall) curves for macro-averaging
+  %        wprcurve, wfmax, wfmax_bst.
   %
   % 'rm':  pre-computed RU-MI curves for macro-averaging rmcurve, smin,
   %        smin_bst.
@@ -93,20 +93,20 @@ function [] = eval_single(config, mid, prev_file, pred_file, eval_file)
   if config.do_seq_fmax
     load(prev_file, 'pr');
 
-		% precision-recall curve
-		prcurve = cafa_eval_seq_curve(mid, config.bm, pr, config.md);
-		pfp_savevar(eval_file, prcurve, 'seq_prcurve');
+    % precision-recall curve
+    prcurve = cafa_eval_seq_curve(mid, config.bm, pr, config.md);
+    pfp_savevar(eval_file, prcurve, 'seq_prcurve');
 
-		% Fmax
-		fmax.id = prcurve.id;
-		[fmax.fmax, fmax.point, fmax.tau] = pfp_fmaxc(prcurve.curve, prcurve.tau, config.beta);
-		fmax.coverage = prcurve.coverage;
-		fmax.mode = prcurve.mode;
-		pfp_savevar(eval_file, fmax, 'seq_fmax');
+    % Fmax
+    fmax.id = prcurve.id;
+    [fmax.fmax, fmax.point, fmax.tau] = pfp_fmaxc(prcurve.curve, prcurve.tau, config.beta);
+    fmax.coverage = prcurve.coverage;
+    fmax.mode = prcurve.mode;
+    pfp_savevar(eval_file, fmax, 'seq_fmax');
 
-		% bootstrapped Fmax
-		fmax = cafa_eval_seq_fmax_bst(mid, config.bm, pr, config.md, config.bi, config.beta);
-		pfp_savevar(eval_file, fmax, 'seq_fmax_bst');
+    % bootstrapped Fmax
+    fmax = cafa_eval_seq_fmax_bst(mid, config.bm, pr, config.md, config.bi, config.beta);
+    pfp_savevar(eval_file, fmax, 'seq_fmax_bst');
   end
   % }}}
 
@@ -114,20 +114,20 @@ function [] = eval_single(config, mid, prev_file, pred_file, eval_file)
   if config.do_seq_wfmax
     load(prev_file, 'wpr');
 
-		% weighted precision-recall curve
-		prcurve = cafa_eval_seq_curve(mid, config.bm, wpr, config.md);
-		pfp_savevar(eval_file, prcurve, 'seq_wprcurve');
+    % weighted precision-recall curve
+    prcurve = cafa_eval_seq_curve(mid, config.bm, wpr, config.md);
+    pfp_savevar(eval_file, prcurve, 'seq_wprcurve');
 
-		% weighted Fmax
-		fmax.id = prcurve.id;
-		[fmax.fmax, fmax.point, fmax.tau] = pfp_fmaxc(prcurve.curve, prcurve.tau, config.beta);
-		fmax.coverage = prcurve.coverage;
-		fmax.mode = prcurve.mode;
-		pfp_savevar(eval_file, fmax, 'seq_wfmax');
+    % weighted Fmax
+    fmax.id = prcurve.id;
+    [fmax.fmax, fmax.point, fmax.tau] = pfp_fmaxc(prcurve.curve, prcurve.tau, config.beta);
+    fmax.coverage = prcurve.coverage;
+    fmax.mode = prcurve.mode;
+    pfp_savevar(eval_file, fmax, 'seq_wfmax');
 
-		% weighted bootstrapped Fmax
-		fmax = cafa_eval_seq_fmax_bst(mid, config.bm, wpr, config.md, config.bi, config.beta);
-		pfp_savevar(eval_file, fmax, 'seq_wfmax_bst');
+    % weighted bootstrapped Fmax
+    fmax = cafa_eval_seq_fmax_bst(mid, config.bm, wpr, config.md, config.bi, config.beta);
+    pfp_savevar(eval_file, fmax, 'seq_wfmax_bst');
   end
   % }}}
 
@@ -135,19 +135,19 @@ function [] = eval_single(config, mid, prev_file, pred_file, eval_file)
   if config.do_seq_smin
     load(prev_file, 'rm');
 
-		% RU-MI curve
-		rmcurve = cafa_eval_seq_curve(mid, config.bm, rm, config.md);
-		pfp_savevar(eval_file, rmcurve, 'seq_rmcurve');
+    % RU-MI curve
+    rmcurve = cafa_eval_seq_curve(mid, config.bm, rm, config.md);
+    pfp_savevar(eval_file, rmcurve, 'seq_rmcurve');
 
-		% Smin
-		smin.id = rmcurve.id;
-		[smin.smin, smin.point, smin.tau] = pfp_sminc(rmcurve.curve, rmcurve.tau);
-		smin.coverage = rmcurve.coverage;
-		smin.mode = rmcurve.mode;
-		pfp_savevar(eval_file, smin, 'seq_smin');
+    % Smin
+    smin.id = rmcurve.id;
+    [smin.smin, smin.point, smin.tau] = pfp_sminc(rmcurve.curve, rmcurve.tau);
+    smin.coverage = rmcurve.coverage;
+    smin.mode = rmcurve.mode;
+    pfp_savevar(eval_file, smin, 'seq_smin');
 
-		% bootstrapped Smin
-		smin = cafa_eval_seq_smin_bst(mid, config.bm, rm, config.md, config.bi);
+    % bootstrapped Smin
+    smin = cafa_eval_seq_smin_bst(mid, config.bm, rm, config.md, config.bi);
     pfp_savevar(eval_file, smin, 'seq_smin_bst');
   end
   % }}}
@@ -156,19 +156,19 @@ function [] = eval_single(config, mid, prev_file, pred_file, eval_file)
   if config.do_seq_nsmin
     load(prev_file, 'nrm');
 
-		% RU-MI curve
-		rmcurve = cafa_eval_seq_curve(mid, config.bm, nrm, config.md);
-		pfp_savevar(eval_file, rmcurve, 'seq_nrmcurve');
+    % RU-MI curve
+    rmcurve = cafa_eval_seq_curve(mid, config.bm, nrm, config.md);
+    pfp_savevar(eval_file, rmcurve, 'seq_nrmcurve');
 
-		% Smin
-		smin.id = rmcurve.id;
-		[smin.smin, smin.point, smin.tau] = pfp_sminc(rmcurve.curve, rmcurve.tau);
-		smin.coverage = rmcurve.coverage;
-		smin.mode = rmcurve.mode;
-		pfp_savevar(eval_file, smin, 'seq_nsmin');
+    % Smin
+    smin.id = rmcurve.id;
+    [smin.smin, smin.point, smin.tau] = pfp_sminc(rmcurve.curve, rmcurve.tau);
+    smin.coverage = rmcurve.coverage;
+    smin.mode = rmcurve.mode;
+    pfp_savevar(eval_file, smin, 'seq_nsmin');
 
-		% bootstrapped Smin
-		smin = cafa_eval_seq_smin_bst(mid, config.bm, nrm, config.md, config.bi);
+    % bootstrapped Smin
+    smin = cafa_eval_seq_smin_bst(mid, config.bm, nrm, config.md, config.bi);
     pfp_savevar(eval_file, smin, 'seq_nsmin_bst');
   end
   % }}}
@@ -177,8 +177,8 @@ function [] = eval_single(config, mid, prev_file, pred_file, eval_file)
   if config.do_term_auc
     load(pred_file, 'pred');
 
-		auc = cafa_eval_term_auc(mid, config.bm, pred, config.oa, config.md);
-		pfp_savevar(eval_file, auc, 'term_auc');
+    auc = cafa_eval_term_auc(mid, config.bm, pred, config.oa, config.md);
+    pfp_savevar(eval_file, auc, 'term_auc');
   end
   % }}}
 return
@@ -188,4 +188,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 01:04:07 PM E
+% Last modified: Fri 17 Jul 2015 02:40:41 PM E
