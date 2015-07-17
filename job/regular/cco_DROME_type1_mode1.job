@@ -1,0 +1,24 @@
+pred_dir   = ~/cv3/prediction/cco/
+prev_dir   = ~/cv3/seq-centric/cco/
+eval_dir   = ~/cv3/evaluation/
+ont_term   = ~/cv3/ontology/cco_term.txt
+annotation = ~/cv3/benchmark/groundtruth/ccoa.mat
+benchmark  = ~/cv3/benchmark/lists/cco_DROME_type1.txt
+bootstrap  = ~/cv3/config/bootstrap/cco_DROME_type1.mat
+
+ontology = cco
+category = DROME
+type = 1
+mode = 1
+
+metric = f
+metric = wf
+metric = s
+metric = ns
+metric = auc
+
+model = all
+model = +BN1S
+model = +BB1S
+model = +BN4S
+model = +BB4S

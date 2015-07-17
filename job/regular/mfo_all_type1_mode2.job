@@ -1,0 +1,24 @@
+pred_dir   = ~/cv3/prediction/mfo/
+prev_dir   = ~/cv3/seq-centric/mfo/
+eval_dir   = ~/cv3/evaluation/
+ont_term   = ~/cv3/ontology/mfo_term.txt
+annotation = ~/cv3/benchmark/groundtruth/mfoa.mat
+benchmark  = ~/cv3/benchmark/lists/mfo_all_type1.txt
+bootstrap  = ~/cv3/config/bootstrap/mfo_all_type1.mat
+
+ontology = mfo
+category = all
+type = 1
+mode = 2
+
+metric = f
+metric = wf
+metric = s
+metric = ns
+metric = auc
+
+model = all
+model = +BN1S
+model = +BB1S
+model = +BN4S
+model = +BB4S

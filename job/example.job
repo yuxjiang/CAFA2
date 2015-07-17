@@ -1,0 +1,71 @@
+# Example for an evaluation pipeline job
+
+# paths
+# -----
+# where is the parsed 'pred' structures
+pred_dir   = ~/cv3/prediction/mfo/
+
+# where is pre-computed results?
+prev_dir   = ~/cv3/seq-centric/mfo/
+
+# where to put output folder
+eval_dir   = ~/cv3/evaluation/mfo_all_type1_mode1/
+
+# where is the ontology term list file
+ont_term   = ~/cv3/ontology/mfo_term.txt
+
+# where is the annotation structure
+annotation = ~/cv3/benchmark/groundtruth/mfoa.mat
+
+# benchmark list file
+benchmark  = ~/cv3/benchmark/mfo_all_type1.txt
+
+# where is the bootstrap index
+bootstrap  = ~/cv3/config/bootstrap/mfo_all_type1.mat
+
+# ontology
+# --------
+# options: mfo, bpo, cco, hpo
+ontology = mfo
+
+# benchmark category
+# ------------------
+# options: all, easy, hard, eukarya, prokarya, species
+category = all
+
+# type
+# ----
+# options: 1, 2
+type = 1
+
+# mode
+# ----
+# options: 1, 2
+mode = 1
+
+# metric
+# ------
+# options:
+# f (F1-max), s (S2-min), wf (weighted F1-max), ns (normalized S2-min), auc
+metric = f
+metric = wf
+metric = s
+metric = ns
+metric = auc
+
+# model
+# -----
+# options: all (all regular models), +M*, -M*, +B*, -B* 
+# baseline (Naive/BLAST) options: B[NB][14][SGUA]
+# note: B[NB]4S is the most typical, which was trained on SwissProt Jan.2014
+model = all
+model = +BN1S
+model = +BB1S
+model = +BN4S
+model = +BB4S
+
+# -------------
+# Yuxiang Jiang (yuxjiang@indiana.edu)
+# Department of Computer Science
+# Indiana University, Bloomington
+# Last modified: Fri 17 Jul 2015 02:28:56 PM E

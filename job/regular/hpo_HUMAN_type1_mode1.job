@@ -1,0 +1,22 @@
+pred_dir   = ~/cv3/prediction/hpo/
+prev_dir   = ~/cv3/seq-centric/hpo/
+eval_dir   = ~/cv3/evaluation/
+ont_term   = ~/cv3/ontology/hpo_term.txt
+annotation = ~/cv3/benchmark/groundtruth/hpoa.mat
+benchmark  = ~/cv3/benchmark/lists/hpo_HUMAN_type1.txt
+bootstrap  = ~/cv3/config/bootstrap/hpo_HUMAN_type1.mat
+
+ontology = hpo
+category = HUMAN
+type = 1
+mode = 1
+
+metric = f
+metric = wf
+metric = s
+metric = ns
+metric = auc
+
+model = all
+model = +BN4H
+model = +BB4H
