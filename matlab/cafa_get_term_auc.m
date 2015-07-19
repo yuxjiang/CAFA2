@@ -1,10 +1,10 @@
-function [aucs] = cafa_sel_top5_term_auc(aucs, mids)
-%CAFA_SEL_TOP5_TERM_AUC CAFA select top 5 term AUC
+function [aucs] = cafa_get_term_auc(aucs, mids)
+%CAFA_GET_TERM_AUC CAFA get term AUC
 % {{{
 %
-% [aucs] = CAFA_SEL_TOP5_TERM_AUC(aucs, mids);
+% [aucs] = CAFA_GET_TERM_AUC(aucs, mids);
 %
-%   Picks top 5 Fmax methods.
+%   Picks specified 'auc' structures.
 %
 % Input
 % -----
@@ -38,7 +38,7 @@ function [aucs] = cafa_sel_top5_term_auc(aucs, mids)
 
   % check inputs {{{
   if nargin ~= 2
-    error('cafa_sel_top5_term_auc:InputCount', 'Expected 2 input.');
+    error('cafa_get_term_auc:InputCount', 'Expected 2 input.');
   end
 
   % check the 1st input 'aucs' {{{
@@ -58,7 +58,7 @@ function [aucs] = cafa_sel_top5_term_auc(aucs, mids)
   end
   [found, index] = ismember(mids, ids);
   if ~all(found)
-    error('cafa_sel_top5_term_auc:NotFound', 'Some methods are not found.');
+    error('cafa_get_term_auc:NotFound', 'Some methods are not found.');
   end
   aucs = aucs(index);
   %}}}
@@ -68,4 +68,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 13 Jul 2015 02:36:20 PM E
+% Last modified: Sun 19 Jul 2015 03:28:55 PM E

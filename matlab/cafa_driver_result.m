@@ -49,7 +49,7 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast)
 %[>]cafa_sheet_seq_fmax.m
 %[>]cafa_sheet_seq_smin.m
 %[>]cafa_sel_valid_term_auc.m
-%[>]cafa_sel_top5_term_auc.m
+%[>]cafa_get_term_auc.m
 %[>]cafa_read_team_info.m
 % }}}
 
@@ -228,7 +228,7 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast)
   fclose(fid);
 
   % select top 5 methods
-  aucs = cafa_sel_top5_term_auc(aucs, info.top10_mid);
+  aucs = cafa_get_term_auc(aucs, info.top10_mid);
 
   % note that filtered aucs could be empty, for all terms are fully annotated
   % like root, which results in NaN AUC.
@@ -282,4 +282,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Fri 17 Jul 2015 01:06:25 PM E
+% Last modified: Sun 19 Jul 2015 03:27:19 PM E
