@@ -1,13 +1,16 @@
-function [sel, bsl, info] = cafa_sel_top10_seq_smin(smins, naive, blast, config)
-%CAFA_SEL_TOP10_SEQ_SMIN CAFA bar top10 sequence-centric Smin
+function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config)
+%CAFA_SEL_TOP_SEQ_SMIN CAFA bar top sequence-centric Smin
 % {{{
 %
-% [sel, bsl, info] = CAFA_SEL_TOP10_SEQ_SMIN(smins, cnaive, blast, onfig);
+% [sel, bsl, info] = CAFA_SEL_TOP_SEQ_SMIN(K, smins, cnaive, blast, config);
 %
-%   Picks the top10 bootstrapped Smin.
+%   Picks the top bootstrapped Smin.
 %
 % Input
 % -----
+% [double]
+% K:        The number of teams/methods to pick.
+%
 % [cell]
 % smins:      The pre-calculated Smin structures.
 %             [char]      [1-by-n]    .id
@@ -63,10 +66,10 @@ function [sel, bsl, info] = cafa_sel_top10_seq_smin(smins, naive, blast, config)
 % [struct]
 % info: Extra information.
 %       [cell]
-%       .all_mid:   internal ID of all participating models.
+%       .all_mid: internal ID of all participating models.
 %
 %       [cell]
-%       .top10_mid: internal ID of top 10 models (ranked from 1 to 10)
+%       .top_mid: internal ID of top K models (ranked from 1 to K)
 %
 % Dependency
 % ----------
@@ -75,24 +78,28 @@ function [sel, bsl, info] = cafa_sel_top10_seq_smin(smins, naive, blast, config)
 % }}}
 
   % check inputs {{{
-  if nargin ~= 4
-    error('cafa_sel_top10_seq_smin:InputCount', 'Expected 4 inputs.');
+  if nargin ~= 5
+    error('cafa_sel_top_seq_smin:InputCount', 'Expected 5 inputs.');
   end
 
-  % check the 1st input 'smins' {{{
-  validateattributes(smins, {'cell'}, {'nonempty'}, '', 'smins', 1);
+  % check the 1st input 'K' {{{
+  validateattributes(K, {'double'}, {'positive', 'integer'}, '', 'K', 1);
+  % }}}
+  
+  % check the 2nd input 'smins' {{{
+  validateattributes(smins, {'cell'}, {'nonempty'}, '', 'smins', 2);
   % }}}
 
-  % check the 2nd input 'naive' {{{
-  validateattributes(naive, {'char'}, {'nonempty'}, '', 'naive', 2);
+  % check the 3rd input 'naive' {{{
+  validateattributes(naive, {'char'}, {'nonempty'}, '', 'naive', 3);
   % }}}
 
-  % check the 3rd input 'blast' {{{
-  validateattributes(blast, {'char'}, {'nonempty'}, '', 'blast', 3);
+  % check the 4rd input 'blast' {{{
+  validateattributes(blast, {'char'}, {'nonempty'}, '', 'blast', 4);
   % }}}
 
-  % check the 4th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
+  % check the 5th input 'config' {{{
+  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
   [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
   % }}}
   % }}}
@@ -168,17 +175,16 @@ function [sel, bsl, info] = cafa_sel_top10_seq_smin(smins, naive, blast, config)
       % do nothing
     end
   end
-  qld(kept + 1 : end) = []; % truncate the trailing empty cells
+  qld(kept + 1 : end)       = []; % truncate the trailing empty cells
   avg_smins(kept + 1 : end) = [];
   % }}}
 
-  % sort averaged Smin and pick the top 10 {{{
+  % sort averaged Smin and pick the top K {{{
   % keep find the next team until
   % 1. find K (= 10) teams, or
   % 2. exhaust the list
   % Note that we only allow one model selected per PI.
 
-  K = 10; % target number of seletect teams
   sel = cell(1, K);
   sel_pi = {};
   [~, index] = sort(avg_smins, 'ascend');
@@ -194,7 +200,7 @@ function [sel, bsl, info] = cafa_sel_top10_seq_smin(smins, naive, blast, config)
     end
   end
   if nsel < K
-    warning('cafa_sel_top10_seq_smin:LessThenTen', 'Only selected %d models.', nsel);
+    warning('cafa_sel_top_seq_smin:LessThenTen', 'Only selected %d models.', nsel);
     sel(nsel + 1 : end) = [];
   end
   % }}}
@@ -205,9 +211,9 @@ function [sel, bsl, info] = cafa_sel_top10_seq_smin(smins, naive, blast, config)
     info.all_mid{i} = qld{i}.mid;
   end
 
-  info.top10_mid = cell(1, numel(sel));
+  info.top_mid = cell(1, numel(sel));
   for i = 1 : numel(sel)
-    info.top10_mid{i} = sel{i}.mid;
+    info.top_mid{i} = sel{i}.mid;
     sel{i} = rmfield(sel{i}, 'mid'); % remove temporary field: mid
   end
   % }}}
@@ -217,4 +223,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:42:43 AM E
+% Last modified: Sun 19 Jul 2015 04:51:41 PM E

@@ -1,13 +1,16 @@
-function [sel, bsl] = cafa_sel_top10_seq_rmcurve(rmcurves, naive, blast, config)
-%CAFA_SEL_TOP10_SEQ_SMIN CAFA curve top10 sequence-centric S-min
+function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config)
+%CAFA_SEL_TOP_SEQ_SMIN CAFA curve top sequence-centric Smin
 % {{{
 %
-% [sel, bsl] = CAFA_SEL_TOP10_SEQ_SMIN(rmcurves, naive, blast, config);
+% [sel, bsl] = CAFA_SEL_TOP_SEQ_SMIN(K, rmcurves, naive, blast, config);
 %
-%   Picks the top10 RU-MI curves in S-min.
+%   Picks the top RU-MI curves in Smin.
 %
 % Input
 % -----
+% [double]
+% K:        The number of teams/methods to pick.
+%
 % [cell]
 % rmcurves: The pre-calculated RU-MI curve structures.
 %           [char]      [1-by-n]    .id
@@ -50,7 +53,7 @@ function [sel, bsl] = cafa_sel_top10_seq_rmcurve(rmcurves, naive, blast, config)
 %       .curve      n x 2, points on the curve.
 %
 %       [double]
-%       .opt_point  1 x 2, the optimal point (corresp. to S-min).
+%       .opt_point  1 x 2, the optimal point (corresp. to Smin).
 %
 %       [char]
 %       .tag        for the legend of the plot.
@@ -69,33 +72,37 @@ function [sel, bsl] = cafa_sel_top10_seq_rmcurve(rmcurves, naive, blast, config)
 % }}}
 
   % check inputs {{{
-  if nargin ~= 4
-    error('cafa_sel_top10_seq_rmcurve:InputCount', 'Expected 4 inputs.');
+  if nargin ~= 5
+    error('cafa_sel_top_seq_rmcurve:InputCount', 'Expected 5 inputs.');
   end
 
-  % check the 1st input 'rmcurves' {{{
-  validateattributes(rmcurves, {'cell'}, {'nonempty'}, '', 'rmcurves', 1);
+  % check the 1st input 'K' {{{
+  validateattributes(K, {'double'}, {'positive', 'integer'}, '', 'K', 1);
+  % }}}
+  
+  % check the 2nd input 'rmcurves' {{{
+  validateattributes(rmcurves, {'cell'}, {'nonempty'}, '', 'rmcurves', 2);
   % }}}
 
-  % check the 2nd input 'naive' {{{
-  validateattributes(naive, {'char'}, {'nonempty'}, '', 'naive', 2);
+  % check the 3rd input 'naive' {{{
+  validateattributes(naive, {'char'}, {'nonempty'}, '', 'naive', 3);
   % }}}
 
-  % check the 3rd input 'blast' {{{
-  validateattributes(blast, {'char'}, {'nonempty'}, '', 'blast', 3);
+  % check the 4rd input 'blast' {{{
+  validateattributes(blast, {'char'}, {'nonempty'}, '', 'blast', 4);
   % }}}
 
-  % check the 4th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
+  % check the 5th input 'config' {{{
+  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
   [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
   % }}}
   % }}}
 
-  % clean up, and calculate S-min {{{
+  % clean up, and calculate Smin {{{
   % 1. remove 'disqualified' teams;
   % 2. set aside baseline methods;
   % 3. match team names for display.
-  % 4. calculate S-min.
+  % 4. calculate Smin.
 
   n = numel(rmcurves);
   qld = cell(1, n); % all qualified teams
@@ -141,7 +148,7 @@ function [sel, bsl] = cafa_sel_top10_seq_rmcurve(rmcurves, naive, blast, config)
 
       [smin, pt, ~] = pfp_sminc(rmcurves{i}.curve, rmcurves{i}.tau);
 
-      % skip teams with 'NaN' S-min values, though this shouldn't happen.
+      % skip teams with 'NaN' Smin values, though this shouldn't happen.
       if isnan(smin)
         continue;
       end
@@ -164,13 +171,12 @@ function [sel, bsl] = cafa_sel_top10_seq_rmcurve(rmcurves, naive, blast, config)
   smins(kept + 1 : end) = [];
   % }}}
 
-  % sort S-min and pick the top 10 {{{
+  % sort Smin and pick the top K {{{
   % keep find the next team until
   % 1. find K (= 10) teams, or
   % 2. exhaust the list
   % Note that we only allow one model selected per team.
 
-  K = 10; % target number of seletect teams
   sel = cell(1, K);
   sel_pi = {};
   [~, index] = sort(smins, 'ascend');
@@ -186,7 +192,7 @@ function [sel, bsl] = cafa_sel_top10_seq_rmcurve(rmcurves, naive, blast, config)
     end
   end
   if nsel < K
-    warning('cafa_sel_top10_seq_rmcurve:LessThenTen', 'Only selected %d models.', nsel);
+    warning('cafa_sel_top_seq_rmcurve:LessThenTen', 'Only selected %d models.', nsel);
     sel(nsel + 1 : end) = [];
   end
   % }}}
@@ -227,4 +233,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:42:00 AM E
+% Last modified: Sun 19 Jul 2015 04:20:20 PM E

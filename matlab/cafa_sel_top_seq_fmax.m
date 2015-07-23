@@ -1,14 +1,10 @@
-function [sel, bsl, info] = cafa_sel_top10_seq_fmax(fmaxs, naive, blast, config, K)
-%CAFA_SEL_TOP10_SEQ_FMAX CAFA select top10 sequence-centric Fmax
+function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config)
+%CAFA_SEL_TOP_SEQ_FMAX CAFA select top sequence-centric Fmax
 % {{{
 %
-% [sel, bsl, info] = CAFA_SEL_TOP10_SEQ_FMAX(fmaxs, naive, blast, config);
+% [sel, bsl, info] = CAFA_SEL_TOP_SEQ_FMAX(fmaxs, naive, blast, config);
 %
-%   Picks the top10 bootstrapped Fmax.
-%
-% [sel, bsl, info] = CAFA_SEL_TOP10_SEQ_FMAX(fmaxs, naive, blast, config, K);
-%
-%   Picks the top K bootstrapped Fmax.
+%   Picks the top bootstrapped Fmax.
 %
 % Input
 % -----
@@ -80,10 +76,10 @@ function [sel, bsl, info] = cafa_sel_top10_seq_fmax(fmaxs, naive, blast, config,
 % [struct]
 % info:   Extra information.
 %         [cell]
-%         .all_mid:   internal ID of all participating models.
+%         .all_mid: internal ID of all participating models.
 %
 %         [cell]
-%         .top10_mid: internal ID of top 10 models (ranked from 1 to 10)
+%         .top_mid: internal ID of top K models (ranked from 1 to K)
 %
 % Dependency
 % ----------
@@ -92,14 +88,30 @@ function [sel, bsl, info] = cafa_sel_top10_seq_fmax(fmaxs, naive, blast, config,
 % }}}
 
   % check inputs {{{
-  if nargin < 4 || nargin > 5
-    error('cafa_sel_top10_seq_fmax:InputCount', 'Expected 4 or 5 inputs.');
+  if nargin ~= 5
+    error('cafa_sel_top_seq_fmax:InputCount', 'Expected 5 inputs.');
   end
 
-  if nargin == 4
-    K = 10;
-  end
+  % check the 1st input 'K' {{{
+  validateattributes(K, {'double'}, {'positive', 'integer'}, '', 'K', 1);
+  % }}}
+  
+  % check the 2nd input 'fmaxs' {{{
+  validateattributes(fmaxs, {'cell'}, {'nonempty'}, '', 'fmaxs', 2);
+  % }}}
 
+  % check the 3rd input 'naive' {{{
+  validateattributes(naive, {'char'}, {'nonempty'}, '', 'naive', 3);
+  % }}}
+
+  % check the 4rd input 'blast' {{{
+  validateattributes(blast, {'char'}, {'nonempty'}, '', 'blast', 4);
+  % }}}
+
+  % check the 5th input 'config' {{{
+  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
+  % }}}
   % check the 1st input 'fmaxs' {{{
   validateattributes(fmaxs, {'cell'}, {'nonempty'}, '', 'fmaxs', 1);
   % }}}
@@ -194,11 +206,11 @@ function [sel, bsl, info] = cafa_sel_top10_seq_fmax(fmaxs, naive, blast, config,
       % nop
     end
   end
-  qld(kept+1 : end)          = []; % truncate the trailing empty cells
-  avg_fmaxs(kept+1 : end)    = [];
+  qld(kept+1 : end)       = []; % truncate the trailing empty cells
+  avg_fmaxs(kept+1 : end) = [];
   % }}}
 
-  % sort averaged Fmax and pick the top 10 {{{
+  % sort averaged Fmax and pick the top K {{{
   if K == 0
     sel = {};
   else
@@ -222,7 +234,7 @@ function [sel, bsl, info] = cafa_sel_top10_seq_fmax(fmaxs, naive, blast, config,
       end
     end
     if nsel < K
-      warning('cafa_sel_top10_seq_fmax:LessThenTen', 'Only selected %d models.', nsel);
+      warning('cafa_sel_top_seq_fmax:LessThenTen', 'Only selected %d models.', nsel);
       sel(nsel + 1 : end) = [];
     end
   end
@@ -234,9 +246,9 @@ function [sel, bsl, info] = cafa_sel_top10_seq_fmax(fmaxs, naive, blast, config,
     info.all_mid{i} = qld{i}.mid;
   end
 
-  info.top10_mid = cell(1, numel(sel));
+  info.top_mid = cell(1, numel(sel));
   for i = 1 : numel(sel)
-    info.top10_mid{i} = sel{i}.mid;
+    info.top_mid{i} = sel{i}.mid;
     sel{i} = rmfield(sel{i}, 'mid'); % remove temporary field: mid
   end
   % }}}
@@ -246,4 +258,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:40:57 AM E
+% Last modified: Sun 19 Jul 2015 04:51:12 PM E

@@ -36,7 +36,7 @@ function [] = cafa_barplot_seq_smin(pfile, pttl, data, bsl_data)
 %           [char]
 %           .tag            tag of the model.
 %
-%           See cafa_sel_top10_seq_smin.m
+%           See cafa_sel_top_seq_smin.m
 %
 % [cell]
 % bsl_data: A 1 x 2 cell containing the information for baselines, i.e.
@@ -48,7 +48,7 @@ function [] = cafa_barplot_seq_smin(pfile, pttl, data, bsl_data)
 %
 % Dependency
 % ----------
-%[>]cafa_sel_top10_seq_smin.m
+%[>]cafa_sel_top_seq_smin.m
 %[>]embed_canvas.m
 % }}}
 
@@ -203,4 +203,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 10 Jul 2015 03:11:29 PM E
+% Last modified: Sun 19 Jul 2015 04:30:58 PM E

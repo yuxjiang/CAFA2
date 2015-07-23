@@ -35,7 +35,7 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
 %           [char]
 %           .tag        for the legend of the plot
 %
-%           See cafa_sel_top10_seq_rmcurve.m
+%           See cafa_sel_top_seq_rmcurve.m
 %
 % [cell]
 % bsl_data: A 1 x 2 cell containing the information for baselines, i.e.
@@ -47,7 +47,7 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
 %
 % Dependency
 % ----------
-%[>]cafa_sel_top10_seq_rmcurve.m
+%[>]cafa_sel_top_seq_rmcurve.m
 %[>]embed_canvas.m
 % }}}
 
@@ -209,4 +209,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 10 Jul 2015 03:20:52 PM E
+% Last modified: Sun 19 Jul 2015 04:31:48 PM E

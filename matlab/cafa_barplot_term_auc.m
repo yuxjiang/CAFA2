@@ -4,7 +4,7 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 %
 % [] = CAFA_BARPLOT_TERM_AUC(pfile, pttl, data, bsl_data, yaxis);
 %
-%   Plots selected bootstrapped Fmax as barplots.
+%   Plots selected average AUC as barplots.
 %
 % Input
 % -----
@@ -22,21 +22,24 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 %           Each cell has the thing needed for plotting a single curve.
 %
 %           [double]
-%           .fmax_mean      scalar, "bar height".
+%           .auc_mean scalar, "bar height".
 %
 %           [double]
-%           .fmax_q05       scalar, 5% quantiles.
+%           .auc_q05  scalar, 5% quantiles.
 %
 %           [double]
-%           .fmax_q95       scalar, 95% quantiles.
+%           .auc_q95  scalar, 95% quantiles.
 %
 %           [double]
-%           .coverage       scalar, averaged coverage.
+%           .auc_std    scalar, standard deviation
+%
+%           [double]
+%           .auc_ste    scalar, standard error (std / sqrt(N))
 %
 %           [char]
-%           .tag            tag of the model.
+%           .tag      tag of the model.
 %
-%           See cafa_sel_top10_seq_fmax.m
+%           See cafa_sel_top_term_auc.m
 %
 % [cell]
 % bsl_data: A 1 x 2 cell containing the information for baselines, i.e.
@@ -54,13 +57,13 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 %
 % Dependency
 % ----------
-%[>]cafa_sel_top10_seq_fmax.m
+%[>]cafa_sel_top_term_auc.m
 %[>]embed_canvas.m
 % }}}
 
   % check inputs {{{
   if nargin < 4 || nargin > 5
-    error('cafa_barplot_seq_fmax:InputCount', 'Expected 4 or 5 inputs.');
+    error('cafa_barplot_term_auc:InputCount', 'Expected 4 or 5 inputs.');
   end
 
   if nargin == 4
@@ -106,31 +109,65 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
   % }}}
 
   % preparation, find ylim {{{
+
+  % collect plotting data {{{
+  bar_h = zeros(n, 1);
+  err_l = zeros(n, 1);
+  err_u = zeros(n, 1);
+
+  for i = 1 : n
+    bar_h(i) = data{i}.auc_mean;
+
+    % standard error
+    % err_l(i) = data{i}.auc_mean - data{i}.auc_ste;
+    % err_u(i) = data{i}.auc_mean + data{i}.auc_ste;
+
+    % standard deviation
+    err_l(i) = data{i}.auc_mean - data{i}.auc_std;
+    err_u(i) = data{i}.auc_mean + data{i}.auc_std;
+  end
+
+  bsl_bar_h = zeros(n, 1);
+  bsl_err_l = zeros(n, 1);
+  bsl_err_u = zeros(n, 1);
+  for i = 1 : m
+    bsl_bar_h(i) = bsl_data{i}.auc_mean;
+
+    % standard error
+    % bsl_err_l(i) = bsl_data{i}.auc_mean - bsl_data{i}.auc_ste;
+    % bsl_err_u(i) = bsl_data{i}.auc_mean + bsl_data{i}.auc_ste;
+
+    % standard deviation
+    bsl_err_l(i) = bsl_data{i}.auc_mean - bsl_data{i}.auc_std;
+    bsl_err_u(i) = bsl_data{i}.auc_mean + bsl_data{i}.auc_std;
+  end
+  % }}}
+
   if is_adaptive
     % find range
-    fmax_min = 1.0;
-    fmax_max = 0.0;
+    auc_min = 1.0;
+    auc_max = 0.0;
     for i = 1 : n
-      if fmax_min > data{i}.fmax_q05
-        fmax_min = data{i}.fmax_q05;
+      if auc_min > err_l(i)
+        auc_min = err_l(i);
       end
 
-      if fmax_max < data{i}.fmax_q95
-        fmax_max = data{i}.fmax_q95;
+      if auc_max < err_u(i)
+        auc_max = err_u(i);
       end
     end
 
     for i = 1 : m
-      if fmax_min > bsl_data{i}.fmax_q05
-        fmax_min = bsl_data{i}.fmax_q05;
+      if auc_min > bsl_err_l(i)
+        auc_min = bsl_err_l(i);
       end
 
-      if fmax_max < bsl_data{i}.fmax_q95
-        fmax_max = bsl_data{i}.fmax_q95;
+      if auc_max < bsl_err_u(i)
+        auc_max = bsl_err_u(i);
       end
     end
 
-    [ylim_l, ylim_u, unit] = adapt_yaxis(fmax_min, fmax_max, 0.0, 1.0, [0.1, 0.05, 0.02, 0.01]);
+    [ylim_l, ylim_u, unit] = adapt_yaxis(auc_min, auc_max, 0.0, 1.0, [0.1, 0.05, 0.02, 0.01]);
   else
     ylim_l = yaxis(1);
     ylim_u = yaxis(2);
@@ -158,16 +195,11 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
   hold on;
 
   for i = 1 : n
-    rpos = [i - bar_w / 2, ylim_l, bar_w, data{i}.fmax_mean - ylim_l];
+    rpos = [i - bar_w / 2, ylim_l, bar_w, data{i}.auc_mean - ylim_l];
     rectangle('Position', rpos, 'FaceColor', mcolor, 'EdgeColor', mcolor);
-    line([i, i], [data{i}.fmax_q05, data{i}.fmax_q95], 'Color', 'k');
-    line([i - bar_w / 4, i + bar_w / 4], [data{i}.fmax_q05, data{i}.fmax_q05], 'Color', 'k');
-    line([i - bar_w / 4, i + bar_w / 4], [data{i}.fmax_q95, data{i}.fmax_q95], 'Color', 'k');
-
-    % plot coverage as text
-    cpos  = ylim_l + 0.05 * (ylim_u - ylim_l);
-    ctext = sprintf('C=%.2f', nanmean(data{i}.coverage));
-    text(i, cpos, ctext, 'FontSize', base_fs, 'Rotation', 90);
+    line([i, i], [err_l(i), err_u(i)], 'Color', 'k');
+    line([i - bar_w / 4, i + bar_w / 4], [err_l(i), err_l(i)], 'Color', 'k');
+    line([i - bar_w / 4, i + bar_w / 4], [err_u(i), err_u(i)], 'Color', 'k');
 
     % collect team name for display
     xticks{i} = regexprep(data{i}.tag, '_', '\\_');
@@ -178,16 +210,11 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
   N = 10; % careful, baseline starts at 11, even if n < 10
   for i = 1 : m
     j = N + i;
-    rpos = [j - bar_w / 2, ylim_l, bar_w, bsl_data{i}.fmax_mean - ylim_l];
+    rpos = [j - bar_w / 2, ylim_l, bar_w, bsl_data{i}.auc_mean - ylim_l];
     rectangle('Position', rpos, 'FaceColor', bcolor{i}, 'EdgeColor', bcolor{i});
-    line([j, j], [bsl_data{i}.fmax_q05, bsl_data{i}.fmax_q95], 'Color', 'k');
-    line([j - bar_w / 4, j + bar_w / 4], [bsl_data{i}.fmax_q05, bsl_data{i}.fmax_q05], 'Color', 'k');
-    line([j - bar_w / 4, j + bar_w / 4], [bsl_data{i}.fmax_q95, bsl_data{i}.fmax_q95], 'Color', 'k');
-
-    % plot coverage as text
-    cpos  = ylim_l + 0.05 * (ylim_u - ylim_l);
-    ctext = sprintf('C=%.2f', nanmean(bsl_data{i}.coverage));
-    text(j, cpos, ctext, 'Rotation', 90, 'FontSize', base_fs, 'Color', btxtcolor{i});
+    line([j, j], [bsl_err_l(i), bsl_err_u(i)], 'Color', 'k');
+    line([j - bar_w / 4, j + bar_w / 4], [bsl_err_l(i), bsl_err_l(i)], 'Color', 'k');
+    line([j - bar_w / 4, j + bar_w / 4], [bsl_err_u(i), bsl_err_u(i)], 'Color', 'k');
 
     % collect team name for display
     xticks{j} = regexprep(bsl_data{i}.tag, '_', '\\_');
@@ -196,7 +223,7 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
   % draw dashed baseline level
   for i = 1 : m
     xrange = [0, (N + m + 1)]; % [from, to]
-    level  = repmat(bsl_data{i}.fmax_mean, 1, 2);
+    level  = repmat(bsl_data{i}.auc_mean, 1, 2);
     line(xrange, level, 'LineWidth', 2, 'LineStyle', ':', 'Color', bcolor{i});
   end
   % }}}
@@ -230,5 +257,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 02:55:38 PM E
-
+% Last modified: Mon 20 Jul 2015 01:07:38 PM E

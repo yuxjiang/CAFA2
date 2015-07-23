@@ -41,7 +41,7 @@ function [] = cafa_plot_duel_fmax(pfile, pttl, data, bsl_data)
 %           cell 3 - BLAST trained on CAFA1 training (2011 SwissProt)
 %           cell 4 - BLAST trained on CAFA2 training (2014 SwissProt)
 %           
-%           Each cell can be retrieved using cafa_sel_top10_seq_fmax.m
+%           Each cell can be retrieved using cafa_sel_top_seq_fmax.m
 %
 % Output
 % ------
@@ -50,7 +50,7 @@ function [] = cafa_plot_duel_fmax(pfile, pttl, data, bsl_data)
 % Dependency
 % ----------
 %[>]cafa_duel_seq_fmax.m
-%[>]cafa_sel_top10_seq_fmax.m
+%[>]cafa_sel_top_seq_fmax.m
 % }}}
 
   % check inputs {{{
@@ -284,4 +284,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:55:06 AM E
+% Last modified: Sun 19 Jul 2015 04:31:14 PM E

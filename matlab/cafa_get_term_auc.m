@@ -9,17 +9,11 @@ function [aucs] = cafa_get_term_auc(aucs, mids)
 % Input
 % -----
 % [cell]
-% aucs:     The collected 'term_auc' structures
-%           Each cell has the following fields.
+% aucs:     The collected 'term_auc' structures, which has the following fields
 %
-%           [char]
-%           .id     (Internel) model of the model
-%
-%           [cell]
-%           .term   1-by-m, term ID list
-%
-%           [double]
-%           .auc    1-by-m, AUC per term
+%           [char]    .id     (Internel) model of the model
+%           [cell]    .term   1-by-m, term ID list
+%           [double]  .auc    1-by-m, AUC per term
 %
 %           See cafa_collect.m
 %
@@ -68,4 +62,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sun 19 Jul 2015 03:28:55 PM E
+% Last modified: Sun 19 Jul 2015 03:48:58 PM E

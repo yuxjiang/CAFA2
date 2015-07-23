@@ -33,7 +33,7 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
 %           [char]
 %           .tag        for the legend of the plot
 %
-%           See cafa_sel_top10_seq_prcurve.m
+%           See cafa_sel_top_seq_prcurve.m
 %
 % [cell]
 % bsl_data: A 1 x 2 cell containing the information for baselines, i.e.
@@ -52,7 +52,7 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
 %
 % Dependency
 % ----------
-%[>]cafa_sel_top10_seq_prcurve.m
+%[>]cafa_sel_top_seq_prcurve.m
 %[>]embed_canvas.m
 % }}}
 
@@ -224,4 +224,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 10 Jul 2015 03:17:03 PM E
+% Last modified: Sun 19 Jul 2015 04:31:42 PM E

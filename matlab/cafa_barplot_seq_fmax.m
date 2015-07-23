@@ -36,7 +36,7 @@ function [] = cafa_barplot_seq_fmax(pfile, pttl, data, bsl_data, yaxis)
 %           [char]
 %           .tag            tag of the model.
 %
-%           See cafa_sel_top10_seq_fmax.m
+%           See cafa_sel_top_seq_fmax.m
 %
 % [cell]
 % bsl_data: A 1 x 2 cell containing the information for baselines, i.e.
@@ -54,7 +54,7 @@ function [] = cafa_barplot_seq_fmax(pfile, pttl, data, bsl_data, yaxis)
 %
 % Dependency
 % ----------
-%[>]cafa_sel_top10_seq_fmax.m
+%[>]cafa_sel_top_seq_fmax.m
 %[>]embed_canvas.m
 % }}}
 
@@ -230,4 +230,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 10 Jul 2015 03:11:29 PM E
+% Last modified: Sun 19 Jul 2015 04:30:50 PM E

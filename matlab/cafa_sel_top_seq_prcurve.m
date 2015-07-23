@@ -1,13 +1,21 @@
-function [sel, bsl] = cafa_sel_top10_seq_prcurve(prcurves, naive, blast, config, rmcurves)
-%CAFA_SEL_TOP10_SEQ_FMAX CAFA select top10 sequence-centric Fmax
+function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config, rmcurves)
+%CAFA_SEL_TOP_SEQ_FMAX CAFA select top sequence-centric Fmax
 % {{{
 %
-% [sel, bsl] = CAFA_SEL_TOP10_SEQ_FMAX(prcurves, naive, blast, config, rmcurves);
+% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, config);
 %
-%   Picks the top10 precision-recall curves in Fmax.
+%   Picks the top precision-recall curves in Fmax.
+%
+% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, config, rmcurves);
+%
+%   Picks the top precision-recall curves in Fmax (output corresponding optimal
+%   Smin ru-mi pairs).
 %
 % Input
 % -----
+% [double]
+% K:        The number of teams/methods to pick.
+%
 % [cell]
 % prcurves: The pre-calculated precision-recall curve structures.
 %           [char]      [1-by-n]    .id
@@ -83,33 +91,37 @@ function [sel, bsl] = cafa_sel_top10_seq_prcurve(prcurves, naive, blast, config,
 % }}}
 
   % check inputs {{{
-  if nargin < 4 || nargin > 5
-    error('cafa_sel_top10_seq_prcurve:InputCount', 'Expected 4 or 5 inputs.');
+  if nargin < 5 || nargin > 6
+    error('cafa_sel_top_seq_prcurve:InputCount', 'Expected 5 or 6 inputs.');
   end
 
-  if nargin == 4
+  if nargin == 5
     rmcurves = {};
   end
 
-  % check the 2nd input 'naive' {{{
-  validateattributes(naive, {'char'}, {'nonempty'}, '', 'naive', 2);
+  % check the 1st input 'K' {{{
+  validateattributes(K, {'double'}, {'positive', 'integer'}, '', 'K', 1);
+  % }}}
+  
+  % check the 2nd input 'prcurves' {{{
+  validateattributes(prcurves, {'cell'}, {'nonempty'}, '', 'prcurves', 2);
   % }}}
 
-  % check the 3rd input 'blast' {{{
-  validateattributes(blast, {'char'}, {'nonempty'}, '', 'blast', 3);
+  % check the 3rd input 'naive' {{{
+  validateattributes(naive, {'char'}, {'nonempty'}, '', 'naive', 3);
   % }}}
 
-  % check the 1st input 'prcurves' {{{
-  validateattributes(prcurves, {'cell'}, {'nonempty'}, '', 'prcurves', 1);
+  % check the 4rd input 'blast' {{{
+  validateattributes(blast, {'char'}, {'nonempty'}, '', 'blast', 4);
   % }}}
 
-  % check the 4th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
+  % check the 5th input 'config' {{{
+  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
   [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
   % }}}
 
-  % check the 5th input 'rmcurves' {{{
-  validateattributes(rmcurves, {'cell'}, {}, '', 'rmcurves', 5);
+  % check the 6th input 'rmcurves' {{{
+  validateattributes(rmcurves, {'cell'}, {}, '', 'rmcurves', 6);
   if isempty(rmcurves)
     do_alt = false;
   else
@@ -212,13 +224,12 @@ function [sel, bsl] = cafa_sel_top10_seq_prcurve(prcurves, naive, blast, config,
   fmaxs(kept + 1 : end) = [];
   % }}}
 
-  % sort Fmax and pick the top 10 {{{
+  % sort Fmax and pick the top K {{{
   % keep find the next team until
   % 1. find K (= 10) teams, or
   % 2. exhaust the list
   % Note that we only allow one model selected per pi.
 
-  K = 10; % target number of seletect teams
   sel = cell(1, K);
   sel_pi = {};
   [~, index] = sort(fmaxs, 'descend');
@@ -234,7 +245,7 @@ function [sel, bsl] = cafa_sel_top10_seq_prcurve(prcurves, naive, blast, config,
     end
   end
   if nsel < K
-    warning('cafa_sel_top10_seq_prcurve:LessThenTen', 'Only selected %d models.', nsel);
+    warning('cafa_sel_top_seq_prcurve:LessThenTen', 'Only selected %d models.', nsel);
     sel(nsel + 1 : end) = [];
   end
   % }}}
@@ -284,4 +295,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:41:46 AM E
+% Last modified: Sun 19 Jul 2015 04:19:09 PM E
