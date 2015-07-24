@@ -59,7 +59,7 @@ function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method
 % Dependency
 % ----------
 %[>]cafa_parse_config.m
-%[>]cafa_read_team_info.m
+%[>]cafa_team_read_config.m
 %[>]pfp_predproj.m
 %[>]pfp_oaproj.m
 %[>]pfp_annotsuboa.m
@@ -116,7 +116,7 @@ function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method
   % check the 6th input 'team_cfg' {{{
   if ~isempty(mid)
     validateattributes(team_cfg, {'char'}, {'nonempty'}, '', 'team_cfg', 6);
-    [team_id, ~, team_name, ~, ~, ~] = cafa_read_team_info(team_cfg);
+    [team_id, ~, team_name, ~, ~, ~] = cafa_team_read_config(team_cfg);
   else
     % nop, 'team_cfg' is ignored.
   end
@@ -310,4 +310,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Wed 15 Jul 2015 03:43:35 PM E
+% Last modified: Fri 24 Jul 2015 11:53:53 AM E

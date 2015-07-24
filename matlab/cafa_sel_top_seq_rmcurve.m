@@ -67,7 +67,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 % ----------
 %[>]pfp_sminc.m
 %[>]cafa_collect.m
-%[>]cafa_read_team_info.m
+%[>]cafa_team_read_config.m
 %[>]cafa_eval_seq_curve.m
 % }}}
 
@@ -94,7 +94,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
   % }}}
   % }}}
 
@@ -233,4 +233,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 19 Jul 2015 04:20:20 PM E
+% Last modified: Fri 24 Jul 2015 11:55:48 AM E

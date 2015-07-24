@@ -82,7 +82,7 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 % Dependency
 % ----------
 %[>]cafa_eval_term_auc.m
-%[>]cafa_read_team_info.m
+%[>]cafa_team_read_config.m
 % }}}
 
   % check inputs {{{
@@ -108,7 +108,7 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
   % }}}
   % }}}
 
@@ -235,4 +235,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 20 Jul 2015 11:48:04 AM E
+% Last modified: Fri 24 Jul 2015 11:56:10 AM E

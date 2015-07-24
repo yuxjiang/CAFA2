@@ -84,7 +84,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 % Dependency
 % ----------
 %[>]cafa_eval_seq_fmax_bst.m
-%[>]cafa_read_team_info.m
+%[>]cafa_team_read_config.m
 % }}}
 
   % check inputs {{{
@@ -110,7 +110,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
   % }}}
   % check the 1st input 'fmaxs' {{{
   validateattributes(fmaxs, {'cell'}, {'nonempty'}, '', 'fmaxs', 1);
@@ -126,7 +126,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 
   % check the 4th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
   % }}}
 
   % check the 5th input 'K' {{{
@@ -258,4 +258,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 19 Jul 2015 04:51:12 PM E
+% Last modified: Fri 24 Jul 2015 11:55:07 AM E

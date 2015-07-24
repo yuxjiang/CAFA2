@@ -60,6 +60,7 @@ function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, config, anonymous)
 % ----------
 %[>]cafa_eval_seq_smin.m
 %[>]cafa_eval_seq_smin_bst.m
+%[>]cafa_team_read_config.m
 % }}}
 
   % check inputs {{{
@@ -85,7 +86,7 @@ function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, config, anonymous)
 
   % check the 4th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
   % }}}
 
   % check the 5th input 'anonymous' {{{
@@ -153,4 +154,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:26:54 AM E
+% Last modified: Fri 24 Jul 2015 11:57:35 AM E

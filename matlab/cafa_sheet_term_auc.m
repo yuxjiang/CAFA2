@@ -82,7 +82,7 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
 
   % check the 3rd input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 3);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_read_team_info(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
   % }}}
 
   % check the 4th input 'anonymous' {{{
@@ -177,4 +177,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 03 Jul 2015 11:18:06 AM E
+% Last modified: Fri 24 Jul 2015 11:56:55 AM E

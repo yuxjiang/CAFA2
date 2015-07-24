@@ -41,7 +41,7 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast)
 %[>]cafa_sheet_seq_smin.m
 %[>]cafa_sel_valid_term_auc.m
 %[>]cafa_get_term_auc.m
-%[>]cafa_read_team_info.m
+%[>]cafa_team_read_config.m
 % }}}
 
   % set-up {{{
@@ -259,7 +259,7 @@ return
 
 % function: save_team_info {{{
 function [] = save_team_info(saveto, info, cfg)
-  [iid, eid, tname, ~, dname, pi] = cafa_read_team_info(cfg);
+  [iid, eid, tname, ~, dname, pi] = cafa_team_read_config(cfg);
   fid = fopen(saveto, 'w');
   fprintf(fid, 'qualified model counts [%3d]\n', numel(info.all_mid));
   fprintf(fid, '----------------------------\n');
@@ -284,4 +284,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 20 Jul 2015 10:46:50 AM E
+% Last modified: Fri 24 Jul 2015 11:52:37 AM E

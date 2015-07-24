@@ -1,8 +1,8 @@
-function [iid, eid, tname, ttype, dname, pname] = cafa_read_team_info(team_file)
-%CAFA_READ_TEAM_INFO CAFA read team info
+function [iid, eid, tname, ttype, dname, pname] = cafa_team_read_config(team_file)
+%CAFA_TEAM_READ_CONFIG CAFA team read config
 % {{{
 %
-% [iid, eid, tname, ttype, dname, pname] = CAFA_READ_TEAM_INFO(team_file);
+% [iid, eid, tname, ttype, dname, pname] = CAFA_TEAM_READ_CONFIG(team_file);
 %
 %   Reads and parses team information file.
 %
@@ -34,14 +34,14 @@ function [iid, eid, tname, ttype, dname, pname] = cafa_read_team_info(team_file)
 
   % check inputs {{{
   if nargin ~= 1
-    error('cafa_read_team_info:InputCount', 'Expected 1 input.');
+    error('cafa_team_read_config:InputCount', 'Expected 1 input.');
   end
 
   % check the 1st input 'team_file' {{{
   validateattributes(team_file, {'char'}, {'nonempty'}, '', 'team_file', 1);
   fid = fopen(team_file, 'r');
   if fid == -1
-    error('cafa_read_team_info:FileErr', 'Cannot open the team file [%s].', team_file);
+    error('cafa_team_read_config:FileErr', 'Cannot open the team file [%s].', team_file);
   end
   % }}}
   % }}}
@@ -63,4 +63,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Fri 10 Jul 2015 03:12:14 PM E
+% Last modified: Fri 24 Jul 2015 11:54:42 AM E
