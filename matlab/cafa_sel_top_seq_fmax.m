@@ -8,6 +8,11 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 %
 % Input
 % -----
+% [double]
+% K:      The number of models to pick. If K is set to 0, this function will
+%         be used to pick baseline models, i.e. the returning 'sel' will be {}.
+%         default: 10
+%
 % [cell]
 % fmaxs:  The pre-calculated Fmax structures.
 %         [char]      [1-by-n]    .id
@@ -42,12 +47,6 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 %                     'd'  - disqualified
 %                     'n'  - Naive model (baseline 1)
 %                     'b'  - BLAST model (baseline 2)
-%
-% (optional)
-% [double]
-% K:      The number of models to pick. If K is set to 0, this function will
-%         be used to pick baseline models, i.e. the returning 'sel' will be {}.
-%         default: 10
 %
 % Output
 % ------
@@ -111,26 +110,6 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
   [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
-  % }}}
-  % check the 1st input 'fmaxs' {{{
-  validateattributes(fmaxs, {'cell'}, {'nonempty'}, '', 'fmaxs', 1);
-  % }}}
-
-  % check the 2nd input 'naive' {{{
-  validateattributes(naive, {'char'}, {}, '', 'naive', 2);
-  % }}}
-
-  % check the 3rd input 'blast' {{{
-  validateattributes(blast, {'char'}, {}, '', 'blast', 3);
-  % }}}
-
-  % check the 4th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
-  % }}}
-
-  % check the 5th input 'K' {{{
-  validateattributes(K, {'double'}, {'integer', 'nonnegative'}, '', 'K', 5);
   % }}}
   % }}}
 
@@ -258,4 +237,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 24 Jul 2015 11:55:07 AM E
+% Last modified: Tue 28 Jul 2015 02:32:36 PM E

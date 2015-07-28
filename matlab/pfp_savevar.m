@@ -53,7 +53,7 @@ function [] = pfp_savevar(filename, var, varname)
 
   % prepare varname {{{
   if isempty(varname)
-    varname = inputname(2)
+    varname = inputname(2);
   end
   eval(sprintf('%s = var;', varname));
   % }}}
@@ -72,4 +72,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Wed 10 Jun 2015 04:14:02 PM E
+% Last modified: Fri 24 Jul 2015 04:42:28 PM E

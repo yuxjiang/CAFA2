@@ -56,6 +56,7 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
 %
 % Dependency
 % ----------
+%[>]cafa_team_read_config.m
 %[>]cafa_eval_term_auc.m
 % }}}
 
@@ -177,4 +178,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 24 Jul 2015 11:56:55 AM E
+% Last modified: Tue 28 Jul 2015 02:20:38 PM E

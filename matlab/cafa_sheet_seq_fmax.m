@@ -58,6 +58,7 @@ function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, anonymous)
 %
 % Dependency
 % ----------
+%[>]cafa_team_read_config.m
 %[>]cafa_eval_seq_fmax.m
 %[>]cafa_eval_seq_fmax_bst.m
 % }}}
@@ -153,4 +154,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 24 Jul 2015 11:56:45 AM E
+% Last modified: Tue 28 Jul 2015 02:20:17 PM E
