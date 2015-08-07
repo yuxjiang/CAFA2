@@ -34,6 +34,8 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
 %           * 4. <type>
 %           * 5. <displayname>
 %             6. <pi>
+%             7. <keyword list>
+%             8. <assigned color>
 %
 %             Note:
 %             1. The starred columns (*) will be used in this function.
@@ -83,7 +85,7 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
 
   % check the 3rd input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 3);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name] = cafa_team_read_config(config);
   % }}}
 
   % check the 4th input 'anonymous' {{{
@@ -178,4 +180,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 28 Jul 2015 02:20:38 PM E
+% Last modified: Wed 05 Aug 2015 04:29:35 PM E

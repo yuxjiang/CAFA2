@@ -41,6 +41,8 @@ function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, anonymous)
 %         * 4. <type>
 %         * 5. <displayname>
 %           6. <pi>
+%           7. <keyword list>
+%           8. <assigned color>
 %
 %           Note:
 %           1. The starred columns (*) will be used in this function.
@@ -86,7 +88,7 @@ function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, anonymous)
 
   % check the 4th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name] = cafa_team_read_config(config);
   % }}}
 
   % check the 5th input 'anonymous' {{{
@@ -154,4 +156,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 28 Jul 2015 02:20:17 PM E
+% Last modified: Wed 05 Aug 2015 04:26:47 PM E

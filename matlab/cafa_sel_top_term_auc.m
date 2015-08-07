@@ -36,6 +36,8 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 %       * 4. <type>
 %       * 5. <displayname>
 %       * 6. <pi>
+%         7. <keyword list>
+%         8. <assigned color>
 %
 %         Note:
 %         1. The starred columns (*) will be used in this function.
@@ -235,4 +237,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Fri 24 Jul 2015 11:56:10 AM E
+% Last modified: Wed 05 Aug 2015 04:28:59 PM E

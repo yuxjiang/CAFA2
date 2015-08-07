@@ -55,10 +55,10 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast)
 
   % Y-axis {{{
   % fixed y-axis (in Fmax barplots), for the manuscript.
-  % yaxis_fmax = [0.0, 0.8, 0.1]; % start, stop, step, for Fmax barplots
+  yaxis_fmax = [0.0, 0.8, 0.1]; % start, stop, step, for Fmax barplots
 
   % adaptive y-axis, for the supplementary.
-  yaxis_fmax = [];
+  % yaxis_fmax = [];
 
   % fixed y-axis (in AUC bar/box plots)
   yaxis_auc = [0.2, 1.0, 0.1];
@@ -80,170 +80,170 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast)
   end
   % }}}
 
-  % % top10 precision-recall curve {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'top10_fmax_curve', plot_ext);
-  % prcurves = cafa_collect(config.eval_dir, 'seq_prcurve');
-  % [top10, baseline] = cafa_sel_top_seq_prcurve(10, prcurves, naive, blast, cfg);
-  % cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline);
+  % top10 precision-recall curve {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'top10_fmax_curve', plot_ext);
+  prcurves = cafa_collect(config.eval_dir, 'seq_prcurve');
+  [top10, baseline] = cafa_sel_top_seq_prcurve(10, prcurves, naive, blast, cfg);
+  cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline);
 
-  % % mark alternative points {{{
-  % % rmcurves = cafa_collect(config.eval_dir, 'seq_rmcurve');
-  % % [top10, baseline] = cafa_sel_top_seq_prcurve(10, prcurves, naive, blast, cfg, rmcurves);
-  % % cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline, true);
-  % % }}}
-  % % }}}
-
-  % % all Fmax sheet {{{
-  % saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_fmax_sheet', sheet_ext);
-  % saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_fmax_sheet_disclosed', sheet_ext);
-  % fmaxs = cafa_collect(config.eval_dir, 'seq_fmax');
-  % fmaxs_bst = cafa_collect(config.eval_dir, 'seq_fmax_bst');
-  % cafa_sheet_seq_fmax(saveto_A, fmaxs, fmaxs_bst, cfg, true);
-  % cafa_sheet_seq_fmax(saveto_N, fmaxs, fmaxs_bst, cfg, false);
-  % % }}}
-
-  % % top10 weighted precision-recall curve {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'top10_wfmax_curve', plot_ext);
-  % prcurves = cafa_collect(config.eval_dir, 'seq_wprcurve');
-  % [top10, baseline] = cafa_sel_top_seq_prcurve(10, prcurves, naive, blast, cfg);
-  % cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline);
-  % % }}}
-
-  % % all weighted Fmax sheet {{{
-  % saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_wfmax_sheet', sheet_ext);
-  % saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_wfmax_sheet_disclosed', sheet_ext);
-  % fmaxs = cafa_collect(config.eval_dir, 'seq_wfmax');
-  % fmaxs_bst = cafa_collect(config.eval_dir, 'seq_wfmax_bst');
-  % cafa_sheet_seq_fmax(saveto_A, fmaxs, fmaxs_bst, cfg, true);
-  % cafa_sheet_seq_fmax(saveto_N, fmaxs, fmaxs_bst, cfg, false);
-  % % }}}
-
-  % % top10 RU-MI curve {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'top10_smin_curve', plot_ext);
+  % mark alternative points {{{
   % rmcurves = cafa_collect(config.eval_dir, 'seq_rmcurve');
-  % [top10, baseline] = cafa_sel_top_seq_rmcurve(10, rmcurves, naive, blast, cfg);
-  % cafa_plot_seq_rmcurve(saveto, ont_str, top10, baseline);
-  % % }}}
+  % [top10, baseline] = cafa_sel_top_seq_prcurve(10, prcurves, naive, blast, cfg, rmcurves);
+  % cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline, true);
+  % }}}
+  % }}}
 
-  % % all Smin sheet {{{
-  % saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_smin_sheet', sheet_ext);
-  % saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_smin_sheet_disclosed', sheet_ext);
-  % smins = cafa_collect(config.eval_dir, 'seq_smin');
-  % smins_bst = cafa_collect(config.eval_dir, 'seq_smin_bst');
-  % cafa_sheet_seq_smin(saveto_A, smins, smins_bst, cfg, true);
-  % cafa_sheet_seq_smin(saveto_N, smins, smins_bst, cfg, false);
-  % % }}}
+  % all Fmax sheet {{{
+  saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_fmax_sheet', sheet_ext);
+  saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_fmax_sheet_disclosed', sheet_ext);
+  fmaxs = cafa_collect(config.eval_dir, 'seq_fmax');
+  fmaxs_bst = cafa_collect(config.eval_dir, 'seq_fmax_bst');
+  cafa_sheet_seq_fmax(saveto_A, fmaxs, fmaxs_bst, cfg, true);
+  cafa_sheet_seq_fmax(saveto_N, fmaxs, fmaxs_bst, cfg, false);
+  % }}}
 
-  % % top10 normalized RU-MI curve {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'top10_nsmin_curve', plot_ext);
-  % rmcurves = cafa_collect(config.eval_dir, 'seq_nrmcurve');
-  % [top10, baseline] = cafa_sel_top_seq_rmcurve(10, rmcurves, naive, blast, cfg);
-  % cafa_plot_seq_rmcurve(saveto, ont_str, top10, baseline);
-  % % }}}
+  % top10 weighted precision-recall curve {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'top10_wfmax_curve', plot_ext);
+  prcurves = cafa_collect(config.eval_dir, 'seq_wprcurve');
+  [top10, baseline] = cafa_sel_top_seq_prcurve(10, prcurves, naive, blast, cfg);
+  cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline);
+  % }}}
 
-  % % all normalized Smin sheet {{{
-  % saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_nsmin_sheet', sheet_ext);
-  % saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_nsmin_sheet_disclosed', sheet_ext);
-  % smins = cafa_collect(config.eval_dir, 'seq_nsmin');
-  % smins_bst = cafa_collect(config.eval_dir, 'seq_nsmin_bst');
-  % cafa_sheet_seq_smin(saveto_A, smins, smins_bst, cfg, true);
-  % cafa_sheet_seq_smin(saveto_N, smins, smins_bst, cfg, false);
-  % % }}}
+  % all weighted Fmax sheet {{{
+  saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_wfmax_sheet', sheet_ext);
+  saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_wfmax_sheet_disclosed', sheet_ext);
+  fmaxs = cafa_collect(config.eval_dir, 'seq_wfmax');
+  fmaxs_bst = cafa_collect(config.eval_dir, 'seq_wfmax_bst');
+  cafa_sheet_seq_fmax(saveto_A, fmaxs, fmaxs_bst, cfg, true);
+  cafa_sheet_seq_fmax(saveto_N, fmaxs, fmaxs_bst, cfg, false);
+  % }}}
 
-  % % top10 Fmax bar {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'top10_fmax_bar', plot_ext);
-  % saveto_team = strcat(config.eval_dir, saveto_prefix, 'team.txt');
-  % fmaxs = cafa_collect(config.eval_dir, 'seq_fmax_bst');
-  % [top10, baseline, info] = cafa_sel_top_seq_fmax(10, fmaxs, naive, blast, cfg);
-  % cafa_barplot_seq_fmax(saveto, ont_str, top10, baseline, yaxis_fmax);
-  % save_team_info(saveto_team, info, cfg);
-  % % cafa_barplot_seq_fmax(saveto, strcat(ont_str, ' F0.5'), top10, baseline, yaxis_fmax);
-  % % }}}
+  % top10 RU-MI curve {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'top10_smin_curve', plot_ext);
+  rmcurves = cafa_collect(config.eval_dir, 'seq_rmcurve');
+  [top10, baseline] = cafa_sel_top_seq_rmcurve(10, rmcurves, naive, blast, cfg);
+  cafa_plot_seq_rmcurve(saveto, ont_str, top10, baseline);
+  % }}}
 
-  % % top10 weighted Fmax bar {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'top10_wfmax_bar', plot_ext);
-  % saveto_team = strcat(config.eval_dir, saveto_prefix, 'team.txt');
-  % fmaxs = cafa_collect(config.eval_dir, 'seq_wfmax_bst');
-  % [top10, baseline, info] = cafa_sel_top_seq_fmax(10, fmaxs, naive, blast, cfg);
-  % cafa_barplot_seq_fmax(saveto, ont_str, top10, baseline, yaxis_fmax);
-  % save_team_info(saveto_team, info, cfg);
-  % % }}}
+  % all Smin sheet {{{
+  saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_smin_sheet', sheet_ext);
+  saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_smin_sheet_disclosed', sheet_ext);
+  smins = cafa_collect(config.eval_dir, 'seq_smin');
+  smins_bst = cafa_collect(config.eval_dir, 'seq_smin_bst');
+  cafa_sheet_seq_smin(saveto_A, smins, smins_bst, cfg, true);
+  cafa_sheet_seq_smin(saveto_N, smins, smins_bst, cfg, false);
+  % }}}
 
-  % % top10 Smin bar {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'top10_smin_bar', plot_ext);
-  % saveto_team = strcat(config.eval_dir, saveto_prefix, 'team.txt');
-  % smins = cafa_collect(config.eval_dir, 'seq_smin_bst');
-  % [top10, baseline, info] = cafa_sel_top_seq_smin(10, smins, naive, blast, cfg);
-  % cafa_barplot_seq_smin(saveto, ont_str, top10, baseline);
-  % save_team_info(saveto_team, info, cfg);
-  % % }}}
+  % top10 normalized RU-MI curve {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'top10_nsmin_curve', plot_ext);
+  rmcurves = cafa_collect(config.eval_dir, 'seq_nrmcurve');
+  [top10, baseline] = cafa_sel_top_seq_rmcurve(10, rmcurves, naive, blast, cfg);
+  cafa_plot_seq_rmcurve(saveto, ont_str, top10, baseline);
+  % }}}
 
-  % % top10 normalized Smin bar {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'top10_nsmin_bar', plot_ext);
-  % saveto_team = strcat(config.eval_dir, saveto_prefix, 'team.txt');
-  % smins = cafa_collect(config.eval_dir, 'seq_nsmin_bst');
-  % [top10, baseline, info] = cafa_sel_top_seq_smin(10, smins, naive, blast, cfg);
-  % cafa_barplot_seq_smin(saveto, ont_str, top10, baseline);
-  % save_team_info(saveto_team, info, cfg);
-  % % }}}
+  % all normalized Smin sheet {{{
+  saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_nsmin_sheet', sheet_ext);
+  saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_nsmin_sheet_disclosed', sheet_ext);
+  smins = cafa_collect(config.eval_dir, 'seq_nsmin');
+  smins_bst = cafa_collect(config.eval_dir, 'seq_nsmin_bst');
+  cafa_sheet_seq_smin(saveto_A, smins, smins_bst, cfg, true);
+  cafa_sheet_seq_smin(saveto_N, smins, smins_bst, cfg, false);
+  % }}}
 
-  % % all averaged AUC per term {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'avg_auc_bar', plot_ext);
-  % aucs = cafa_collect(config.eval_dir, 'term_auc');
+  % top10 Fmax bar {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'top10_fmax_bar', plot_ext);
+  saveto_team = strcat(config.eval_dir, saveto_prefix, 'team.txt');
+  fmaxs = cafa_collect(config.eval_dir, 'seq_fmax_bst');
+  [top10, baseline, info] = cafa_sel_top_seq_fmax(10, fmaxs, naive, blast, cfg);
+  cafa_barplot_seq_fmax(saveto, ont_str, top10, baseline, yaxis_fmax);
+  save_team_info(saveto_team, info, cfg);
+  % cafa_barplot_seq_fmax(saveto, strcat(ont_str, ' F0.5'), top10, baseline, yaxis_fmax);
+  % }}}
 
-  % % load term acc <--> term name table
-  % fid = fopen(config.ont_term, 'r');
-  % terms = textscan(fid, '%s%s', 'Delimiter', '\t');
-  % fclose(fid);
+  % top10 weighted Fmax bar {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'top10_wfmax_bar', plot_ext);
+  saveto_team = strcat(config.eval_dir, saveto_prefix, 'team.txt');
+  fmaxs = cafa_collect(config.eval_dir, 'seq_wfmax_bst');
+  [top10, baseline, info] = cafa_sel_top_seq_fmax(10, fmaxs, naive, blast, cfg);
+  cafa_barplot_seq_fmax(saveto, ont_str, top10, baseline, yaxis_fmax);
+  save_team_info(saveto_team, info, cfg);
+  % }}}
 
-  % % note that filtered aucs could be empty, for all terms are fully annotated
-  % % like root, which results in NaN AUC.
-  % aucs = cafa_sel_valid_term_auc(aucs); % keep only participating models
-  % if ~isempty(aucs)
-  %   % [~, index] = ismember(aucs{1}.term, terms{1});
-  %   cafa_plot_term_avgauc(saveto, ont_str, aucs, config.oa.ontology, yaxis_auc);
-  % else
-  %   warning('No model is selected.');
-  % end
-  % % }}}
+  % top10 Smin bar {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'top10_smin_bar', plot_ext);
+  saveto_team = strcat(config.eval_dir, saveto_prefix, 'team.txt');
+  smins = cafa_collect(config.eval_dir, 'seq_smin_bst');
+  [top10, baseline, info] = cafa_sel_top_seq_smin(10, smins, naive, blast, cfg);
+  cafa_barplot_seq_smin(saveto, ont_str, top10, baseline);
+  save_team_info(saveto_team, info, cfg);
+  % }}}
 
-  % % top5 averaged AUC per term {{{
-  % saveto = strcat(config.eval_dir, saveto_prefix, 'top5avg_auc_bar', plot_ext);
-  % fmaxs  = cafa_collect(config.eval_dir, 'seq_fmax_bst');
-  % [~, ~, info] = cafa_sel_top_seq_fmax(5, fmaxs, naive, blast, cfg);
-  % aucs   = cafa_collect(config.eval_dir, 'term_auc');
+  % top10 normalized Smin bar {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'top10_nsmin_bar', plot_ext);
+  saveto_team = strcat(config.eval_dir, saveto_prefix, 'team.txt');
+  smins = cafa_collect(config.eval_dir, 'seq_nsmin_bst');
+  [top10, baseline, info] = cafa_sel_top_seq_smin(10, smins, naive, blast, cfg);
+  cafa_barplot_seq_smin(saveto, ont_str, top10, baseline);
+  save_team_info(saveto_team, info, cfg);
+  % }}}
 
-  % % load term acc <--> term name table
-  % fid = fopen(config.ont_term, 'r');
-  % terms = textscan(fid, '%s%s', 'Delimiter', '\t');
-  % fclose(fid);
+  % all averaged AUC per term {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'avg_auc_bar', plot_ext);
+  aucs = cafa_collect(config.eval_dir, 'term_auc');
 
-  % % select top 5 methods
-  % aucs = cafa_get_term_auc(aucs, info.top_mid);
+  % load term acc <--> term name table
+  fid = fopen(config.ont_term, 'r');
+  terms = textscan(fid, '%s%s', 'Delimiter', '\t');
+  fclose(fid);
 
-  % % note that filtered aucs could be empty, for all terms are fully annotated
-  % % like root, which results in NaN AUC.
-  % aucs = cafa_sel_valid_term_auc(aucs); % keep only participating models
-  % if ~isempty(aucs)
-  %   % [~, index] = ismember(aucs{1}.term, terms{1});
-  %   cafa_plot_term_avgauc(saveto, ont_str, aucs, config.oa.ontology, yaxis_auc);
-  % else
-  %   warning('No model is selected.');
-  % end
-  % % }}}
+  % note that filtered aucs could be empty, for all terms are fully annotated
+  % like root, which results in NaN AUC.
+  aucs = cafa_sel_valid_term_auc(aucs); % keep only participating models
+  if ~isempty(aucs)
+    % [~, index] = ismember(aucs{1}.term, terms{1});
+    cafa_plot_term_avgauc(saveto, ont_str, aucs, config.oa.ontology, yaxis_auc);
+  else
+    warning('No model is selected.');
+  end
+  % }}}
 
-  % % all AUC per term sheet {{{
-  % saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_auc_sheet', sheet_ext);
-  % saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_auc_sheet_disclosed', sheet_ext);
-  % aucs = cafa_collect(config.eval_dir, 'term_auc');
-  % if strcmp(config.ont, 'hpo')
-  %   cafa_sheet_term_auc(saveto_A, aucs, cfg, true, 'BB4H');
-  %   cafa_sheet_term_auc(saveto_N, aucs, cfg, false, 'BB4H');
-  % else % MFO, BPO, CCO
-  %   cafa_sheet_term_auc(saveto_A, aucs, cfg, true, 'BB4S');
-  %   cafa_sheet_term_auc(saveto_N, aucs, cfg, false, 'BB4S');
-  % end
-  % % }}}
+  % top5 averaged AUC per term {{{
+  saveto = strcat(config.eval_dir, saveto_prefix, 'top5avg_auc_bar', plot_ext);
+  fmaxs  = cafa_collect(config.eval_dir, 'seq_fmax_bst');
+  [~, ~, info] = cafa_sel_top_seq_fmax(5, fmaxs, naive, blast, cfg);
+  aucs   = cafa_collect(config.eval_dir, 'term_auc');
+
+  % load term acc <--> term name table
+  fid = fopen(config.ont_term, 'r');
+  terms = textscan(fid, '%s%s', 'Delimiter', '\t');
+  fclose(fid);
+
+  % select top 5 methods
+  aucs = cafa_get_term_auc(aucs, info.top_mid);
+
+  % note that filtered aucs could be empty, for all terms are fully annotated
+  % like root, which results in NaN AUC.
+  aucs = cafa_sel_valid_term_auc(aucs); % keep only participating models
+  if ~isempty(aucs)
+    % [~, index] = ismember(aucs{1}.term, terms{1});
+    cafa_plot_term_avgauc(saveto, ont_str, aucs, config.oa.ontology, yaxis_auc);
+  else
+    warning('No model is selected.');
+  end
+  % }}}
+
+  % all AUC per term sheet {{{
+  saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_auc_sheet', sheet_ext);
+  saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_auc_sheet_disclosed', sheet_ext);
+  aucs = cafa_collect(config.eval_dir, 'term_auc');
+  if strcmp(config.ont, 'hpo')
+    cafa_sheet_term_auc(saveto_A, aucs, cfg, true, 'BB4H');
+    cafa_sheet_term_auc(saveto_N, aucs, cfg, false, 'BB4H');
+  else % MFO, BPO, CCO
+    cafa_sheet_term_auc(saveto_A, aucs, cfg, true, 'BB4S');
+    cafa_sheet_term_auc(saveto_N, aucs, cfg, false, 'BB4S');
+  end
+  % }}}
 
   % top10 averaged AUC bar {{{
   saveto = strcat(config.eval_dir, saveto_prefix, 'top10_auc_bar', plot_ext);
@@ -284,4 +284,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Fri 24 Jul 2015 11:52:37 AM E
+% Last modified: Wed 05 Aug 2015 04:22:26 PM E

@@ -6,13 +6,14 @@ function [term] = pfp_getterm(ont, term_lst)
 %
 %   Returns a term structure array.
 %
-%   Note: 
-%   1. If 'alt_list' is presented in the ontology structure, 'term_lst' will
-%      also be searched against that list, and those corresponding "current IDs"
-%      will be returned, if found.
+% Note
+% ----
+% 1. If 'alt_list' is presented in the ontology structure, 'term_lst' will
+%    also be searched against that list, and those corresponding "current IDs"
+%    will be returned, if found.
 %
-%   2. For IDs that are not found, an empty string will be returned as a
-%      placeholder for both of the term ID and name.
+% 2. For IDs that are not found, an empty string will be returned as a
+%    placeholder for both of the term ID and name.
 %
 % Input
 % -----
@@ -89,4 +90,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 May 2015 10:24:58 AM E
+% Last modified: Fri 07 Aug 2015 01:40:40 PM E

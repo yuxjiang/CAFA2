@@ -129,7 +129,8 @@ function [] = cafa_barplot_seq_smin(pfile, pttl, data, bsl_data)
   % }}}
 
   % draw top 10 models {{{
-  h = figure('Visible', 'off'); hold on;
+  h = figure('Visible', 'off');
+  hold on;
 
   for i = 1 : n
     rpos = [i - bar_w / 2, ylim_l, bar_w, data{i}.smin_mean - ylim_l];
@@ -203,4 +204,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 19 Jul 2015 04:30:58 PM E
+% Last modified: Wed 05 Aug 2015 04:32:43 PM E

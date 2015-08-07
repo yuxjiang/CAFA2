@@ -40,6 +40,8 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 %       * 4. <type>
 %       * 5. <displayname>
 %       * 6. <pi>
+%         7. <keyword list>
+%         8. <assigned color>
 %
 %         Note:
 %         1. The starred columns (*) will be used in this function.
@@ -237,4 +239,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 28 Jul 2015 02:32:36 PM E
+% Last modified: Wed 05 Aug 2015 04:27:46 PM E

@@ -41,6 +41,8 @@ function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, config, anonymous)
 %           * 4. <type>
 %           * 5. <displayname>
 %             6. <pi>
+%             7. <keyword list>
+%             8. <assigned color>
 %
 %             Note:
 %             1. The starred columns (*) will be used in this function.
@@ -86,7 +88,7 @@ function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, config, anonymous)
 
   % check the 4th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name] = cafa_team_read_config(config);
   % }}}
 
   % check the 5th input 'anonymous' {{{
@@ -154,4 +156,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 24 Jul 2015 11:57:35 AM E
+% Last modified: Wed 05 Aug 2015 04:25:31 PM E

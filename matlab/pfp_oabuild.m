@@ -80,21 +80,45 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
 
   % read ontology annotation data file(s) {{{
   plain_oa = oaread(afiles); % See below for definination
-
   matched_term = pfp_getterm(ont, plain_oa.term_id);
-  [found, index] = ismember({matched_term.id}, {ont.term.id});
-  if ~all(found)
-    warning('pfp_oabuild:InvalidID', 'Found [%d] invalid term ID(s).', sum(~found));
-  end
 
-  plain_oa.annot(:, ~found) = [];
+  % unmatched terms will have an empty string, '', as its ID (place-holder),
+  dummy = find(cellfun(@length, {matched_term.id}) == 0);
+  if numel(dummy) > 0
+    warning('pfp_oabuild:InvalidID', 'Found [%d] invalid term ID(s).', numel(dummy));
+
+    % remove those dummy terms.
+    matched_term(dummy) = [];
+
+    % update 'plain_oa' accordingly
+    plain_oa.term_id(dummy)  = [];
+    plain_oa.annot(:, dummy) = [];
+  end
   % read ontology annotation data file(s) }}}
 
   % build oa structure {{{
   oa.object     = plain_oa.obj_id;
   oa.ontology   = ont;
   oa.annotation = logical(sparse(numel(oa.object), numel(ont.term)));
-  oa.annotation(:, index(found)) = plain_oa.annot ~= 0;
+
+  % map matched_term.id to the ontology term list
+  % those terms have been mapped already above, so all should be found
+  [~, index] = ismember({matched_term.id}, {ont.term.id});
+
+  % alternative term IDs will share the same index, in which case, we have to
+  % take the union of annotations on those terms. Thus, the union will be saved
+  % as two exact copy (columns) corresponding to each of the alternative IDs.
+  uindex = unique(index);
+  for i = 1 : numel(uindex)
+    alt_cols = find(index == uindex(i));
+    if numel(alt_cols) > 1
+      % take the union and overwrite
+      col = any(plain_oa.annot(:, alt_cols), 2);
+      plain_oa.annot(:, alt_cols) = repmat(col, 1, numel(alt_cols));
+    end
+  end
+
+  oa.annotation(:, index) = plain_oa.annot ~= 0;
 
   % remove objects with no annotations
   zero_annot = sum(oa.annotation, 2) == 0;
@@ -155,4 +179,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sat 16 May 2015 06:02:28 PM E
+% Last modified: Fri 07 Aug 2015 03:12:33 PM E
