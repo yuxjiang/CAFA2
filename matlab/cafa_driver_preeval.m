@@ -75,6 +75,14 @@ function [] = cafa_driver_preeval()
   % import filtered models and save to config.pred_dir {{{
   if config.do_import
     files = dir(strcat(config.filt_dir, 'M*'));
+
+    % make sure subfolders exist
+    for i = 1 : numel(config.ont)
+      if ~exist(strcat(config.pred_dir, config.ont{i}), 'dir')
+        mkdir(strcat(config.pred_dir, config.ont{i}));
+      end
+    end
+
     for i = 1 : numel(files)
       mid = regexprep(files(i).name, '\..*$', '');
       fprintf('importing model [%s]\n', mid);
@@ -111,6 +119,11 @@ function [] = cafa_driver_preeval()
     ont = config.ont{i};
     pred_dir_ont = strcat(config.pred_dir, ont, '/');
     prev_dir_ont = strcat(config.prev_dir, ont, '/');
+
+    % make sure subfolders exist
+    if ~exist(prev_dir_ont, 'dir')
+      mkdir(prev_dir_ont);
+    end
 
     files = dir(strcat(pred_dir_ont, '*.mat'));
     for i = 1 : numel(files)
@@ -213,4 +226,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:23:54 AM E
+% Last modified: Sun 09 Aug 2015 06:09:14 PM E

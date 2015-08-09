@@ -37,33 +37,34 @@ function [] = cafa_driver_eval(config_info)
   % }}}
 
   % evaluation {{{
-  % create parallel worders
-  p = gcp('nocreate');
-  if isempty(p)
-    parpool(8);
-  end
   n = numel(config.model);
+  if n > 4
+    % parallel evaluation for batch running
+    p = gcp('nocreate');
+    if isempty(p)
+      parpool(8);
+    end
 
-%  % patch: skip regular models, only eval baseline models {{{
-%  isreg = false(1, n);
-%  for i = 1 : n
-%    if strcmp(config.model{i}(1), 'M')
-%      isreg(i) = true;
-%    end
-%  end
-%  config.model(isreg) = [];
-%  n = numel(config.model); % update n
-%  % }}}
+    parfor i = 1 : n
+      % specify info for the model
+      mid       = config.model{i};
+      prev_file = strcat(config.prev_dir, mid, '.mat');
+      pred_file = strcat(config.pred_dir, mid, '.mat');
+      eval_file = strcat(config.eval_dir, mid, '.mat');
 
-  parfor i = 1 : n
-  % for i = 1 : n
-    % specify info for the model
-    mid       = config.model{i};
-    prev_file = strcat(config.prev_dir, mid, '.mat');
-    pred_file = strcat(config.pred_dir, mid, '.mat');
-    eval_file = strcat(config.eval_dir, mid, '.mat');
+      eval_single(config, mid, prev_file, pred_file, eval_file);
+    end
+  else
+    % serial evaluation for small jobs
+    for i = 1 : n
+      % specify info for the model
+      mid       = config.model{i};
+      prev_file = strcat(config.prev_dir, mid, '.mat');
+      pred_file = strcat(config.pred_dir, mid, '.mat');
+      eval_file = strcat(config.eval_dir, mid, '.mat');
 
-    eval_single(config, mid, prev_file, pred_file, eval_file);
+      eval_single(config, mid, prev_file, pred_file, eval_file);
+    end
   end
   % }}}
 return
@@ -188,4 +189,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 02:40:41 PM E
+% Last modified: Sun 09 Aug 2015 05:44:03 PM E

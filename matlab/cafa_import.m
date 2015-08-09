@@ -167,8 +167,7 @@ function [pred, msg] = cafa_import(ifile, ont, header)
   tindex = [];
   score  = [];
 
-  data = textscan(fid, '%s%s%f', bs, ...
-      'Delimiter', '\t ', 'HeaderLines', header_line, 'CommentStyle', 'END');
+  data = textscan(fid, '%s%s%f', bs, 'Delimiter', '\t ', 'HeaderLines', header_line, 'CommentStyle', 'END');
   while ~isempty(data{1})
     % update the object list, without affecting the index of existing object
     uobj = unique(data{1});
@@ -176,7 +175,7 @@ function [pred, msg] = cafa_import(ifile, ont, header)
 
     % find indices
     [~, oid] = ismember(data{1}, pred.object);
-    tid = pfp_gettermidx(ont, data{2});
+    tid = reshape(pfp_gettermidx(ont, data{2}), [], 1); % column vector
 
     found = tid ~= 0;
 
@@ -304,4 +303,4 @@ return % }}}
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 12 Jul 2015 06:02:18 PM E
+% Last modified: Sun 09 Aug 2015 02:54:47 PM E

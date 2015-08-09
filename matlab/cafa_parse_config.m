@@ -42,6 +42,7 @@ function [config] = cafa_parse_config(config_file)
   % }}}
   % }}}
 
+  % read and parse {{{
   metric       = {};
   models       = {};
   models_plus  = {};
@@ -108,6 +109,7 @@ function [config] = cafa_parse_config(config_file)
     tline = fgetl(fid);
   end
   fclose(fid);
+  % }}}
 
   % default beta {{{
   if ~isfield(config, 'beta')
@@ -187,4 +189,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sun 12 Jul 2015 05:23:58 PM E
+% Last modified: Sun 09 Aug 2015 05:08:59 PM E

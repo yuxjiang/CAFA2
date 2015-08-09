@@ -101,8 +101,7 @@ function [cm] = pfp_seqcm(target, pred, oa, varargin)
 
   % check the 3rd input 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 3);
-  if numel(pred.ontology.term) ~= numel(oa.ontology.term) || 
-    ~all(strcmp({pred.ontology.term.id}, {oa.ontology.term.id}))
+  if numel(pred.ontology.term) ~= numel(oa.ontology.term) || ~all(strcmp({pred.ontology.term.id}, {oa.ontology.term.id}))
     error('pfp_seqcm:InputErr', 'Ontology mismatch.');
   end
   % }}}
@@ -197,4 +196,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 14 Jun 2015 04:15:42 PM E
+% Last modified: Sun 09 Aug 2015 04:03:48 PM E
