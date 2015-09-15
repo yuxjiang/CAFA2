@@ -14,7 +14,7 @@ function [ev] = cafa_eval_seq_smin(id, bm, rm, md)
 % Input
 % -----
 % [char]
-% id: A string for model ID. (usually, the internal ID)
+% id: A string for model ID.
 %
 % [char or cell]
 % bm: A benchmark filename or a list of benchmark target IDs.
@@ -49,7 +49,7 @@ function [ev] = cafa_eval_seq_smin(id, bm, rm, md)
 % ev: The S-min structure for each model:
 %
 %     [char]
-%     .id         internal ID, used for naming files.
+%     .id         The model name, used for naming files.
 %
 %     [double]
 %     .smin       scalar, S2-min.
@@ -122,4 +122,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:39:44 AM E
+% Last modified: Tue 15 Sep 2015 01:31:55 PM E

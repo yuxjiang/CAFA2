@@ -32,7 +32,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
 %       * 5. <displayname>
 %       * 6. <pi>
 %         7. <keyword list>
-%         8. <assigned color>
+%       * 8. <assigned color>
 %
 %         Note:
 %         1. The starred columns (*) will be used in this function.
@@ -61,6 +61,12 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
 %       [char]
 %       .tag            tag of the model.
 %
+%       [char]
+%       .pi_name        name of the PI.
+%
+%       [double]
+%       .color          assigned color (1-by-3 RGB tuple).
+%
 % [cell]
 % bsl:  The baseline bars and related information. Each cell has the
 %       same structure as 'sel'.
@@ -68,10 +74,10 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
 % [struct]
 % info: Extra information.
 %       [cell]
-%       .all_mid: internal ID of all participating models.
+%       .all_mid: The name of all participating models.
 %
 %       [cell]
-%       .top_mid: internal ID of top K models (ranked from 1 to K)
+%       .top_mid: The name of top K models (ranked from 1 to K)
 %
 % Dependency
 % ----------
@@ -102,7 +108,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name, ~, clr] = cafa_team_read_config(config);
   % }}}
   % }}}
 
@@ -120,11 +126,11 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
   kept = 0;
 
   % parse model number 1, 2 or 3 from external ID {{{
-  model_num = cell(1, n);
-  for i = 1 : n
-    splitted_id = strsplit(ext_id{i}, '-');
-    model_num{i} = splitted_id{2};
-  end
+  % model_num = cell(1, n);
+  % for i = 1 : n
+  %   splitted_id = strsplit(ext_id{i}, '-');
+  %   model_num{i} = splitted_id{2};
+  % end
   % }}}
 
   for i = 1 : n
@@ -134,13 +140,17 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
       bsl{1}.smin_q05  = prctile(smins{i}.smin_bst, 5);
       bsl{1}.smin_q95  = prctile(smins{i}.smin_bst, 95);
       bsl{1}.coverage  = nanmean(smins{i}.coverage_bst);
-      bsl{1}.tag = sprintf('%s', disp_name{index});
+      bsl{1}.tag       = sprintf('%s', disp_name{index});
+      bsl{1}.pi_name   = pi_name{index};
+      bsl{1}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
     elseif strcmp(smins{i}.id, blast)
       bsl{2}.smin_mean = nanmean(smins{i}.smin_bst);
       bsl{2}.smin_q05  = prctile(smins{i}.smin_bst, 5);
       bsl{2}.smin_q95  = prctile(smins{i}.smin_bst, 95);
       bsl{2}.coverage  = nanmean(smins{i}.coverage_bst);
-      bsl{2}.tag = sprintf('%s', disp_name{index});
+      bsl{2}.tag       = sprintf('%s', disp_name{index});
+      bsl{2}.pi_name   = pi_name{index};
+      bsl{2}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
     elseif strcmp(team_type(index), 'q') % qualified teams
       % filtering {{{
       % skip models with 0 coverage
@@ -170,8 +180,10 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
       qld{kept}.coverage  = nanmean(smins{i}.coverage_bst);
       avg_smins(kept)     = avg_smin;
       qld{kept}.disp_name = disp_name{index};
-      qld{kept}.tag       = sprintf('%s-%s', disp_name{index}, model_num{index});
+      % qld{kept}.tag       = sprintf('%s-%s', disp_name{index}, model_num{index});
+      qld{kept}.tag       = sprintf('%s', disp_name{index});
       qld{kept}.pi_name   = pi_name{index};
+      qld{kept}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
       % }}}
     else
       % do nothing
@@ -225,4 +237,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 05 Aug 2015 04:29:17 PM E
+% Last modified: Tue 15 Sep 2015 01:46:07 PM E

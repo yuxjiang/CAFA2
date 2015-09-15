@@ -18,7 +18,7 @@ function [aucs] = cafa_get_term_auc(aucs, mids)
 %           See cafa_collect.m
 %
 % [cell]
-% mids:     1-by-5 method ID, (internal ID)
+% mids:     1-by-k method name.
 %
 % Output
 % ------
@@ -41,7 +41,7 @@ function [aucs] = cafa_get_term_auc(aucs, mids)
   % }}}
 
   % check the 2nd input 'mids' {{{
-  validateattributes(mids, {'cell'}, {'numel', 5}, '', 'mids', 2);
+  validateattributes(mids, {'cell'}, {'nonempty'}, '', 'mids', 2);
   % }}}
   % }}}
 
@@ -62,4 +62,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sun 19 Jul 2015 03:48:58 PM E
+% Last modified: Tue 15 Sep 2015 01:44:43 PM E

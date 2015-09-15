@@ -27,10 +27,10 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 %           See cafa_eval_seq_prcurve.m
 %
 % [char]
-% naive:    the internalID of the naive baseline.
+% naive:    The model name of the naive baseline.
 %
 % [char]
-% blast:    the internalID of the blast baseline.
+% blast:    The model name of the blast baseline.
 %
 % [char]
 % config:   The team info file which should have the following columns:
@@ -42,7 +42,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 %         * 5. <displayname>
 %         * 6. <pi>
 %           7. <keyword list>
-%           8. <assigned color>
+%         * 8. <assigned color>
 %
 %           Note:
 %           1. The starred columns (*) will be used in this function.
@@ -78,6 +78,13 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 %
 %       [char]
 %       .tag        for the legend of the plot.
+%
+%       [char]
+%       .pi_name    name of the PI.
+%
+%       [double]
+%       .color      assigned color (1-by-3 RGB tuple).
+%       
 %
 % [cell]
 % bsl:  The baseline curves and related information. Each cell has the same
@@ -119,7 +126,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name, ~, clr] = cafa_team_read_config(config);
   % }}}
 
   % check the 6th input 'rmcurves' {{{
@@ -145,11 +152,11 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
   kept = 0;
 
   % parse model number 1, 2 or 3 from external ID {{{
-  model_num = cell(1, n);
-  for i = 1 : n
-      splitted_id = strsplit(ext_id{i}, '-');
-      model_num{i} = splitted_id{2};
-  end
+  % model_num = cell(1, n);
+  % for i = 1 : n
+  %     splitted_id = strsplit(ext_id{i}, '-');
+  %     model_num{i} = splitted_id{2};
+  % end
   % }}}
 
   for i = 1 : n
@@ -165,7 +172,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
     prcurves{i} = remove_tau0_point(prcurves{i});
 
     if strcmp(prcurves{i}.id, naive)
-      bsl{1}.curve = prcurves{i}.curve;
+      bsl{1}.curve     = prcurves{i}.curve;
       [fmax, pt, ~]    = pfp_fmaxc(prcurves{i}.curve, prcurves{i}.tau);
       bsl{1}.opt_point = pt;
 
@@ -173,9 +180,11 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
         bsl{1}.alt_point = find_alt_point(prcurves{i}, rmcurves{i});
       end
 
-      bsl{1}.tag = sprintf('%s (F=%.2f,C=%.2f)', disp_name{index}, fmax, prcurves{i}.coverage);
+      bsl{1}.tag     = sprintf('%s (F=%.2f,C=%.2f)', disp_name{index}, fmax, prcurves{i}.coverage);
+      bsl{1}.pi_name = pi_name{index};
+      bsl{1}.color   = (hex2dec(reshape(clr{index}, 3, 2))/255)';
     elseif strcmp(prcurves{i}.id, blast)
-      bsl{2}.curve = prcurves{i}.curve;
+      bsl{2}.curve     = prcurves{i}.curve;
       [fmax, pt, ~]    = pfp_fmaxc(prcurves{i}.curve, prcurves{i}.tau);
       bsl{2}.opt_point = pt;
 
@@ -183,7 +192,9 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
         bsl{2}.alt_point = find_alt_point(prcurves{i}, rmcurves{i});
       end
 
-      bsl{2}.tag = sprintf('%s (F=%.2f,C=%.2f)', disp_name{index}, fmax, prcurves{i}.coverage);
+      bsl{2}.tag     = sprintf('%s (F=%.2f,C=%.2f)', disp_name{index}, fmax, prcurves{i}.coverage);
+      bsl{2}.pi_name = pi_name{index};
+      bsl{2}.color   = (hex2dec(reshape(clr{index}, 3, 2))/255)';
     elseif strcmp(team_type(index), 'q') % qualified teams
       % filtering {{{
       % skip models with 0 coverage
@@ -206,8 +217,8 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 
       % collecting {{{
       kept = kept + 1;
-      qld{kept}.curve = prcurves{i}.curve;
-      fmaxs(kept) = fmax;
+      qld{kept}.curve     = prcurves{i}.curve;
+      fmaxs(kept)         = fmax;
       qld{kept}.opt_point = pt;
 
       if do_alt
@@ -215,8 +226,10 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
       end
 
       qld{kept}.disp_name = disp_name{index};
-      qld{kept}.tag       = sprintf('%s-%s (F=%.2f,C=%.2f)', disp_name{index}, model_num{index}, fmax, prcurves{i}.coverage);
+      % qld{kept}.tag       = sprintf('%s-%s (F=%.2f,C=%.2f)', disp_name{index}, model_num{index}, fmax, prcurves{i}.coverage);
+      qld{kept}.tag       = sprintf('%s (F=%.2f,C=%.2f)', disp_name{index}, fmax, prcurves{i}.coverage);
       qld{kept}.pi_name   = pi_name{index};
+      qld{kept}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
       % }}}
     else
       % nop: ignore unmatched baselines and disqualified models
@@ -297,4 +310,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 05 Aug 2015 04:28:25 PM E
+% Last modified: Tue 15 Sep 2015 01:45:35 PM E

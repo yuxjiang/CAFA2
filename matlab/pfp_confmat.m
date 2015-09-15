@@ -59,6 +59,7 @@ function [cm, tau] = pfp_confmat(pred, ref, tau)
   % }}}
   % }}}
 
+  % compute confusion matrices at each tau {{{
   cm = struct('TN', cell(1, k), 'FP', cell(1, k), 'FN', cell(1, k), 'TP', cell(1, k));
 
   pos = ref;
@@ -73,10 +74,11 @@ function [cm, tau] = pfp_confmat(pred, ref, tau)
     cm(i).TP = sum(P & pos);
     cm(i).FN = npos - cm(i).TP;
   end
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 14 Jun 2015 04:26:19 PM E
+% Last modified: Tue 15 Sep 2015 11:41:29 AM E

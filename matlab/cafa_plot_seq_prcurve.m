@@ -180,9 +180,11 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
   % default position by MATLAB: [0.1300 0.1100 0.7750 0.8150]
   set(gca, 'Position', [0.10 0.10 0.50 0.80]);
 
-  xlim([0, 1]); ylim([0, 1]);
+  xlim([0, 1]);
+  ylim([0, 1]);
 
-  xlabel('Recall'); ylabel('Precision');
+  xlabel('Recall');
+  ylabel('Precision');
   title(pttl);
 
   % plot prcurves of selected models {{{
@@ -224,4 +226,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 19 Jul 2015 04:31:42 PM E
+% Last modified: Tue 01 Sep 2015 04:04:53 PM E

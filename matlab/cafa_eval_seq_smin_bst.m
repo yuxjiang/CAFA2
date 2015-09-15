@@ -10,7 +10,7 @@ function [ev] = cafa_eval_seq_smin_bst(id, bm, rm, ev_mode, BI)
 % Input
 % -----
 % [char]
-% id:       A string for model ID. (usually, the internal ID)
+% id:       A string for model ID.
 %
 % [char or cell]
 % bm:       A benchmark filename or a list of benchmark target IDs.
@@ -53,7 +53,7 @@ function [ev] = cafa_eval_seq_smin_bst(id, bm, rm, ev_mode, BI)
 % ev: The RU-MI curve structure for each model:
 %
 %     [char]
-%     .id             internal ID, used for naming files.
+%     .id             The model name, used for naming files.
 %
 %     [double]
 %     .smin_bst       B-by-1, bootstrapped S-min
@@ -154,4 +154,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 12 Jul 2015 04:54:38 PM E
+% Last modified: Tue 15 Sep 2015 01:31:36 PM E

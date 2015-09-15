@@ -13,7 +13,7 @@ function [ev] = cafa_eval_seq_fmax(id, bm, pr, md, beta)
 % Input
 % -----
 % [char]
-% id:   A string for model ID. (usually, the internal ID)
+% id:   A string for model ID.
 %
 % [char or cell]
 % bm:   A benchmark filename or a list of benchmark target IDs.
@@ -53,7 +53,7 @@ function [ev] = cafa_eval_seq_fmax(id, bm, pr, md, beta)
 % ev: The Fmax structure for each model:
 %
 %     [char]
-%     .id         internal ID, used for naming files.
+%     .id         The model name, used for naming files.
 %
 %     [double]
 %     .fmax       scalar, Fmax.
@@ -137,4 +137,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 10 Jul 2015 01:51:05 PM E
+% Last modified: Tue 15 Sep 2015 01:31:22 PM E

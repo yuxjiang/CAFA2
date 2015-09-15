@@ -9,22 +9,22 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 % Input
 % -----
 % [double]
-% K:        The number of teams/methods to pick.
+% K:      The number of teams/methods to pick.
 %
 % [cell]
-% aucs:     The collected 'term_auc' structures, which has the following fields
+% aucs:   The collected 'term_auc' structures, which has the following fields
 %
-%           [char]    .id     (Internel) model of the model
-%           [cell]    .term   1-by-m, term ID list
-%           [double]  .auc    1-by-m, AUC per term
+%         [char]    .id     (Internel) model of the model
+%         [cell]    .term   1-by-m, term ID list
+%         [double]  .auc    1-by-m, AUC per term
 %
-%           See cafa_collect.m
-%
-% [char]
-% naive:  the internalID of the naive baseline.
+%         See cafa_collect.m
 %
 % [char]
-% blast:  the internalID of the blast baseline.
+% naive:  The model name of the naive baseline.
+%
+% [char]
+% blast:  the model name of the blast baseline.
 %
 % [char]
 % config: The file having team information. The file should have the
@@ -37,7 +37,7 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 %       * 5. <displayname>
 %       * 6. <pi>
 %         7. <keyword list>
-%         8. <assigned color>
+%       * 8. <assigned color>
 %
 %         Note:
 %         1. The starred columns (*) will be used in this function.
@@ -49,37 +49,43 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 % Output
 % ------
 % [cell]
-% sel:    The bars and related information ready for plotting:
+% sel:  The bars and related information ready for plotting:
 %
-%         [double]
-%         .auc_mean   scalar, "bar height".
+%       [double]
+%       .auc_mean   scalar, "bar height".
 %
-%         [double]
-%         .auc_q05    scalar, 5% quantiles.
+%       [double]
+%       .auc_q05    scalar, 5% quantiles.
 %
-%         [double]
-%         .auc_q95    scalar, 95% quantiles.
+%       [double]
+%       .auc_q95    scalar, 95% quantiles.
 %
-%         [double]
-%         .auc_std    scalar, standard deviation
+%       [double]
+%       .auc_std    scalar, standard deviation
 %
-%         [double]
-%         .auc_ste    scalar, standard error (std / sqrt(N))
+%       [double]
+%       .auc_ste    scalar, standard error (std / sqrt(N))
 %
-%         [char]
-%         .tag        tag of the model.
+%       [char]
+%       .tag        tag of the model.
+%
+%       [char]
+%       .pi_name    name of the PI.
+%
+%       [double]
+%       .color      assigned color (1-by-3 RGB tuple).
 %
 % [cell]
-% bsl:    The baseline bars and related information. Each cell has the same
-%         structure as 'sel'.
+% bsl:  The baseline bars and related information. Each cell has the same
+%       structure as 'sel'.
 %
 % [struct]
-% info:   Extra information.
-%         [cell]
-%         .all_mid:   internal ID of all participating models.
+% info: Extra information.
+%       [cell]
+%       .all_mid: model name of all participating models.
 %
-%         [cell]
-%         .top_mid: internal ID of top K models (ranked from 1 to K)
+%       [cell]
+%       .top_mid: model name of top K models (ranked from 1 to K)
 %
 % Dependency
 % ----------
@@ -110,7 +116,7 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name, ~, clr] = cafa_team_read_config(config);
   % }}}
   % }}}
 
@@ -128,11 +134,11 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
   kept = 0;
 
   % parse model number 1, 2 or 3 from external ID {{{
-  model_num = cell(1, n);
-  for i = 1 : n
-    splitted_id = strsplit(ext_id{i}, '-');
-    model_num{i} = splitted_id{2};
-  end
+  % model_num = cell(1, n);
+  % for i = 1 : n
+  %   splitted_id = strsplit(ext_id{i}, '-');
+  %   model_num{i} = splitted_id{2};
+  % end
   % }}}
 
   for i = 1 : n
@@ -145,6 +151,8 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
       bsl{1}.auc_std  = nanstd(aucs{i}.auc);
       bsl{1}.auc_ste  = bsl{1}.auc_std / sqrt(sum(~isnan(aucs{i}.auc)));
       bsl{1}.tag      = sprintf('%s', disp_name{index});
+      bsl{1}.pi_name  = pi_name{index};
+      bsl{1}.color    = (hex2dec(reshape(clr{index}, 3, 2))/255)';
     elseif strcmp(aucs{i}.id, blast)
       bsl{2}.auc_mean = nanmean(aucs{i}.auc);
       bsl{2}.auc_q05  = prctile(aucs{i}.auc, 5);
@@ -152,6 +160,8 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
       bsl{2}.auc_std  = nanstd(aucs{i}.auc);
       bsl{2}.auc_ste  = bsl{2}.auc_std / sqrt(sum(~isnan(aucs{i}.auc)));
       bsl{2}.tag      = sprintf('%s', disp_name{index});
+      bsl{2}.pi_name  = pi_name{index};
+      bsl{2}.color    = (hex2dec(reshape(clr{index}, 3, 2))/255)';
     elseif strcmp(team_type(index), 'q') % qualified models
       % filtering {{{
       avg_auc = nanmean(aucs{i}.auc);
@@ -178,8 +188,10 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 
       avg_aucs(kept)      = avg_auc;
       qld{kept}.disp_name = disp_name{index};
-      qld{kept}.tag       = sprintf('%s-%s', disp_name{index}, model_num{index});
+      % qld{kept}.tag       = sprintf('%s-%s', disp_name{index}, model_num{index});
+      qld{kept}.tag       = sprintf('%s', disp_name{index});
       qld{kept}.pi_name   = pi_name{index};
+      qld{kept}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
       % }}}
     else
       % nop
@@ -237,4 +249,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Wed 05 Aug 2015 04:28:59 PM E
+% Last modified: Tue 15 Sep 2015 01:46:41 PM E

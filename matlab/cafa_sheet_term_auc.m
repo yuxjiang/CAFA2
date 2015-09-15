@@ -49,7 +49,7 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
 %
 % (optional)
 % [char]
-% sort_mid:   Model internalID, Sort terms according the performance of it.
+% sort_mid:   Model name, Sort terms according the performance of it.
 %             default: 'BB4S'
 %
 % Output
@@ -180,4 +180,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 05 Aug 2015 04:29:35 PM E
+% Last modified: Tue 15 Sep 2015 01:46:59 PM E

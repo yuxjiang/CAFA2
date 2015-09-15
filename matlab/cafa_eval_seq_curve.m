@@ -21,7 +21,7 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
 % input
 % -----
 % [char]
-% id:       a string for model id. (usually, the internal id)
+% id:       a string for model id.
 %
 % [char or cell]
 % bm:       a benchmark filename or a list of benchmark target ids.
@@ -57,7 +57,7 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
 % ev: The returning structure for each model:
 %
 %     [char]
-%     .id         internal ID, used for naming files.
+%     .id         The model name, used for naming files.
 %
 %     [double]
 %     .curve      k-by-2, points on that curve.
@@ -151,4 +151,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 10 Jul 2015 01:48:46 PM E
+% Last modified: Tue 15 Sep 2015 01:30:35 PM E

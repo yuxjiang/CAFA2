@@ -158,7 +158,8 @@ function [pred, msg] = cafa_import(ifile, ont, header)
     fseek(fid, 0, 'bof');
   else
     header_line = 0;
-  end % }}}
+  end
+  % }}}
 
   % Read prediction data {{{
   bs = 1e6; % block size
@@ -303,4 +304,4 @@ return % }}}
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 09 Aug 2015 02:54:47 PM E
+% Last modified: Tue 15 Sep 2015 11:26:38 AM E

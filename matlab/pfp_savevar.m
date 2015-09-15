@@ -63,7 +63,7 @@ function [] = pfp_savevar(filename, var, varname)
     % if the file already exists, append the variable.
     save(filename, varname, '-append');
   else
-    save(filename, varname);
+    save(filename, varname, '-v7.3');
   end
   % }}}
 return
@@ -72,4 +72,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Fri 24 Jul 2015 04:42:28 PM E
+% Last modified: Tue 08 Sep 2015 01:33:20 PM E

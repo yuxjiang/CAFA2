@@ -16,21 +16,21 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
 % -----
 % [char]
 % pfile:    The filename of the plot.
-%           Note that the file extension must be one of 'eps' or 'png'
+%           Note that the file extension must be either 'eps' or 'png'.
 %           default: 'png'
 %
 % [char]
 % pttl:     The plot title.
 %
 % [cell]
-% data:     The data containing curves and other information to plot
+% data:     The data containing curves and other information to plot.
 %           Each cell has the thing needed for plotting a single curve.
 %
 %           [double]
 %           .curve      n x 2, points on the curve
 %
 %           [double]
-%           .opt_point  1 x 2, the optimal point (corresp. to S-min)
+%           .opt_point  1 x 2, the optimal point (corresp. to Smin)
 %
 %           [char]
 %           .tag        for the legend of the plot
@@ -51,7 +51,7 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
 %[>]embed_canvas.m
 % }}}
 
-  % check inputs and pre-calculation {{{
+  % check inputs {{{
   if nargin ~= 4
     error('cafa_plot_seq_rmcurve:InputCount', 'Expected 4 inputs.');
   end
@@ -151,7 +151,8 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
   % default position by MATLAB: [0.1300 0.1100 0.7750 0.8150]
   set(gca, 'Position', [0.10 0.10 0.50 0.80]);
 
-  xlabel('Remaining uncertainty'); ylabel('Misinformation');
+  xlabel('Remaining uncertainty');
+  ylabel('Misinformation');
   title(pttl);
 
   % plot rmcurves of selected models {{{
@@ -160,7 +161,7 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
   end
   % }}}
 
-  % plot optimal S-min on the curves
+  % plot optimal Smin on the curves
   for i = 1 : N
     plot(opt{i}(1), opt{i}(2), '.', 'Color', clr(i, :), 'MarkerSize', 20);
     plot(opt{i}(1), opt{i}(2), 'o', 'Color', clr(i, :), 'MarkerSize', 10);
@@ -195,7 +196,7 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
   [X, Y] = meshgrid(x, y);
   Z = sqrt(X .^ 2 + Y .^ 2);
 
-  legend(tag, 'Fontsize', 7, 'Interpreter', 'none', 'Position', [0.65, 0.25, 0.30, 0.50]);
+  legend(tag, 'Fontsize', 10, 'Interpreter', 'none', 'Position', [0.65, 0.25, 0.30, 0.50]);
   contour(X, Y, Z, 'ShowText', 'on', 'LineColor', [1, 1, 1] * 0.5, 'LineStyle', ':', 'LabelSpacing', 288);
   % }}}
 
@@ -209,4 +210,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 19 Jul 2015 04:31:48 PM E
+% Last modified: Tue 01 Sep 2015 04:05:58 PM E

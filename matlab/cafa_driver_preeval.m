@@ -38,10 +38,14 @@ function [] = cafa_driver_preeval()
   % config.ont      = {'mfo', 'bpo'};
 
   % cafa 2 ----
-  config.cons_dir = '~/cv3/consolidated/';
-  config.prev_dir = '~/cv3/seq-centric/';
-  config.pred_dir = '~/cv3/prediction/';
-  config.filt_dir = '~/cv3/filtered/';
+  % config.cons_dir = '~/cv3/consolidated/'; % (input) where are the raw % plain-text predictions
+  % config.prev_dir = '~/cv3/seq-centric/';  % where the sequence-centric pre-evaluation results go
+  % config.pred_dir = '~/cv3/prediction/';   % where the prediction structures go
+  % config.filt_dir = '~/cv3/filtered/';     % where the filtered plain-text % predictions go
+  config.cons_dir = '~/Downloads/asa/cafa1/';
+  config.prev_dir = '~/Downloads/asa/seq-centric/';
+  config.pred_dir = '~/Downloads/asa/prediction/';
+  config.filt_dir = '~/Downloads/asa/filtered/';
   config.bm_all   = pfp_loaditem('~/cv3/benchmark/lists/all.txt', 'char');
   config.bm_mfo   = pfp_loaditem('~/cv3/benchmark/lists/mfo_all_typex.txt', 'char');
   config.bm_cco   = pfp_loaditem('~/cv3/benchmark/lists/cco_all_typex.txt', 'char');
@@ -55,8 +59,8 @@ function [] = cafa_driver_preeval()
   % }}}
 
   % set up toggles {{{
-  config.do_filter = false; % to keep only benchmark sequences
-  config.do_import = false; % make 'pred' from text files for each ontology.
+  config.do_filter = true; % to keep only benchmark sequences
+  config.do_import = true; % make 'pred' from text files for each ontology.
   % }}}
 
   % filter regular models {{{
@@ -226,4 +230,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 09 Aug 2015 06:09:14 PM E
+% Last modified: Fri 14 Aug 2015 04:05:56 PM E

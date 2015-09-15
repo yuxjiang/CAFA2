@@ -10,7 +10,7 @@ function [ev] = cafa_eval_seq_fmax_bst(id, bm, pr, ev_mode, BI, beta)
 % -----
 % (required)
 % [char]
-% id:       A string for model ID. (usually, the internal ID)
+% id:       A string for model ID.
 %
 % [char or cell]
 % bm:       A benchmark filename or a list of benchmark target IDs.
@@ -57,7 +57,7 @@ function [ev] = cafa_eval_seq_fmax_bst(id, bm, pr, ev_mode, BI, beta)
 % ev: The precision-recall curve structure for each model:
 %
 %     [char]
-%     .id             internal ID, used for naming files.
+%     .id             The model name, used for naming files.
 %
 %     [double]
 %     .fmax_bst       B-by-1, bootstrapped F1-max.
@@ -166,4 +166,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:38:35 AM E
+% Last modified: Tue 15 Sep 2015 01:31:11 PM E

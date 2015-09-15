@@ -20,7 +20,7 @@ function [result] = cafa_duel_seq_fmax(group1, group2)
 % group1:   A 1-by-n cell of 'seq_fmax_bst' result structures.
 %
 %           [char]
-%           .id           internal ID, used for naming files.
+%           .id           The model name, used for naming files.
 %
 %           [double]
 %           .fmax_bst     B-by-1, bootstrapped F1-max.
@@ -121,4 +121,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 10:49:41 AM E
+% Last modified: Tue 15 Sep 2015 01:29:56 PM E

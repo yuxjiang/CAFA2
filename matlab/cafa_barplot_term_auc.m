@@ -18,7 +18,7 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 % pttl:     The plot title.
 %
 % [cell]
-% data:     The data containing Fmaxs and other information to plot
+% data:     The data containing AUCs and other information to plot
 %           Each cell has the thing needed for plotting a single curve.
 %
 %           [double]
@@ -47,7 +47,7 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 %
 % (optional)
 % [double]
-% yaxis:    1 x 3 double, the Fmax limits (y-axis), [start, stop, step]
+% yaxis:    1 x 3 double, the AUC limits (y-axis), [start, stop, step]
 %           if yaxis is empty or not given, it will be decided adaptively.
 %           default: []
 %
@@ -119,12 +119,12 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
     bar_h(i) = data{i}.auc_mean;
 
     % standard error
-    % err_l(i) = data{i}.auc_mean - data{i}.auc_ste;
-    % err_u(i) = data{i}.auc_mean + data{i}.auc_ste;
+    err_l(i) = data{i}.auc_mean - data{i}.auc_ste;
+    err_u(i) = data{i}.auc_mean + data{i}.auc_ste;
 
     % standard deviation
-    err_l(i) = data{i}.auc_mean - data{i}.auc_std;
-    err_u(i) = data{i}.auc_mean + data{i}.auc_std;
+    % err_l(i) = data{i}.auc_mean - data{i}.auc_std;
+    % err_u(i) = data{i}.auc_mean + data{i}.auc_std;
   end
 
   bsl_bar_h = zeros(n, 1);
@@ -134,12 +134,12 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
     bsl_bar_h(i) = bsl_data{i}.auc_mean;
 
     % standard error
-    % bsl_err_l(i) = bsl_data{i}.auc_mean - bsl_data{i}.auc_ste;
-    % bsl_err_u(i) = bsl_data{i}.auc_mean + bsl_data{i}.auc_ste;
+    bsl_err_l(i) = bsl_data{i}.auc_mean - bsl_data{i}.auc_ste;
+    bsl_err_u(i) = bsl_data{i}.auc_mean + bsl_data{i}.auc_ste;
 
     % standard deviation
-    bsl_err_l(i) = bsl_data{i}.auc_mean - bsl_data{i}.auc_std;
-    bsl_err_u(i) = bsl_data{i}.auc_mean + bsl_data{i}.auc_std;
+    % bsl_err_l(i) = bsl_data{i}.auc_mean - bsl_data{i}.auc_std;
+    % bsl_err_u(i) = bsl_data{i}.auc_mean + bsl_data{i}.auc_std;
   end
   % }}}
 
@@ -230,7 +230,7 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 
   % tuning {{{
   title(pttl, 'FontSize', base_fs + 2);
-  ylabel('{\itF}_{max}');
+  ylabel('Averaged AUC');
 
   ax = gca;
   ax.XLim               = [0, (N + m + 1)];
@@ -257,4 +257,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 20 Jul 2015 01:07:38 PM E
+% Last modified: Mon 31 Aug 2015 09:18:34 AM E

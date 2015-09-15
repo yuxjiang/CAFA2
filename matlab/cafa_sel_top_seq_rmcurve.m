@@ -21,10 +21,10 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 %           See cafa_eval_seq_rmcurve.m
 %
 % [char]
-% naive:    the internalID of the naive baseline.
+% naive:    The model name of the naive baseline.
 %
 % [char]
-% blast:    the internalID of the blast baseline.
+% blast:    The model name of the blast baseline.
 %
 % [char]
 % config:   The file having team information. The file should have the
@@ -37,7 +37,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 %         * 5. <displayname>
 %         * 6. <pi>
 %           7. <keyword list>
-%           8. <assigned color>
+%         * 8. <assigned color>
 %
 %           Note:
 %           1. The starred columns (*) will be used in this function.
@@ -59,6 +59,12 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 %
 %       [char]
 %       .tag        for the legend of the plot.
+%
+%       [char]
+%       .pi_name    name of the PI.
+%
+%       [double]
+%       .color      assigned color (1-by-3 RGB tuple).
 %
 % [cell]
 % bsl:  The baseline curves and related information. Each cell has the
@@ -96,7 +102,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name, pi_name, ~, clr] = cafa_team_read_config(config);
   % }}}
   % }}}
 
@@ -113,11 +119,11 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
   kept = 0;
 
   % parse model number 1, 2 or 3 from external ID {{{
-  model_num = cell(1, n);
-  for i = 1 : n
-      splitted_id = strsplit(ext_id{i}, '-');
-      model_num{i} = splitted_id{2};
-  end
+  % model_num = cell(1, n);
+  % for i = 1 : n
+  %     splitted_id = strsplit(ext_id{i}, '-');
+  %     model_num{i} = splitted_id{2};
+  % end
   % }}}
 
   for i = 1 : n
@@ -127,15 +133,19 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
     rmcurves{i} = remove_tau0_point(rmcurves{i});
 
     if strcmp(rmcurves{i}.id, naive)
-      bsl{1}.curve = rmcurves{i}.curve;
-      [smin, pt, ~] = pfp_sminc(rmcurves{i}.curve, rmcurves{i}.tau);
+      bsl{1}.curve     = rmcurves{i}.curve;
+      [smin, pt, ~]    = pfp_sminc(rmcurves{i}.curve, rmcurves{i}.tau);
       bsl{1}.opt_point = pt;
-      bsl{1}.tag = sprintf('%s (S=%.2f,C=%.2f)', disp_name{index}, smin, rmcurves{i}.coverage);
+      bsl{1}.tag       = sprintf('%s (S=%.2f,C=%.2f)', disp_name{index}, smin, rmcurves{i}.coverage);
+      bsl{1}.pi_name   = pi_name{index};
+      bsl{1}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
     elseif strcmp(rmcurves{i}.id, blast)
-      bsl{2}.curve = rmcurves{i}.curve;
-      [smin, pt, ~] = pfp_sminc(rmcurves{i}.curve, rmcurves{i}.tau);
+      bsl{2}.curve     = rmcurves{i}.curve;
+      [smin, pt, ~]    = pfp_sminc(rmcurves{i}.curve, rmcurves{i}.tau);
       bsl{2}.opt_point = pt;
-      bsl{2}.tag = sprintf('%s (S=%.2f,C=%.2f)', disp_name{index}, smin, rmcurves{i}.coverage);
+      bsl{2}.tag       = sprintf('%s (S=%.2f,C=%.2f)', disp_name{index}, smin, rmcurves{i}.coverage);
+      bsl{2}.pi_name   = pi_name{index};
+      bsl{2}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
     elseif strcmp(team_type(index), 'q') % qualified teams
       % filtering {{{
       % skip models with 0 coverage
@@ -162,8 +172,10 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
       smins(kept)         = smin;
       qld{kept}.opt_point = pt;
       qld{kept}.disp_name = disp_name{index};
-      qld{kept}.tag       = sprintf('%s-%s (S=%.2f,C=%.2f)', disp_name{index}, model_num{index}, smin, rmcurves{i}.coverage);
+      % qld{kept}.tag       = sprintf('%s-%s (S=%.2f,C=%.2f)', disp_name{index}, model_num{index}, smin, rmcurves{i}.coverage);
+      qld{kept}.tag       = sprintf('%s (S=%.2f,C=%.2f)', disp_name{index}, smin, rmcurves{i}.coverage);
       qld{kept}.pi_name   = pi_name{index};
+      qld{kept}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
       % }}}
     else
       % nop: ignore unmatched baselines and disqualified models
@@ -235,4 +247,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 05 Aug 2015 04:28:32 PM E
+% Last modified: Tue 15 Sep 2015 01:45:50 PM E

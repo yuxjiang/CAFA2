@@ -9,7 +9,7 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 % Input
 % -----
 % [char]
-% id:       A string for model ID. (usually, the internal ID)
+% id:       A string for model ID.
 %
 % [char or cell]
 % bm:       A benchmark filename or a list of benchmark target IDs.
@@ -43,10 +43,10 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 % ev: The AUC results per term:
 %
 %     [char]
-%     .id     internal ID, used for naming files.
+%     .id     The model name, used for naming files.
 %
 %     [cell of char]
-%     .term   1-by-m, term names.
+%     .term   1-by-m, term names. ('m': the number of terms)
 %
 %     [double]
 %     .auc    1-by-m, AUC estimates.
@@ -72,7 +72,7 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
   % check the 2nd input 'bm' {{{
   validateattributes(bm, {'cell', 'char'}, {'nonempty'}, '', 'bm', 2);
   if ischar(bm) % load the benchmark if a file name is given
-      bm = pfp_loaditem(bm, 'char');
+    bm = pfp_loaditem(bm, 'char');
   end
   % }}}
 
@@ -82,15 +82,13 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 
   % check the 4th input 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 4);
-  if numel(pred.ontology.term) ~= numel(oa.ontology.term) || ...
-      ~all(strcmp({pred.ontology.term.id}, {oa.ontology.term.id}))
-      error('cafa_eval_term_auc:InputErr', 'Ontology mismatch.');
+  if numel(pred.ontology.term) ~= numel(oa.ontology.term) || ~all(strcmp({pred.ontology.term.id}, {oa.ontology.term.id}))
+    error('cafa_eval_term_auc:InputErr', 'Ontology mismatch.');
   end
   % }}}
 
   % check the 5th input 'ev_mode' {{{
-  ev_mode = validatestring(ev_mode, {'1', 'full', '2', 'partial'}, ...
-      '', 'ev_mode', 5);
+  ev_mode = validatestring(ev_mode, {'1', 'full', '2', 'partial'}, '', 'ev_mode', 5);
   % }}}
   % }}}
 
@@ -154,4 +152,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:07:42 AM E
+% Last modified: Tue 15 Sep 2015 01:52:02 PM E
