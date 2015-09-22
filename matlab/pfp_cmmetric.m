@@ -21,6 +21,7 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
 % [char]
 % metric: Desired metric, should be one of the following:
 %         'pr'    - precision, recall
+%         'wpr'   - weighted precision, recall
 %         'rm'    - RU, MI
 %         'nrm'   - normalized RU, MI
 %         'f'     - F-measure
@@ -49,7 +50,7 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
 %[>]pfp_seqcm.m
 % }}}
 
-  % check input {{{
+  % check inputs {{{
   if nargin < 2
     error('pfp_cmmetric:InputCount', 'Expected >= 2 inputs.');
   end
@@ -131,4 +132,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 14 Jun 2015 04:21:07 PM E
+% Last modified: Tue 15 Sep 2015 02:47:36 PM E

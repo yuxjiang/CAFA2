@@ -51,6 +51,12 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 %     [double]
 %     .auc    1-by-m, AUC estimates.
 %
+%     [double]
+%     .mode   The evaluation mode, passed through from input.
+%
+%     [double]
+%     .npos   The number of positive annotations cutoff, passed through from input.
+%
 % Dependency
 % ----------
 %[>]pfp_loaditem.m
@@ -145,6 +151,8 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
   for i = 1 : m
     ev.auc(i) = get_auc([P(:, i), T(:, i)]);
   end
+  ev.mode = ev_mode;
+  ev.npos = p.Results.npos;
   % }}}
 return
 
@@ -152,4 +160,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 01:52:02 PM E
+% Last modified: Tue 15 Sep 2015 02:06:00 PM E

@@ -90,7 +90,7 @@ function [blast] = pfp_importblastp(filename, ksh)
   remained       = cell(1, 6);
   while ~feof(fid)
     % read in a new block
-    block = textscan(fid, format, block_size, 'Delimiter', '\t');
+    block = textscan(fid, format, block_size);
 
     % process the block {{{
     % appending to the remained block
@@ -200,4 +200,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 05 Jun 2015 02:14:54 PM E
+% Last modified: Tue 22 Sep 2015 11:50:40 AM E

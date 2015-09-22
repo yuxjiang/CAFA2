@@ -15,8 +15,8 @@ function [ont] = pfp_ontbuild(ont_type, obo_file, ext_rel)
 % Input
 % -----
 % [char]
-% ont_type: The type of the ontology, must be one of the following
-%           {'GO', 'DO', 'HPO'}
+% ont_type: The type of the ontology, must be one of the following {'GO', 'DO',
+%           'HPO'}
 %
 %           Note:
 %           If 'ont_type' is set to 'GO' then it returns a collection of the 3
@@ -60,8 +60,8 @@ function [ont] = pfp_ontbuild(ont_type, obo_file, ext_rel)
 %                       t = 2 ("part_of")
 %
 %           [cell]
-%           .rel_code   A relationship code array, typically,
-%                       {'is_a', 'part_of'}
+%           .rel_code   A relationship code array, typically, {'is_a',
+%                       'part_of'}
 %
 %           [char]
 %           .ont_type   The ontology name tag.
@@ -262,4 +262,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 May 2015 10:40:32 AM E
+% Last modified: Sat 22 Aug 2015 04:00:47 PM E

@@ -29,7 +29,9 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
 % [struct]
 % preeval:  the pre-computed curve per sequence.
 %           [cell of char]
-%           .object     - n-by-1 sequence id
+%           .centric  - should always be 'sequence' (not used)
+%
+%           .object   - n-by-1 sequence id
 %
 %           [cell of n-by-2 double]
 %           .metric   - 1-by-k, consists of k sets of points, where 'k' is the 
@@ -41,9 +43,14 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
 %                       Each cell contains a n-by-2 double array, corresponding
 %                       to n points at that threshold.
 %
+%           [double]
+%           .tau      - A 1-by-k array of thresholds. (not used)
+%           
 %           [logical]
 %           .covered  - n-by-1 indicator of if sequence i is predicted by the
 %                       model.
+%
+%           See pfp_convcmstruct.m
 %
 % [char]
 % md:       The mode of evaluation.
@@ -77,7 +84,7 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
 % Dependency
 % ----------
 %[>]pfp_loaditem.m
-%[>]pfp_seqcm.m
+%[>]pfp_convcmstruct.m
 % }}}
 
   % check inputs {{{
@@ -151,4 +158,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 01:30:35 PM E
+% Last modified: Tue 15 Sep 2015 02:57:54 PM E

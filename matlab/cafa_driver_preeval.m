@@ -16,7 +16,7 @@ function [] = cafa_driver_preeval()
 %[>]cafa_import.m
 %[>]pfp_loaditem.m
 %[>]pfp_seqcm.m
-%[>]pfp_cmmetric.m
+%[>]pfp_convcmstruct.m
 %[>]pfp_savevar.m
 % }}}
 
@@ -159,69 +159,17 @@ function [] = preeval_single(config)
   % }}}
 
   % compute and save metrics of interest {{{
-  % pr {{{
-  k = size(cm_seq.cm, 2);
-  pr.object = cm_seq.object;
-  pr.metric = cell(1, k);
-  for i = 1 : k
-    cm = [reshape(full([cm_seq.cm(:, i).TN]), [], 1), ...
-          reshape(full([cm_seq.cm(:, i).FP]), [], 1), ...
-          reshape(full([cm_seq.cm(:, i).FN]), [], 1), ...
-          reshape(full([cm_seq.cm(:, i).TP]), [], 1)];
-    pr.metric{i} = pfp_cmmetric(cm, 'pr', 'beta', 1);
-  end
-  pr.covered = (cm_seq.npp > 0);
-  pr.tau = cm_seq.tau;
+  pr = pfp_convcmstruct(cm_seq, 'pr', 'beta', 1);
   pfp_savevar(config.ofile, pr, 'pr');
-  % }}}
 
-  % wpr {{{
-  k = size(cm_seq_ia.cm, 2);
-  wpr.object = cm_seq_ia.object;
-  wpr.metric = cell(1, k);
-  for i = 1 : k
-    cm = [reshape(full([cm_seq_ia.cm(:, i).TN]), [], 1), ...
-          reshape(full([cm_seq_ia.cm(:, i).FP]), [], 1), ...
-          reshape(full([cm_seq_ia.cm(:, i).FN]), [], 1), ...
-          reshape(full([cm_seq_ia.cm(:, i).TP]), [], 1)];
-    wpr.metric{i} = pfp_cmmetric(cm, 'wpr', 'beta', 1);
-  end
-  wpr.covered = (cm_seq_ia.npp > 0);
-  wpr.tau = cm_seq_ia.tau;
+  wpr = pfp_convcmstruct(cm_seq_ia, 'wpr', 'beta', 1);
   pfp_savevar(config.ofile, wpr, 'wpr');
-  % }}}
 
-  % rm {{{
-  k = size(cm_seq_ia.cm, 2);
-  rm.object = cm_seq_ia.object;
-  rm.metric = cell(1, k);
-  for i = 1 : k
-    cm = [reshape(full([cm_seq_ia.cm(:, i).TN]), [], 1), ...
-          reshape(full([cm_seq_ia.cm(:, i).FP]), [], 1), ...
-          reshape(full([cm_seq_ia.cm(:, i).FN]), [], 1), ...
-          reshape(full([cm_seq_ia.cm(:, i).TP]), [], 1)];
-    rm.metric{i} = pfp_cmmetric(cm, 'rm', 'order', 2);
-  end
-  rm.covered = (cm_seq_ia.npp > 0);
-  rm.tau = cm_seq_ia.tau;
+  rm = pfp_convcmstruct(cm_seq_ia, 'rm', 'order', 2);
   pfp_savevar(config.ofile, rm, 'rm');
-  % }}}
 
-  % nrm {{{
-  k = size(cm_seq_ia.cm, 2);
-  nrm.object = cm_seq_ia.object;
-  nrm.metric = cell(1, k);
-  for i = 1 : k
-    cm = [reshape(full([cm_seq_ia.cm(:, i).TN]), [], 1), ...
-          reshape(full([cm_seq_ia.cm(:, i).FP]), [], 1), ...
-          reshape(full([cm_seq_ia.cm(:, i).FN]), [], 1), ...
-          reshape(full([cm_seq_ia.cm(:, i).TP]), [], 1)];
-    nrm.metric{i} = pfp_cmmetric(cm, 'nrm', 'order', 2);
-  end
-  nrm.covered = (cm_seq_ia.npp > 0);
-  nrm.tau = cm_seq_ia.tau;
+  nrm = pfp_convcmstruct(cm_seq_ia, 'nrm', 'order', 2);
   pfp_savevar(config.ofile, nrm, 'nrm');
-  % }}}
   % }}}
 return
 %}}}
@@ -230,4 +178,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 14 Aug 2015 04:05:56 PM E
+% Last modified: Tue 15 Sep 2015 02:48:45 PM E
