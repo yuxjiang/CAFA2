@@ -4,7 +4,7 @@ function [cm] = pfp_seqcm(target, pred, oa, varargin)
 %
 % [cm] = PFP_SEQCM(target, pred, oa, varargin);
 %
-%   Calculate sequence-centric confusion matrices. It computes k matrices for
+%   Calculates sequence-centric confusion matrices. It computes k matrices for
 %   each 'target' sequence, where 'k' is the number of thresholds.
 %
 % Note
@@ -196,4 +196,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 09 Aug 2015 04:03:48 PM E
+% Last modified: Thu 15 Oct 2015 11:21:52 AM E

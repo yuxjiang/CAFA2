@@ -38,14 +38,10 @@ function [] = cafa_driver_preeval()
   % config.ont      = {'mfo', 'bpo'};
 
   % cafa 2 ----
-  % config.cons_dir = '~/cv3/consolidated/'; % (input) where are the raw % plain-text predictions
-  % config.prev_dir = '~/cv3/seq-centric/';  % where the sequence-centric pre-evaluation results go
-  % config.pred_dir = '~/cv3/prediction/';   % where the prediction structures go
-  % config.filt_dir = '~/cv3/filtered/';     % where the filtered plain-text % predictions go
-  config.cons_dir = '~/Downloads/asa/cafa1/';
-  config.prev_dir = '~/Downloads/asa/seq-centric/';
-  config.pred_dir = '~/Downloads/asa/prediction/';
-  config.filt_dir = '~/Downloads/asa/filtered/';
+  config.cons_dir = '~/cv3/consolidated/'; % (input) where are the raw % plain-text predictions
+  config.prev_dir = '~/cv3/seq-centric/';  % where the sequence-centric pre-evaluation results go
+  config.pred_dir = '~/cv3/prediction/';   % where the prediction structures go
+  config.filt_dir = '~/cv3/filtered/';     % where the filtered plain-text % predictions go
   config.bm_all   = pfp_loaditem('~/cv3/benchmark/lists/all.txt', 'char');
   config.bm_mfo   = pfp_loaditem('~/cv3/benchmark/lists/mfo_all_typex.txt', 'char');
   config.bm_cco   = pfp_loaditem('~/cv3/benchmark/lists/cco_all_typex.txt', 'char');
@@ -178,4 +174,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 02:48:45 PM E
+% Last modified: Thu 15 Oct 2015 11:28:51 AM E

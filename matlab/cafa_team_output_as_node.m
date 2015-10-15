@@ -6,6 +6,11 @@ function [] = cafa_team_output_as_node(filename, team_cfg, eval_dir)
 %
 %   Outputs a tab-split-value file describes teams as network nodes.
 %
+% Note
+% ----
+% This function is used to generate node descriptions for drawing networks of
+% prediction correlations.
+%
 % Input
 % -----
 % [char]
@@ -103,4 +108,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 28 Jul 2015 04:45:33 PM E
+% Last modified: Wed 30 Sep 2015 08:04:14 PM E
