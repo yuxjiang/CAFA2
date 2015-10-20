@@ -1,8 +1,8 @@
-function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config)
+function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config, isdump)
 %CAFA_SEL_TOP_SEQ_SMIN CAFA curve top sequence-centric Smin
 % {{{
 %
-% [sel, bsl] = CAFA_SEL_TOP_SEQ_SMIN(K, rmcurves, naive, blast, config);
+% [sel, bsl] = CAFA_SEL_TOP_SEQ_SMIN(K, rmcurves, naive, blast, config, isdump);
 %
 %   Picks the top RU-MI curves in Smin.
 %
@@ -35,9 +35,10 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 %           3. <teamname>
 %         * 4. <type>
 %         * 5. <displayname>
-%         * 6. <pi>
-%           7. <keyword list>
-%         * 8. <assigned color>
+%         * 6. <dumpname>
+%         * 7. <pi>
+%           8. <keyword list>
+%         * 9. <assigned color>
 %
 %           Note:
 %           1. The starred columns (*) will be used in this function.
@@ -45,6 +46,10 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 %                       'd'  - disqualified
 %                       'n'  - Naive method (baseline 1)
 %                       'b'  - BLAST method (baseline 2)
+%
+% [logical]
+% isdump:   A switch for using dump name instead of display name.
+%           default: false.
 %
 % Output
 % ------
@@ -80,8 +85,8 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 % }}}
 
   % check inputs {{{
-  if nargin ~= 5
-    error('cafa_sel_top_seq_rmcurve:InputCount', 'Expected 5 inputs.');
+  if nargin ~= 6
+    error('cafa_sel_top_seq_rmcurve:InputCount', 'Expected 6 inputs.');
   end
 
   % check the 1st input 'K' {{{
@@ -102,7 +107,14 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  % }}}
+
+  % check the 6th input 'isdump' {{{
+  validateattributes(isdump, {'logical'}, {'nonempty'}, '', 'isdump', 6);
+  if isdump
+    disp_name = dump_name;
+  end
   % }}}
   % }}}
 
@@ -247,4 +259,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 01:45:50 PM E
+% Last modified: Tue 20 Oct 2015 11:13:26 AM E

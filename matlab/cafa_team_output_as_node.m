@@ -49,7 +49,7 @@ function [] = cafa_team_output_as_node(filename, team_cfg, eval_dir)
 
   % check the 2nd input 'team_cfg' {{{
   validateattributes(team_cfg, {'char'}, {'nonempty'}, '', 'team_cfg', 2);
-  [team.iid, team.eid, team.name, team.type, team.display, team.pi, team.kw, team.hex] = cafa_team_read_config(team_cfg);
+  [team.iid, team.eid, team.name, team.type, team.display, team.dump, team.pi, team.kw, team.hex] = cafa_team_read_config(team_cfg);
   % }}}
 
   % check the 3rd input 'eval_dir' {{{
@@ -108,4 +108,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Wed 30 Sep 2015 08:04:14 PM E
+% Last modified: Tue 20 Oct 2015 11:22:15 AM E

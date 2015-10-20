@@ -1,8 +1,8 @@
-function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, anonymous)
+function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, isdump, anonymous)
 %CAFA_SHEET_SEQ_FMAX CAFA sheet sequence-centric Fmax
 % {{{
 %
-% [] = CAFA_SHEET_SEQ_FMAX(sfile, fmax, fmax_bst, config, anonymous);
+% [] = CAFA_SHEET_SEQ_FMAX(sfile, fmax, fmax_bst, config, isdump, anonymous);
 %
 %   Builds evaluation reports (*.csv).
 %
@@ -40,9 +40,10 @@ function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, anonymous)
 %           3. <teamname>
 %         * 4. <type>
 %         * 5. <displayname>
-%           6. <pi>
-%           7. <keyword list>
-%           8. <assigned color>
+%         * 6. <dumpname>
+%           7. <pi>
+%           8. <keyword list>
+%           9. <assigned color>
 %
 %           Note:
 %           1. The starred columns (*) will be used in this function.
@@ -50,6 +51,10 @@ function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, anonymous)
 %                       'd'  - disqualified
 %                       'n'  - Naive method (baseline 1)
 %                       'b'  - BLAST method (baseline 2)
+%
+% [logical]
+% isdump:   A switch for using dump name instead of display name.
+%           default: false.
 %
 % [logical]
 % anonymous:  Toggle for anonymous. (i.e. remove the team name column)
@@ -66,8 +71,8 @@ function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, anonymous)
 % }}}
 
   % check inputs {{{
-  if nargin ~= 5
-    error('cafa_sheet_seq_fmax:InputCount', 'Expected 5 inputs.');
+  if nargin ~= 6
+    error('cafa_sheet_seq_fmax:InputCount', 'Expected 6 inputs.');
   end
 
   % check the 1st input 'sfile' {{{
@@ -88,11 +93,18 @@ function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, anonymous)
 
   % check the 4th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
-  [team_id, ext_id, ~, team_type, disp_name] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name] = cafa_team_read_config(config);
+  % }}}
+
+  % check the 5th input 'isdump' {{{
+  validateattributes(isdump, {'logical'}, {'nonempty'}, '', 'isdump', 5);
+  if isdump
+    disp_name = dump_name;
+  end
   % }}}
 
   % check the 5th input 'anonymous' {{{
-  validateattributes(anonymous, {'logical'}, {'nonempty'}, '', 'anonymous', 5);
+  validateattributes(anonymous, {'logical'}, {'nonempty'}, '', 'anonymous', 6);
   % }}}
   % }}}
 
@@ -156,4 +168,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 05 Aug 2015 04:26:47 PM E
+% Last modified: Tue 20 Oct 2015 11:11:10 AM E

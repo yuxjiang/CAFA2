@@ -1,8 +1,8 @@
-function [iid, eid, tname, ttype, dname, pname, kw, chex] = cafa_team_read_config(team_file)
+function [iid, eid, tname, ttype, dname, dname2, pname, kw, chex] = cafa_team_read_config(team_file)
 %CAFA_TEAM_READ_CONFIG CAFA team read config
 % {{{
 %
-% [iid, eid, tname, ttype, dname, pname, kw, chex] = CAFA_TEAM_READ_CONFIG(team_file);
+% [iid, eid, tname, ttype, dname, pname, kw, chex, dname2] = CAFA_TEAM_READ_CONFIG(team_file);
 %
 %   Reads and parses team information file.
 %
@@ -19,9 +19,11 @@ function [iid, eid, tname, ttype, dname, pname, kw, chex] = cafa_team_read_confi
 %             3. Team name
 %             4. Type of the method
 %             5. Display name of the method
-%             6. PI's name of the method/team
-%             7. Keyword list of the method
-%             8. Assigned color of the method/PI
+%             6. Dump name of the method (possibly another name for its
+%                appearance in the data dump.)
+%             7. PI's name of the method/team
+%             8. Keyword list of the method
+%             9. Assigned color of the method/PI
 %
 % Output
 % ------
@@ -40,6 +42,9 @@ function [iid, eid, tname, ttype, dname, pname, kw, chex] = cafa_team_read_confi
 %
 % [cell]
 % dname:  The model name to display.
+%
+% [cell]
+% dname2: The dump name for Data dump.
 %
 % [cell]
 % pname:  The PI name.
@@ -67,18 +72,19 @@ function [iid, eid, tname, ttype, dname, pname, kw, chex] = cafa_team_read_confi
   % }}}
 
   % read and parse {{{
-  fmt = '%s%s%s%s%s%s%s%s';
+  fmt = repmat('%s', 1, 9);
   team = textscan(fid, fmt, 'HeaderLines', 1, 'Delimiter', '\t');
   fclose(fid);
 
-  iid   = team{1};
-  eid   = team{2};
-  tname = team{3};
-  ttype = team{4};
-  dname = team{5};
-  pname = team{6};
-  kw    = team{7};
-  chex  = team{8};
+  iid    = team{1};
+  eid    = team{2};
+  tname  = team{3};
+  ttype  = team{4};
+  dname  = team{5};
+  dname2 = team{6};
+  pname  = team{7};
+  kw     = team{8};
+  chex   = team{9};
   % }}}
 return
 
@@ -86,4 +92,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 28 Jul 2015 02:35:21 PM E
+% Last modified: Tue 20 Oct 2015 11:22:50 AM E

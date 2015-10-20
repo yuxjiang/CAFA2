@@ -1,8 +1,8 @@
-function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
+function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config, isdump)
 %CAFA_SEL_TOP_TERM_AUC CAFA select top term-centric AUC
 % {{{
 %
-% [sel, bsl, info] = CAFA_SEL_TOP_TERM_AUC(K, aucs, naive, blast, config);
+% [sel, bsl, info] = CAFA_SEL_TOP_TERM_AUC(K, aucs, naive, blast, config, isdump);
 %
 %   Picks the top AUC methods.
 %
@@ -35,9 +35,10 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 %         3. <teamname>
 %       * 4. <type>
 %       * 5. <displayname>
-%       * 6. <pi>
-%         7. <keyword list>
-%       * 8. <assigned color>
+%       * 6. <dumpname>
+%       * 7. <pi>
+%         8. <keyword list>
+%       * 9. <assigned color>
 %
 %         Note:
 %         1. The starred columns (*) will be used in this function.
@@ -45,6 +46,10 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 %                     'd'  - disqualified
 %                     'n'  - Naive model (baseline 1)
 %                     'b'  - BLAST model (baseline 2)
+%
+% [logical]
+% isdump: A switch for using dump name instead of display name.
+%         default: false.
 %
 % Output
 % ------
@@ -94,8 +99,8 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 % }}}
 
   % check inputs {{{
-  if nargin ~= 5
-    error('cafa_sel_top_term_auc:InputCount', 'Expected 5 inputs.');
+  if nargin ~= 6
+    error('cafa_sel_top_term_auc:InputCount', 'Expected 6 inputs.');
   end
 
   % check the 1st input 'K' {{{
@@ -116,7 +121,14 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config)
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  % }}}
+
+  % check the 6th input 'isdump' {{{
+  validateattributes(isdump, {'logical'}, {'nonempty'}, '', 'isdump', 6);
+  if isdump
+    disp_name = dump_name;
+  end
   % }}}
   % }}}
 
@@ -249,4 +261,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 15 Sep 2015 01:46:41 PM E
+% Last modified: Tue 20 Oct 2015 11:56:57 AM E

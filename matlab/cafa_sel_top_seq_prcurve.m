@@ -1,18 +1,19 @@
-function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config, rmcurves)
+function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config, isdump, rmcurves)
 %CAFA_SEL_TOP_SEQ_FMAX CAFA select top sequence-centric Fmax
 % {{{
 %
-% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, config);
+% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, config, isdump);
 %
 %   Picks the top precision-recall curves in Fmax.
 %
-% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, config, rmcurves);
+% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, config, isdump, rmcurves);
 %
 %   Picks the top precision-recall curves in Fmax (output corresponding optimal
 %   Smin ru-mi pairs).
 %
 % Input
 % -----
+% (required)
 % [double]
 % K:        The number of teams/methods to pick.
 %
@@ -40,6 +41,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 %           3. <teamname>
 %         * 4. <type>
 %         * 5. <displayname>
+%         * 6. <dumpname>
 %         * 6. <pi>
 %           7. <keyword list>
 %         * 8. <assigned color>
@@ -50,6 +52,10 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 %                       'd'  - disqualified
 %                       'n'  - Naive method (baseline 1)
 %                       'b'  - BLAST method (baseline 2)
+%
+% [logical]
+% isdump:   A switch for using dump name instead of display name.
+%           default: false.
 %
 % (optional)
 % [cell]
@@ -100,11 +106,11 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 % }}}
 
   % check inputs {{{
-  if nargin < 5 || nargin > 6
-    error('cafa_sel_top_seq_prcurve:InputCount', 'Expected 5 or 6 inputs.');
+  if nargin < 6 || nargin > 7
+    error('cafa_sel_top_seq_prcurve:InputCount', 'Expected 6 or 7 inputs.');
   end
 
-  if nargin == 5
+  if nargin == 6
     rmcurves = {};
   end
 
@@ -126,11 +132,18 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 
   % check the 5th input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_read_config(config);
   % }}}
 
-  % check the 6th input 'rmcurves' {{{
-  validateattributes(rmcurves, {'cell'}, {}, '', 'rmcurves', 6);
+  % check the 6th input 'isdump' {{{
+  validateattributes(isdump, {'logical'}, {'nonempty'}, '', 'isdump', 6);
+  if isdump
+    disp_name = dump_name;
+  end
+  % }}}
+
+  % check the 7th input 'rmcurves' {{{
+  validateattributes(rmcurves, {'cell'}, {}, '', 'rmcurves', 7);
   if isempty(rmcurves)
     do_alt = false;
   else
@@ -310,4 +323,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 01:45:35 PM E
+% Last modified: Tue 20 Oct 2015 11:13:18 AM E

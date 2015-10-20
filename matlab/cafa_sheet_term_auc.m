@@ -1,4 +1,4 @@
-function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
+function [] = cafa_sheet_term_auc(sfile, aucs, config, isdump, anonymous, sort_mid)
 %CAFA_SHEET_TERM_AUC CAFA sheet term-centric AUC
 % {{{
 %
@@ -33,9 +33,10 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
 %             3. <teamname>
 %           * 4. <type>
 %           * 5. <displayname>
-%             6. <pi>
-%             7. <keyword list>
-%             8. <assigned color>
+%           * 6. <dumpname>
+%             7. <pi>
+%             8. <keyword list>
+%             9. <assigned color>
 %
 %             Note:
 %             1. The starred columns (*) will be used in this function.
@@ -43,6 +44,10 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
 %                         'd'  - disqualified
 %                         'n'  - Naive method (baseline 1)
 %                         'b'  - BLAST method (baseline 2)
+%
+% [logical]
+% isdump:     A switch for using dump name instead of display name.
+%             default: false.
 %
 % [logical]
 % anonymous:  If anonymous.
@@ -63,11 +68,11 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
 % }}}
 
   % check inputs {{{
-  if nargin < 4 || nargin > 5
-    error('cafa_sheet_term_auc:InputCount', 'Expected 4 or 5 inputs.');
+  if nargin < 5 || nargin > 6
+    error('cafa_sheet_term_auc:InputCount', 'Expected 5 or 6 inputs.');
   end
 
-  if nargin == 4
+  if nargin == 5
     sort_mid = 'BB4S'; % BLAST trained on SwissProt 2014
   end
 
@@ -85,15 +90,22 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, anonymous, sort_mid)
 
   % check the 3rd input 'config' {{{
   validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 3);
-  [team_id, ext_id, ~, team_type, disp_name] = cafa_team_read_config(config);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name] = cafa_team_read_config(config);
   % }}}
 
-  % check the 4th input 'anonymous' {{{
-  validateattributes(anonymous, {'logical'}, {'nonempty'}, '', 'anonymous', 4);
+  % check the 4th input 'isdump' {{{
+  validateattributes(isdump, {'logical'}, {'nonempty'}, '', 'isdump', 4);
+  if isdump
+    disp_name = dump_name;
+  end
   % }}}
 
-  % check the 5th input 'sort_mid' {{{
-  validateattributes(sort_mid, {'char'}, {'nonempty'}, '', 'sort_mid', 5);
+  % check the 5th input 'anonymous' {{{
+  validateattributes(anonymous, {'logical'}, {'nonempty'}, '', 'anonymous', 5);
+  % }}}
+
+  % check the 6th input 'sort_mid' {{{
+  validateattributes(sort_mid, {'char'}, {'nonempty'}, '', 'sort_mid', 6);
   % }}}
   % }}}
 
@@ -180,4 +192,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 01:46:59 PM E
+% Last modified: Tue 20 Oct 2015 11:21:11 AM E
