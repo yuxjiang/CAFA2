@@ -62,7 +62,7 @@ function [] = cafa_team_output_as_node(filename, team_cfg, eval_dir)
 
   % get mid of top 10 methods
   % use dummy tag '.' for baseline methods
-  [~, ~, info] = cafa_sel_top_seq_fmax(10, fmaxs, '.', '.', team_cfg);
+  [~, ~, info] = cafa_sel_top_seq_fmax(10, fmaxs, '.', '.', team_cfg, false);
 
   n = numel(fmaxs);
   mid     = cell(1, n);
@@ -108,4 +108,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 20 Oct 2015 11:22:15 AM E
+% Last modified: Wed 21 Oct 2015 07:03:15 PM E
