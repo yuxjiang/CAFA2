@@ -9,12 +9,12 @@ function [config] = cafa_parse_config(config_file)
 % Input
 % -----
 % [char]
-%   config_file:  the configuration file (job descriptor)
+% config_file:  the configuration file (job descriptor)
 %
 % Output
 % ------
 % [struct]
-%   config:       the parsed structure.
+% config:       the parsed structure.
 %
 % Dependency
 % ----------
@@ -189,4 +189,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sun 09 Aug 2015 05:08:59 PM E
+% Last modified: Tue 20 Oct 2015 02:53:43 PM E

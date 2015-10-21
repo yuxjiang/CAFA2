@@ -45,8 +45,8 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
 % [double]
 % m:  The resulting metric with the size n-by-1 or n-by-2 depending on 'metric'.
 %
-% Dependency
-% ----------
+% See Also
+% --------
 %[>]pfp_seqcm.m
 % }}}
 
@@ -75,8 +75,8 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
   defaultBETA  = 1;
   defaultORDER = 2;
 
-  addOptional(p, 'beta', defaultBETA, @(x) validateattributes(x, {'double'}, {'real', 'positive'}));
-  addOptional(p, 'order', defaultORDER, @(x) validateattributes(x, {'double'}, {'real', 'positive'}));
+  addParameter(p, 'beta', defaultBETA, @(x) validateattributes(x, {'double'}, {'real', 'positive'}));
+  addParameter(p, 'order', defaultORDER, @(x) validateattributes(x, {'double'}, {'real', 'positive'}));
 
   parse(p, varargin{:});
   % }}}
@@ -132,4 +132,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 02:47:36 PM E
+% Last modified: Wed 21 Oct 2015 06:20:37 PM E

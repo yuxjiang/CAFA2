@@ -78,7 +78,7 @@ function [res] = pfp_convcmstruct(cmstruct, metric, varargin)
           reshape(full([cmstruct.cm(:, i).FP]), [], 1), ...
           reshape(full([cmstruct.cm(:, i).FN]), [], 1), ...
           reshape(full([cmstruct.cm(:, i).TP]), [], 1)];
-    res.metric{i} = pfp_cmmetric(cm, metric, varargin);
+    res.metric{i} = pfp_cmmetric(cm, metric, varargin{:});
   end
   res.tau     = cmstruct.tau;
   res.covered = (cmstruct.npp > 0);
@@ -90,4 +90,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 15 Oct 2015 11:24:51 AM E
+% Last modified: Wed 21 Oct 2015 06:34:46 PM E
