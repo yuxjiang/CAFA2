@@ -2,7 +2,7 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
 %PFP_CMMETRIC Confusion matrix metric
 % {{{
 %
-% [m] = PFP_CMMETRIC(TN, FP, FN, TP, metric, p);
+% [m] = PFP_CMMETRIC(cm, metric, p);
 %
 %   Gets metric from confusion matrixs.
 %
@@ -10,10 +10,10 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
 % -----
 % [double]
 % cm:     n-by-4, The four cells of the confusion matrix.
-%         cm(:, 1)    - TN, true negative.
-%         cm(:, 2)    - FP, false positive.
-%         cm(:, 3)    - FN, false negative.
-%         cm(:, 4)    - TP, true positive.
+%         cm(:, 1)  - TN, true negative.
+%         cm(:, 2)  - FP, false positive.
+%         cm(:, 3)  - FN, false negative.
+%         cm(:, 4)  - TP, true positive.
 %
 %         Note that each row of cm construct a confusion matrix, and they are
 %         evaluated independently.
@@ -57,10 +57,10 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
 
   % check the 1st input 'cm' {{{
   validateattributes(cm, {'double'}, {'ncols', 4}, '', 'cm', 1);
-  TN = cm(:, 1);
-  FP = cm(:, 2);
-  FN = cm(:, 3);
-  TP = cm(:, 4);
+  TN = full(cm(:, 1));
+  FP = full(cm(:, 2));
+  FN = full(cm(:, 3));
+  TP = full(cm(:, 4));
   % }}}
 
   % check the 2nd input 'metric' {{{
@@ -102,18 +102,23 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
     % 1. No predictions: TP = FP = 0
     % 2. No annotations: TP = FN = 0
     % 3. No true positives: TP = 0 (i.e. pr = rc = 0)
-    [pr, rc] = [TP ./ (TP + FP), TP ./ (TP + FN)];
+    pr_rc = [TP ./ (TP + FP), TP ./ (TP + FN)];
+    pr    = pr_rc(:, 1);
+    rc    = pr_rc(:, 2);
     m = (1 + p.Results.beta .^ 2) .* pr .* rc ./ (p.Results.beta .^ 2 .* pr + rc);
   elseif strcmpi(metric, 'sd')
     % m = [semantic distance]
     % SD can never be NaN
-    [ru, mi] = [FN, FP];
+    ru = FN;
+    mi = FP;
     m = (ru .^ p.Results.order + mi .^ p.Results.order) .^ (1 ./ p.Results.order);
   elseif strcmpi(metric, 'nsd')
     % m = [normalized semantic distance]
     % normalized SD can be NaN when neither (positive) prediction nor (positive)
     % annotation.
-    [nru, nmi] = [FN, FP] ./ repmat(FN + TP + FP, 1, 2);
+    nru_nmi = [FN, FP] ./ repmat(FN + TP + FP, 1, 2);
+    nru     = nru_nmi(:, 1);
+    nmi     = nru_nmi(:, 2);
     m = (nru .^ p.Results.order + nmi .^ p.Results.order) .^ (1 ./ p.Results.order);
   elseif strcmpi(metric, 'ss')
     % TPR (sensitivity, recall) can be NaN for no (positive) annotations
@@ -132,4 +137,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 21 Oct 2015 06:20:37 PM E
+% Last modified: Fri 23 Oct 2015 02:29:33 PM E

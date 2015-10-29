@@ -31,6 +31,7 @@ function [pred, msg] = cafa_import(ifile, ont, header)
 %
 % [struct]
 % ont:    The ontology structure.
+%         See pfp_ontbuild.m
 %
 % (optional)
 % [logical]
@@ -73,6 +74,9 @@ function [pred, msg] = cafa_import(ifile, ont, header)
 % ----------
 %[>]pfp_gettermidx.m
 %[>]pfp_predprop.m
+%
+% See Also
+% --------
 %[>]pfp_ontbuild.m
 % }}}
 
@@ -304,4 +308,4 @@ return % }}}
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 11:26:38 AM E
+% Last modified: Fri 23 Oct 2015 02:12:56 PM E
