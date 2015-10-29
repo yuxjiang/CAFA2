@@ -44,13 +44,13 @@ This document describes the preprocessing steps for CAFA2 submissions
    (a) a raw submission folder (organized as above)
 
    [OUTPUT]
-   (a) a list of raw prediction files (one per model), each file will be named as its "internal ID"
+   (a) a list of raw prediction files (one per model), each file will be named as its "internal ID" under a newly created subfolder: PASSED
 
        e.g.
-       - preprocessed/
-         s1
-         s2
-         s3
+       - PASSED/
+         M001
+         M002
+         M003
          ...
 
    (b) ID table, which matches the "external ID" to the "internal ID" for each model
