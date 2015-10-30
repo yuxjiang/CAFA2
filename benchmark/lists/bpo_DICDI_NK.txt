@@ -1,0 +1,1 @@
+bpo_DICDI_type1.txt

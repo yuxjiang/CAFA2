@@ -1,0 +1,1 @@
+cco_ECOLI_type1.txt
