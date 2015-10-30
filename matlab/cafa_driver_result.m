@@ -7,6 +7,29 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast, mode)
 %   Generates results for evaluation (plots, and sheets), according to the
 %   evaluation configuration file '<eval_dir>/eval_config.job'.
 %
+% Suggestion
+% ----------
+% It will be more organsized to keep everything under a single folder,
+% therefore, an example CAFA2 project folder looks like the following:
+%
+% CAFA2 (replacing "cv3" below)
+% |--   config/           (configuration files)
+% |--   consolidated/     (consolidated plain-text prediction files)
+% |--   seq-centric/      (pre-evaluation results will appear here)
+% |--   prediction/       (imported predictions in Matlab structures)
+% |     |-- mfo/
+% |     |-- bpo/
+% |     |-- cco/
+% |     `-- hpo/
+% |--   filtered/         (filtered plain-text prediction file)
+% |--   benchmark/
+% |     |-- lists/        (lists of benchmarks)
+% |     `-- groundtruth/  (pre-computed annotations, see pfp_oabuild.m)
+% |-- * evaluation/       (evaluation results will appear here)
+% `--   ontology/         (pre-computed ontologies, see pfp_ontbuild.m)
+%
+% folders with * will be modified by this script.
+%
 % Input
 % -----
 % [char]
@@ -344,4 +367,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 20 Oct 2015 11:27:05 AM E
+% Last modified: Thu 29 Oct 2015 09:25:24 PM E
