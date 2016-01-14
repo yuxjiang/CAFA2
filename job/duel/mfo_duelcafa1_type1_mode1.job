@@ -15,22 +15,22 @@
 # paths
 # -----
 # where is the parsed 'pred' structures
-pred_dir   = ~/cv3/duel/cafa1/prediction/mfo/
+pred_dir   = ~/cafa/duel/cafa1/prediction/mfo/
 
 # where is pre-computed results?
-prev_dir   = ~/cv3/duel/cafa1/seq-centric/mfo/
+prev_dir   = ~/cafa/duel/cafa1/seq-centric/mfo/
 
 # where to put output folder
-eval_dir   = ~/cv3/duel/cafa1/evaluation/
+eval_dir   = ~/cafa/duel/cafa1/evaluation/
 
 # where is the annotation structure
-annotation = ~/cv3/duel/cafa1/benchmark/groundtruth/mfoa.mat
+annotation = ~/cafa/duel/cafa1/benchmark/groundtruth/mfoa.mat
 
 # benchmark list file
-benchmark  = ~/cv3/duel/cafa1/benchmark/mfo_duel_type1.txt
+benchmark  = ~/cafa/duel/cafa1/benchmark/mfo_duel_type1.txt
 
 # where is the bootstrap index
-bootstrap  = ~/cv3/config/bootstrap/mfo_duel_type1.mat
+bootstrap  = ~/cafa/config/bootstrap/mfo_duel_type1.mat
 
 # ontology
 # --------

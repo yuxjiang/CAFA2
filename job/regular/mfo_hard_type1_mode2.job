@@ -1,10 +1,10 @@
-pred_dir   = ~/cv3/prediction/mfo/
-prev_dir   = ~/cv3/seq-centric/mfo/
-eval_dir   = ~/cv3/evaluation/
-ont_term   = ~/cv3/ontology/mfo_term.txt
-annotation = ~/cv3/benchmark/groundtruth/mfoa.mat
-benchmark  = ~/cv3/benchmark/lists/mfo_hard_type1.txt
-bootstrap  = ~/cv3/config/bootstrap/mfo_hard_type1.mat
+pred_dir   = ~/cafa/prediction/mfo/
+prev_dir   = ~/cafa/seq-centric/mfo/
+eval_dir   = ~/cafa/evaluation/
+ont_term   = ~/cafa/ontology/mfo_term.txt
+annotation = ~/cafa/benchmark/groundtruth/mfoa.mat
+benchmark  = ~/cafa/benchmark/lists/mfo_hard_type1.txt
+bootstrap  = ~/cafa/config/bootstrap/mfo_hard_type1.mat
 
 ontology = mfo
 category = hard

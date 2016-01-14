@@ -1,10 +1,10 @@
-pred_dir   = ~/cv3/prediction/bpo/
-prev_dir   = ~/cv3/seq-centric/bpo/
-eval_dir   = ~/cv3/evaluation/
-ont_term   = ~/cv3/ontology/bpo_term.txt
-annotation = ~/cv3/benchmark/groundtruth/bpoa.mat
-benchmark  = ~/cv3/benchmark/lists/bpo_ARATH_type1.txt
-bootstrap  = ~/cv3/config/bootstrap/bpo_ARATH_type1.mat
+pred_dir   = ~/cafa/prediction/bpo/
+prev_dir   = ~/cafa/seq-centric/bpo/
+eval_dir   = ~/cafa/evaluation/
+ont_term   = ~/cafa/ontology/bpo_term.txt
+annotation = ~/cafa/benchmark/groundtruth/bpoa.mat
+benchmark  = ~/cafa/benchmark/lists/bpo_ARATH_type1.txt
+bootstrap  = ~/cafa/config/bootstrap/bpo_ARATH_type1.mat
 
 ontology = bpo
 category = ARATH

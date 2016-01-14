@@ -1,10 +1,10 @@
-pred_dir   = ~/cv3/prediction/hpo/
-prev_dir   = ~/cv3/seq-centric/hpo/
-eval_dir   = ~/cv3/evaluation/
-ont_term   = ~/cv3/ontology/hpo_term.txt
-annotation = ~/cv3/benchmark/groundtruth/hpoa.mat
-benchmark  = ~/cv3/benchmark/lists/hpo_HUMAN_type1.txt
-bootstrap  = ~/cv3/config/bootstrap/hpo_HUMAN_type1.mat
+pred_dir   = ~/cafa/prediction/hpo/
+prev_dir   = ~/cafa/seq-centric/hpo/
+eval_dir   = ~/cafa/evaluation/
+ont_term   = ~/cafa/ontology/hpo_term.txt
+annotation = ~/cafa/benchmark/groundtruth/hpoa.mat
+benchmark  = ~/cafa/benchmark/lists/hpo_HUMAN_type1.txt
+bootstrap  = ~/cafa/config/bootstrap/hpo_HUMAN_type1.mat
 
 ontology = hpo
 category = HUMAN

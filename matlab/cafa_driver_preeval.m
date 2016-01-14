@@ -15,7 +15,7 @@ function [] = cafa_driver_preeval()
 % It will be more organsized to keep everything under a single folder,
 % therefore, an example CAFA2 project folder looks like the following:
 %
-% CAFA2 (replacing "cv3" below)
+% CAFA2 (replacing "cafa" below)
 % |--   config/           (configuration files)
 % |--   consolidated/     (consolidated plain-text prediction files)
 % |-- * seq-centric/      (pre-evaluation results will appear here)
@@ -52,33 +52,33 @@ function [] = cafa_driver_preeval()
   % Note: each folder must end with '/'
 
   % % cafa 1 ----
-  % config.cons_dir = '~/cv3/duel/cafa1/consolidated/';
-  % config.prev_dir = '~/cv3/duel/cafa1/seq-centric/';
-  % config.pred_dir = '~/cv3/duel/cafa1/prediction/';
-  % config.filt_dir = '~/cv3/duel/cafa1/filtered/';
-  % config.bm_all   = pfp_loaditem('~/cv3/duel/cafa1/benchmark/all_duel_cafa1.txt', 'char');
-  % config.bm_mfo   = pfp_loaditem('~/cv3/duel/cafa1/benchmark/mfo_duel_type1.txt', 'char');
-  % config.bm_cco   = pfp_loaditem('~/cv3/duel/cafa1/benchmark/cco_duel_type1.txt', 'char');
-  % config.bm_bpo   = pfp_loaditem('~/cv3/duel/cafa1/benchmark/bpo_duel_type1.txt', 'char');
-  % config.mfoa     = load('~/cv3/duel/cafa1/benchmark/groundtruth/mfoa.mat', 'oa');
-  % config.bpoa     = load('~/cv3/duel/cafa1/benchmark/groundtruth/bpoa.mat', 'oa');
-  % config.ccoa     = load('~/cv3/duel/cafa1/benchmark/groundtruth/ccoa.mat', 'oa');
+  % config.cons_dir = '~/cafa/duel/cafa1/consolidated/';
+  % config.prev_dir = '~/cafa/duel/cafa1/seq-centric/';
+  % config.pred_dir = '~/cafa/duel/cafa1/prediction/';
+  % config.filt_dir = '~/cafa/duel/cafa1/filtered/';
+  % config.bm_all   = pfp_loaditem('~/cafa/duel/cafa1/benchmark/all_duel_cafa1.txt', 'char');
+  % config.bm_mfo   = pfp_loaditem('~/cafa/duel/cafa1/benchmark/mfo_duel_type1.txt', 'char');
+  % config.bm_cco   = pfp_loaditem('~/cafa/duel/cafa1/benchmark/cco_duel_type1.txt', 'char');
+  % config.bm_bpo   = pfp_loaditem('~/cafa/duel/cafa1/benchmark/bpo_duel_type1.txt', 'char');
+  % config.mfoa     = load('~/cafa/duel/cafa1/benchmark/groundtruth/mfoa.mat', 'oa');
+  % config.bpoa     = load('~/cafa/duel/cafa1/benchmark/groundtruth/bpoa.mat', 'oa');
+  % config.ccoa     = load('~/cafa/duel/cafa1/benchmark/groundtruth/ccoa.mat', 'oa');
   % config.ont      = {'mfo', 'bpo'};
 
   % cafa 2 ----
-  config.cons_dir = '~/cv3/consolidated/'; % (input) where are the raw plain-text predictions
-  config.prev_dir = '~/cv3/seq-centric_test/';  % where the sequence-centric pre-evaluation results go
-  config.pred_dir = '~/cv3/prediction/';   % where the prediction structures go
-  config.filt_dir = '~/cv3/filtered/';     % where the filtered plain-text predictions go
-  config.bm_all   = pfp_loaditem('~/cv3/benchmark/lists/all.txt', 'char');
-  config.bm_mfo   = pfp_loaditem('~/cv3/benchmark/lists/mfo_all_typex.txt', 'char');
-  config.bm_cco   = pfp_loaditem('~/cv3/benchmark/lists/cco_all_typex.txt', 'char');
-  config.bm_bpo   = pfp_loaditem('~/cv3/benchmark/lists/bpo_all_typex.txt', 'char');
-  config.bm_hpo   = pfp_loaditem('~/cv3/benchmark/lists/hpo_HUMAN_type1.txt', 'char');
-  config.mfoa     = load('~/cv3/benchmark/groundtruth/mfoa.mat', 'oa');
-  config.bpoa     = load('~/cv3/benchmark/groundtruth/bpoa.mat', 'oa');
-  config.ccoa     = load('~/cv3/benchmark/groundtruth/ccoa.mat', 'oa');
-  config.hpoa     = load('~/cv3/benchmark/groundtruth/hpoa.mat', 'oa');
+  config.cons_dir = '~/cafa/consolidated/'; % (input) where are the raw plain-text predictions
+  config.prev_dir = '~/cafa/seq-centric_test/';  % where the sequence-centric pre-evaluation results go
+  config.pred_dir = '~/cafa/prediction/';   % where the prediction structures go
+  config.filt_dir = '~/cafa/filtered/';     % where the filtered plain-text predictions go
+  config.bm_all   = pfp_loaditem('~/cafa/benchmark/lists/all.txt', 'char');
+  config.bm_mfo   = pfp_loaditem('~/cafa/benchmark/lists/mfo_all_typex.txt', 'char');
+  config.bm_cco   = pfp_loaditem('~/cafa/benchmark/lists/cco_all_typex.txt', 'char');
+  config.bm_bpo   = pfp_loaditem('~/cafa/benchmark/lists/bpo_all_typex.txt', 'char');
+  config.bm_hpo   = pfp_loaditem('~/cafa/benchmark/lists/hpo_HUMAN_type1.txt', 'char');
+  config.mfoa     = load('~/cafa/benchmark/groundtruth/mfoa.mat', 'oa');
+  config.bpoa     = load('~/cafa/benchmark/groundtruth/bpoa.mat', 'oa');
+  config.ccoa     = load('~/cafa/benchmark/groundtruth/ccoa.mat', 'oa');
+  config.hpoa     = load('~/cafa/benchmark/groundtruth/hpoa.mat', 'oa');
   config.ont      = {'mfo', 'bpo', 'cco', 'hpo'};
   % }}}
 
@@ -202,4 +202,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 29 Oct 2015 09:24:17 PM E
+% Last modified: Thu 14 Jan 2016 04:27:34 PM E

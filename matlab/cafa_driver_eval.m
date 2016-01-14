@@ -11,7 +11,7 @@ function [] = cafa_driver_eval(config_info)
 % It will be more organsized to keep everything under a single folder,
 % therefore, an example CAFA2 project folder looks like the following:
 %
-% CAFA2 (replacing "cv3" below)
+% CAFA2
 % |--   config/           (configuration files)
 % |--   consolidated/     (consolidated plain-text prediction files)
 % |--   seq-centric/      (pre-evaluation results will appear here)
@@ -212,4 +212,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 29 Oct 2015 09:24:03 PM E
+% Last modified: Thu 14 Jan 2016 04:26:14 PM E

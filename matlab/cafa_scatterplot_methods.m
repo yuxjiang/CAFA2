@@ -79,7 +79,7 @@ function [] = cafa_scatterplot_methods(pfile, task)
   % }}}
 
   % collect data {{{
-  evdir = '~/cv3/evaluation/';
+  evdir = '~/cafa/evaluation/';
   if strcmp(task, 'EH')
     mfo_data_x = extract_field_from_collection(cafa_collect([evdir, 'mfo_easy_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
     mfo_data_y = extract_field_from_collection(cafa_collect([evdir, 'mfo_hard_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
@@ -229,4 +229,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Wed 21 Oct 2015 03:41:05 PM E
+% Last modified: Thu 14 Jan 2016 04:28:12 PM E

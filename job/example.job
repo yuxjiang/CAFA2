@@ -3,25 +3,25 @@
 # paths
 # -----
 # where is the parsed 'pred' structures
-pred_dir   = ~/cv3/prediction/mfo/
+pred_dir   = ~/cafa/prediction/mfo/
 
 # where is pre-computed results?
-prev_dir   = ~/cv3/seq-centric/mfo/
+prev_dir   = ~/cafa/seq-centric/mfo/
 
 # where to put output folder
-eval_dir   = ~/cv3/evaluation/mfo_all_type1_mode1/
+eval_dir   = ~/cafa/evaluation/mfo_all_type1_mode1/
 
 # where is the ontology term list file
-ont_term   = ~/cv3/ontology/mfo_term.txt
+ont_term   = ~/cafa/ontology/mfo_term.txt
 
 # where is the annotation structure
-annotation = ~/cv3/benchmark/groundtruth/mfoa.mat
+annotation = ~/cafa/benchmark/groundtruth/mfoa.mat
 
 # benchmark list file
-benchmark  = ~/cv3/benchmark/mfo_all_type1.txt
+benchmark  = ~/cafa/benchmark/mfo_all_type1.txt
 
 # where is the bootstrap index
-bootstrap  = ~/cv3/config/bootstrap/mfo_all_type1.mat
+bootstrap  = ~/cafa/config/bootstrap/mfo_all_type1.mat
 
 # ontology
 # --------

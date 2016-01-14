@@ -12,7 +12,7 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast, mode)
 % It will be more organsized to keep everything under a single folder,
 % therefore, an example CAFA2 project folder looks like the following:
 %
-% CAFA2 (replacing "cv3" below)
+% CAFA2
 % |--   config/           (configuration files)
 % |--   consolidated/     (consolidated plain-text prediction files)
 % |--   seq-centric/      (pre-evaluation results will appear here)
@@ -367,4 +367,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 29 Oct 2015 09:25:24 PM E
+% Last modified: Thu 14 Jan 2016 04:27:53 PM E

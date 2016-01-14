@@ -1,10 +1,10 @@
-pred_dir   = ~/cv3/prediction/cco/
-prev_dir   = ~/cv3/seq-centric/cco/
-eval_dir   = ~/cv3/evaluation/
-ont_term   = ~/cv3/ontology/cco_term.txt
-annotation = ~/cv3/benchmark/groundtruth/ccoa.mat
-benchmark  = ~/cv3/benchmark/lists/cco_eukarya_type2.txt
-bootstrap  = ~/cv3/config/bootstrap/cco_eukarya_type2.mat
+pred_dir   = ~/cafa/prediction/cco/
+prev_dir   = ~/cafa/seq-centric/cco/
+eval_dir   = ~/cafa/evaluation/
+ont_term   = ~/cafa/ontology/cco_term.txt
+annotation = ~/cafa/benchmark/groundtruth/ccoa.mat
+benchmark  = ~/cafa/benchmark/lists/cco_eukarya_type2.txt
+bootstrap  = ~/cafa/config/bootstrap/cco_eukarya_type2.mat
 
 ontology = cco
 category = eukarya
