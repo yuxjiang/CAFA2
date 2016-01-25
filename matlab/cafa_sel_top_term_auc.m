@@ -104,7 +104,7 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config,
   end
 
   % check the 1st input 'K' {{{
-  validateattributes(K, {'double'}, {'positive', 'integer'}, '', 'K', 1);
+  validateattributes(K, {'double'}, {'nonnegative', 'integer'}, '', 'K', 1);
   % }}}
   
   % check the 2nd input 'aucs' {{{
@@ -237,7 +237,7 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config,
       end
     end
     if nsel < K
-      warning('cafa_sel_top_term_auc:LessThenTen', 'Only selected %d models.', nsel);
+      warning('cafa_sel_top_term_auc:LessThanK', 'Only selected %d models.', nsel);
       sel(nsel + 1 : end) = [];
     end
   end
@@ -261,4 +261,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 20 Oct 2015 11:56:57 AM E
+% Last modified: Mon 25 Jan 2016 03:54:09 PM E

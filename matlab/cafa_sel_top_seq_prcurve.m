@@ -115,7 +115,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
   end
 
   % check the 1st input 'K' {{{
-  validateattributes(K, {'double'}, {'positive', 'integer'}, '', 'K', 1);
+  validateattributes(K, {'double'}, {'nonnegative', 'integer'}, '', 'K', 1);
   % }}}
   
   % check the 2nd input 'prcurves' {{{
@@ -273,7 +273,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
     end
   end
   if nsel < K
-    warning('cafa_sel_top_seq_prcurve:LessThenTen', 'Only selected %d models.', nsel);
+    warning('cafa_sel_top_seq_prcurve:LessThanK', 'Only selected %d models.', nsel);
     sel(nsel + 1 : end) = [];
   end
   % }}}
@@ -323,4 +323,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 20 Oct 2015 11:13:18 AM E
+% Last modified: Mon 25 Jan 2016 03:53:46 PM E

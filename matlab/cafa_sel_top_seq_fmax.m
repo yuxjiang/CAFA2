@@ -11,7 +11,8 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 % [double]
 % K:      The number of models to pick. If K is set to 0, this function will
 %         be used to pick baseline models, i.e. the returning 'sel' will be {}.
-%         default: 10
+%         If K is set to 'inf', this function returns all model (one per each
+%         PI) in a sorted order.
 %
 % [cell]
 % fmaxs:  The pre-calculated Fmax structures.
@@ -105,7 +106,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
   end
 
   % check the 1st input 'K' {{{
-  validateattributes(K, {'double'}, {'positive', 'integer'}, '', 'K', 1);
+  validateattributes(K, {'double'}, {'nonnegative'}, '', 'K', 1);
   % }}}
   
   % check the 2nd input 'fmaxs' {{{
@@ -218,6 +219,18 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
   % sort averaged Fmax and pick the top K {{{
   if K == 0
     sel = {};
+  elseif isinf(K)
+    % keep all models, sorted
+    sel    = {};
+    sel_pi = {};
+    [~, index] = sort(avg_fmaxs, 'descend');
+    for i = 1 : numel(qld)
+      if ~ismember(qld{index(i)}.pi_name, sel_pi)
+        % append a new model
+        sel_pi = [sel_pi, qld{index(i)}.pi_name];
+        sel    = [sel, qld{index(i)}];
+      end
+    end
   else
     % keep find the next team until
     % 1. find K (= 10) models, or
@@ -239,7 +252,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
       end
     end
     if nsel < K
-      warning('cafa_sel_top_seq_fmax:LessThenTen', 'Only selected %d models.', nsel);
+      warning('cafa_sel_top_seq_fmax:LessThanK', 'Only selected %d models.', nsel);
       sel(nsel + 1 : end) = [];
     end
   end
@@ -263,4 +276,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 20 Oct 2015 11:13:08 AM E
+% Last modified: Mon 25 Jan 2016 04:02:54 PM E

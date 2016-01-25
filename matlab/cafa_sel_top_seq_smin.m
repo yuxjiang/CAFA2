@@ -96,7 +96,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
   end
 
   % check the 1st input 'K' {{{
-  validateattributes(K, {'double'}, {'positive', 'integer'}, '', 'K', 1);
+  validateattributes(K, {'double'}, {'nonnegative', 'integer'}, '', 'K', 1);
   % }}}
   
   % check the 2nd input 'smins' {{{
@@ -226,7 +226,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
     end
   end
   if nsel < K
-    warning('cafa_sel_top_seq_smin:LessThenTen', 'Only selected %d models.', nsel);
+    warning('cafa_sel_top_seq_smin:LessThanK', 'Only selected %d models.', nsel);
     sel(nsel + 1 : end) = [];
   end
   % }}}
@@ -249,4 +249,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 20 Oct 2015 11:13:36 AM E
+% Last modified: Mon 25 Jan 2016 03:54:02 PM E
