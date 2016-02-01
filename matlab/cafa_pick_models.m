@@ -12,7 +12,7 @@ function [mids] = cafa_pick_models(k, bm, rho)
 %    (a) Of high quality in terms of F-measure in general (i.e. does well on the
 %        specific benchmark, 'all' if not specified)
 %
-%    (b) Not redundant. ("dissimilar" to each other)
+%    (b) Non-redundant. ("dissimilar" to each other)
 %
 % 2. This function assumes the CAFA assessment directory is
 %    CAFA_DIR = ~/cafa
@@ -21,6 +21,7 @@ function [mids] = cafa_pick_models(k, bm, rho)
 % -----
 % [double]
 % k:    The number of models to pick.
+%       k = Inf indicates to pick all available models.
 %
 % [char]
 % bm:   The benchmark, which is encoded as: <ontology>_<category>_<type>_<mode>
@@ -36,7 +37,16 @@ function [mids] = cafa_pick_models(k, bm, rho)
 % ------
 % [cell]
 % mids: The cell of model IDs.
+%
+% Dependency
+% ----------
+%[>]cafa_collect.m
+%[>]cafa_sel_top_seq_fmax.m
 % }}}
+
+  % CAFA environment setting {{{
+  CAFA_DIR = '~/cafa';
+  % }}}
 
   % check inputs {{{
   if nargin ~= 3
@@ -44,12 +54,11 @@ function [mids] = cafa_pick_models(k, bm, rho)
   end
 
   % check the 1st input 'k' {{{
-  validateattributes(k, {'double'}, {'integer', '>', 0}, '', 'k', 1);
+  validateattributes(k, {'double'}, {'nonnegative'}, '', 'k', 1);
   % }}}
 
   % check the 2nd input 'bm' {{{
   validateattributes(bm, {'char'}, {'nonempty'}, '', 'bm', 2);
-  CAFA_DIR = '~/cafa';
   eval_dir = fullfile(CAFA_DIR, 'evaluation', bm);
 
   if ~exist(eval_dir, 'dir')
@@ -66,11 +75,11 @@ function [mids] = cafa_pick_models(k, bm, rho)
   % sort models {{{
   fmaxs  = cafa_collect(eval_dir, 'seq_fmax_bst');
   config = fullfile(CAFA_DIR, 'config', 'config.tab');
-  [tops, ~, info] = cafa_sel_top_seq_fmax(10, fmaxs, 'BN4S', 'BB4S', config, false);
+  [tops, ~, info] = cafa_sel_top_seq_fmax(Inf, fmaxs, 'BN4S', 'BB4S', config, false);
   % }}}
 
   % selection {{{
-  if (numel(tops) < k)
+  if ~isinf(k) && (numel(tops) < k)
     mids = info.top_mid;
     warning('cafa_pick_models:LessThanK', 'Not enough models at this k');
     return;
@@ -107,7 +116,7 @@ function [mids] = cafa_pick_models(k, bm, rho)
     end
   end
   mids = info.top_mid(mid_index);
-  if numel(mid_index) < k
+  if ~isinf(k) && (numel(mid_index) < k)
     warning('cafa_pick_models:LessThanK', 'Not enough models at this cutoff.');
   end
   % }}}
@@ -117,4 +126,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 25 Jan 2016 05:06:48 PM E
+% Last modified: Mon 01 Feb 2016 04:11:15 PM E
