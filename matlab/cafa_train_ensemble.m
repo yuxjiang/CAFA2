@@ -1,37 +1,50 @@
-function [model] = cafa_train_ensemble(bm, k, v)
+function [model] = cafa_train_ensemble(bm, k, scheme, learner)
 %CAFA_TRAIN_ENSEMBLE CAFA train ensemble
 % {{{
 %
-% [model] = CAFA_TRAIN_ENSEMBLE(bm);
+% [model] = CAFA_TRAIN_ENSEMBLE(bm, k, scheme, learner);
 %
 %   Returns a combined linear model of a benchmark category.
 %
 % Input
 % -----
 % [char]
-% bm:     The benchmark, which is encoded as: <ontology>_<category>_<type>_<mode>
+% bm:       The benchmark, which is encoded as: <ontology>_<category>_<type>_<mode>
 %
-%         For example: mfo_HUMAN_type1_mode1
+%           For example: mfo_HUMAN_type1_mode1
 %
-%         Also, the specified benchmark should have been evaluated, i.e. there
-%         must be an existing subfolder (having the same name) under
-%         [CAFA_DIR]/evaluation/
-%
-% [double]
-% k:      The number of models to keep (having non-zero coefficient).
+%           Also, the specified benchmark should have been evaluated, i.e. there
+%           must be an existing subfolder (having the same name) under
+%           [CAFA_DIR]/evaluation/
 %
 % [double]
-% v:      The number of folds for "cross-validation"
+% k:        The number of selected models.
+%
+% [char]
+% scheme:   How to select models. Available schemes are:
+%           'lasso' - use LASSO to fit a linear model
+%           'sfs'   - sequential forward (feature) selection
+%
+% [char]
+% learner:  Learning model. Available models are:
+%           'ols' - ordinary least square
+%           'lr'  - logistic regression
+%           'nn'  - neural network
 %
 % Output
 % ------
 % [struct]
-% model:  A k-by-1 vector of beta hat in the case of a linear model.
-%         .iid          1-by-n cell array of model internal IDs.
-%         .dname        1-by-n cell array of model display names.
-%         .beta         1-by-n double array, at most k of which are non-zero.
-%         .perf         1-by-n double array of performance (fmax).
-%         .perf_comb    double, performance of the combined model.
+% model:    The learned ensemble model, which contains the following:
+%           .iid        1-by-p cell array of model internal IDs.
+%           .dname      1-by-p cell array of model display names.
+%           .selected   1-by-k index
+%           .theta      model parameter
+%                       if learner = ['ols'] or ['lr']
+%                       1-by-p double array, at most k of which are non-zero.
+%                       if learner = ['nn']
+%                       the trained neural network model.
+%           .perf       1-by-p double array of performance (fmax).
+%           .perf_comb  double, performance of the combined model.
 %
 % Dependency
 % ----------
@@ -48,12 +61,11 @@ function [model] = cafa_train_ensemble(bm, k, v)
 
   % basic setting {{{
   param.CAFA_DIR = '~/cafa';
-  param.learner  = 'ols';
   % }}}
 
   % check inputs {{{
-  if nargin ~= 3
-    error('cafa_train_ensemble:InputCount', 'Expected 3 inputs.');
+  if nargin ~= 4
+    error('cafa_train_ensemble:InputCount', 'Expected 4 inputs.');
   end
 
   % check the 1st input 'bm'
@@ -65,13 +77,17 @@ function [model] = cafa_train_ensemble(bm, k, v)
 
   % check the 2nd input 'k'
   validateattributes(k, {'double'}, {'>', 0}, '', 'k', 2);
+  param.k = k;
 
-  % check the 3rd input 'v'
-  validateattributes(v, {'double'}, {'>', 0}, '', 'v', 3);
+  % check the 3th input 'scheme'
+  param.scheme = validatestring(scheme, {'lasso', 'sfs'}, '', 'scheme', 3);
+
+  % check the 4th input 'learner'
+  param.learner = validatestring(learner, {'ols', 'lr', 'nn'}, '', 'learner', 4);
   % }}}
 
   % load model iids {{{
-  mids = cafa_pick_models(Inf, bm, 1); % pick all models.
+  param.mids = cafa_pick_models(Inf, bm, 1); % pick all models.
   % }}}
 
   % load target values {{{
@@ -79,169 +95,323 @@ function [model] = cafa_train_ensemble(bm, k, v)
   list_file = strcat(tokens{1}, '_', tokens{2}, '_', tokens{3}, '.txt');
   benchmark = pfp_loaditem(fullfile(param.CAFA_DIR, 'benchmark', 'lists', list_file), 'char');
 
-  gt = load(fullfile(param.CAFA_DIR, 'benchmark', 'groundtruth', [tokens{1}, 'a']), 'oa');
-  oa = pfp_oaproj(gt.oa, benchmark, 'object');
-  Y  = oa.annotation;
+  data     = load(fullfile(param.CAFA_DIR, 'benchmark', 'groundtruth', [tokens{1}, 'a']), 'oa');
+  param.oa = pfp_oaproj(data.oa, benchmark, 'object'); % Y will be oa.annotation
   % }}}
 
   % load predictions {{{
   fprintf('loading predictions ...\n');
-  m = numel(mids);
-  for i = 1 : m
-    data = load(fullfile(param.CAFA_DIR, 'prediction', tokens{1}, mids{i}), 'pred');
-    data = pfp_predproj(data.pred, benchmark, 'object');
-    X{i} = data.score;
+  param.p = numel(param.mids); % number of candidate models
+  n = numel(benchmark);  % number of proteins
+  param.preds = cell(1, param.p);
+  x     = cell(1, param.p);
+  for j = 1 : param.p
+    data = load(fullfile(param.CAFA_DIR, 'prediction', tokens{1}, param.mids{j}), 'pred');
+    param.preds{j} = pfp_predproj(data.pred, benchmark, 'object'); % for evaluation
+    x{j} = param.preds{j}.score;
   end
   % }}}
 
-  % split (training, test) {{{
-  n  = size(Y, 1);
-  tv = randsample(n, floor(0.75*n)); % training + val
-  ts = setdiff(1:n, tv); % test
+  % split (training + validation, test) {{{
+  tv = randsample(n, floor(0.90*n)); % training + validation set
+  ts = setdiff(1:n, tv); % test set
   
-  tv_X = cell(1, m);
-  ts_X = cell(1, m);
-  for i = 1 : m
-    tv_X{i} = X{i}(tv, :);
-    ts_X{i} = X{i}(ts, :);
-  end
-  tv_Y = Y(tv, :);
-  ts_Y = Y(ts, :);
+  [tv_x, tv_y, ts_x, ts_y] = split_ds(x, param.oa.annotation, tv, ts);
+  param.tv_benchmark = benchmark(tv);
   % }}}
 
   % pick k models and learn an ensemble {{{
   fprintf('learning an ensemble ...\n');
-  param.k        = k;
-  param.nfolds   = v;
-  param.mids     = mids;
-  model          = learn_model(tv_X, tv_Y, param);
+  param.nfolds = 5; % do 5-fold cross-validation when needed
+  model = learn_model(tv_x, tv_y, param);
   % }}}
 
   % test performance {{{
   fprintf('evaluating performance ...\n');
-  pred_ts = apply_model(model, benchmark, X, ts, oa.ontology);
+  pred_ts = apply_model(model, benchmark(ts), param.preds, param.oa);
 
-  model.perf_comb = pfp_seqmetric(benchmark(ts), pred_ts, oa, 'fmax');
-  model.perf      = zeros(1, m);
-  for i = 1 : m
-    pred.object    = benchmark(ts);
-    pred.ontology  = oa.ontology;
-    pred.score     = X{i}(ts, :);
-    model.perf(i)  = pfp_seqmetric(benchmark(ts), pred, oa, 'fmax');
+  model.perf_comb = pfp_seqmetric(benchmark(ts), pred_ts, param.oa, 'fmax');
+  model.perf      = zeros(1, param.p);
+  for j = 1 : param.p
+    model.perf(j) = pfp_seqmetric(benchmark(ts), param.preds{j}, param.oa, 'fmax');
   end
   % }}}
 return
 
-% function: preprocess_xy {{{
-function [px, py] = preprocess_xy(x, y, index)
-  p = length(x);
-  px = cell(1, p);
-  if nargin == 3
-    for i = 1 : p
-      px{i} = reshape(x{i}(index,:), [], 1);
-    end
-    px = cell2mat(px);
-    py = reshape(y(index,:), [], 1);
-  else
-    for i = 1 : p
-      px{i} = reshape(x{i}, [], 1);
-    end
-    px = cell2mat(px);
-    py = reshape(y, [], 1);
-  end
-return
-% }}}
-
-% function: learn_model {{{
-% assumes x to be a p-by-1 row cell array (p = 10 for most cases)
-%         each of which is a (double) n-by-m matrix
-%         y to be a (binary) n-by-m matrix
-%         where n: # of proteins, m: # of terms
-function [model] = learn_model(x, y, param)
+% function: split_ds(x, y, id1, id2) {{{
+function [x1, y1, x2, y2] = split_ds(x, y, id1, id2)
   p = numel(x);
-  [n, m] = size(y);
-  votes = zeros(1, p);
-  % v-fold cross-validation {{{
-  index = crossvalind('Kfold', n, param.nfolds);
-  for i = 1 : param.nfolds
-    val = (index == i);
-    tr  = (index ~= i);
-
-    % get votes
-    [tr_X, tr_Y] = preprocess_xy(x, y, tr);
-
-    % remove all zero rows (for speeding up LASSO)
-    allzero = all(tr_X==0, 2);
-    tr_X(allzero, :) = [];
-    tr_Y(allzero)    = [];
-    [B, FitInfo] = lasso(tr_X, tr_Y, 'DFMax', param.k);
-    weight = 1 / FitInfo.MSE(1);
-    picked = find(B(:, 1) ~= 0);
-    votes(picked) = votes(picked) + weight;
+  x1 = cell(1, p);
+  x2 = cell(1, p);
+  for j = 1 : p
+    x1{j} = x{j}(id1, :);
+    x2{j} = x{j}(id2, :);
   end
-  % }}}
-
-  [~, index] = sort(votes, 'descend');
-  idk = index(1:param.k); % index to keep
-  x = x(idk); % keep only the selected k models
-  [x, y] = preprocess_xy(x, y);
-
-  if strcmp(param.learner, 'ols')
-    beta = (x'*x)\(x'*y); % linear regression
-  elseif strcmp(param.learner, 'logistic_regression')
-    beta = mnrfit(x, y+1);
-  else
-    error('cafa_train_ensemble:Learner', 'Unknown learner.');
-  end
-
-  cfile = fullfile(param.CAFA_DIR, 'config', 'config.tab');
-
-  model.learner   = param.learner;
-  model.iid       = param.mids;
-  model.dname     = cafa_team_iid2dname(cfile, param.mids);
-  model.beta      = zeros(1, p);
-  model.beta(idk) = beta;
+  y1 = y(id1, :);
+  y2 = y(id2, :);
 return
 % }}}
 
-% function: apply_model {{{
-function [pred] = apply_model(model, bm, X, pid, ont)
-% model:  learned model
-% bm:     a list of benchmark
-% X:      test set X
-% pid:    benchmark (protein) index of test set
-% ont:    ontology structure
-  pred.object   = bm(pid);
-  pred.ontology = ont;
-  
-  pred.score = sparse(numel(pid), numel(ont.term));
-  % weighted sum
-  if numel(model.beta) ~= numel(X)
-    error('cafa_train_ensemble:ModelCount', 'Incorrect number of models.');
-  end
-  n = numel(model.beta);
+% function: preprocess_xy(x, y) {{{
+function [px, py] = preprocess_xy(x, y)
+% {{{
+% Input
+% -----
+% [cell]
+% x: 1-by-p cell array of score matrices, each of which having size n-by-m.
+%
+% [double]
+% y: n-by-m binary annotation matrix.
+%
+% Output
+% ------
+% [double]
+% px: N-by-p preprocessed score matrix.
+%
+% [double]
+% px: N-by-1 preprocessed annotation matrix.
+% }}}
+%
+% 1. Removes terms with same annotation (i.e., all 0 or 1, for all proteins).
+% 2. Concatenates terms to be a long vector for each model.
 
-  for i = 1 : n
-    if model.beta(i) == 0
-      continue;
+  p = numel(x);
+  keep = find(~all(bsxfun(@eq, y, y(1,:)), 1)); % find columns to keep
+  for j = 1 : p
+    x{j} = reshape(x{j}(:, keep), [], 1);
+  end
+  px = cell2mat(x);
+  py = reshape(y(:, keep), [], 1);
+return
+% }}}
+
+% function: learn_model(x, y, param) {{{
+function [model] = learn_model(x, y, param)
+% {{{
+% Input
+% -----
+% [cell]
+% x: 1-by-p cell array of score matrices, each of which having size n-by-m.
+%
+% [double]
+% y: n-by-m binary annotation matrix.
+%
+% Output
+% ------
+% model
+% }}}
+
+  % record configurations {{{
+  cfile         = fullfile(param.CAFA_DIR, 'config', 'config.tab');
+  model.learner = param.learner;
+  model.iid     = param.mids;
+  model.dname   = cafa_team_iid2dname(cfile, param.mids);
+  % }}}
+
+  n = size(y, 1);
+  model.votes = zeros(1, param.p);
+
+  % set up a template of ols model to be a criterion for feature selection {{{
+  criterion.learner  = 'ols';
+  criterion.selected = [];                % place-holder
+  criterion.theta    = zeros(param.p, 1); % place-holder
+  % }}}
+
+  for v = 1 : param.nfolds
+    fprintf('fold [%d] of %d ...\n', v, param.nfolds);
+
+    % split (training, validation) set, and preprocess {{{
+    index = crossvalind('Kfold', n, param.nfolds);
+    tr = (index ~= v);
+    va = (index == v);
+    [tr_x, tr_y, va_x, va_y] = split_ds(x, y, tr, va);
+    [tr_x, tr_y] = preprocess_xy(tr_x, tr_y);
+    % }}}
+
+    % compute weighted votes of this fold
+    selected = [];
+    weight   = 0;
+    switch param.scheme
+    case 'lasso'
+      % use LASSO to vote {{{
+      B = lasso(tr_x, tr_y, 'DFMax', param.k);
+      selected = find(B(:, 1) ~= 0);
+
+      % update criterion
+      criterion.selected = selected;
+      criterion.theta    = B;
+
+      % evaluate on the validation set
+      pred_va = apply_model(criterion, param.tv_benchmark, param.preds, param.oa);
+      weight  = pfp_seqmetric(param.tv_benchmark, pred_va, param.oa, 'fmax');
+      % }}}
+    case 'sfs'
+      % sequential (forward) selection {{{
+      selected     = [];
+      best_overall = 0; % use fmax as performance
+      while numel(selected) < param.k
+        best_id    = 0;
+        best_round = 0;
+        for j = 1 : param.p
+          if ismember(j, selected)
+            continue;
+          end
+          candidates = [selected, j];
+          candid_x   = tr_x(:, candidates);
+          candid_param = learn_ols(candid_x, tr_y);
+
+          % update criterion
+          criterion.selected          = candidates;
+          criterion.theta             = zeros(param.p, 1);
+          criterion.theta(candidates) = candid_param;
+
+          % evaluate on the validation set
+          pred_va = apply_model(criterion, param.tv_benchmark, param.preds, param.oa);
+          perf    = pfp_seqmetric(param.tv_benchmark, pred_va, param.oa, 'fmax');
+
+          if perf > best_round % found a better candidate
+            best_round = perf;
+            best_id = j;
+          end
+        end
+
+        if best_round > best_overall
+          best_overall = best_round;
+          selected = [selected, best_id];
+        else
+          fprintf('adding methods doesn''t improve performance, early stop.\n');
+          break; % early-stopping
+        end
+      end
+      weight = best_overall;
+      % }}}
+    otherwise
+      % do nothing
     end
-    pred.score = pred.score + model.beta(i) * X{i}(pid, :);
+    % collect weighted votes
+    model.votes(selected) = model.votes(selected) + weight;
   end
+  [~, index]     = sort(model.votes, 'descend');
+  model.selected = index(1:param.k); % index to keep
 
+  x = x(model.selected); % keep only the selected k models
+
+  [x, y] = preprocess_xy(x, y);
+  if strcmp(param.learner, 'ols')
+    model.theta = zeros(1, param.p);
+    model.theta(model.selected) = learn_ols(x, y); % linear regression
+  elseif strcmp(param.learner, 'lr') % TODO
+    model.theta = zeros(1, param.p);
+    model.theta(model.selected) = learn_lr(x, y); % logistic regression
+  elseif strcmp(param.learner, 'nn')
+    model.theta = learn_nn(x, y); % neural network
+  end
+return
+% }}}
+
+% function: apply_model(model, bm, preds, oa) {{{
+function [pred] = apply_model(model, bm, preds, oa)
+% {{{
+% Input
+% -----
+% [struct]
+% model: learned model.
+%
+% [cell]
+% bm:    a list of benchmark.
+%
+% [cell]
+% preds: a cell of pred structures.
+%
+% [struct]
+% oa:    the ontology annotation structure.
+%
+% Output
+% ------
+% [struct]
+% pred: the prediction structure.
+% }}}
+
+  pred.object   = bm;
+  pred.ontology = oa.ontology;
+  pred.score    = sparse(numel(bm), numel(oa.ontology.term));
+  index = model.selected;
+  % apply model
   if strcmp(model.learner, 'ols')
-    % do nothing
-  elseif strcmp(model.learner, 'logistic_regression')
+    % weighted sum
+    for j = 1 : numel(index)
+      P = pfp_predproj(preds{index(j)}, bm, 'object');
+      pred.score = pred.score + model.theta(index(j)) * P.score;
+    end
+  elseif strcmp(model.learner, 'lr')
+    % weighted sum
+    for j = 1 : numel(index)
+      P = pfp_predproj(preds{index(j)}, bm, 'object');
+      pred.score = pred.score + model.theta(index(j)) * P.score;
+    end
     % apply the linker function
     pred.score = 1 ./ (1 + exp(-pred.score));
-  else
-    % do nothing
+  elseif strcmp(model.learner, 'nn')
+    x = cell(1, numel(index));
+    for j = 1 : numel(index)
+      P = pfp_predproj(preds{index(j)}, bm, 'object');
+      x{j} = reshape(P.score, [], 1);
+    end
+    x = cell2mat(x);
+    pred.score = reshape(sim(model.theta, x')', numel(bm), []);
   end
 
   % normalize each row (protein) separately
-  max_scores = pred.score(:, pfp_roottermidx(ont));
+  max_scores = pred.score(:, pfp_roottermidx(oa.ontology));
   min_scores = min(pred.score, [], 2);
   pred.score = pfp_minmaxnrm(pred.score', min_scores', max_scores')';
   pred = pfp_predprop(pred, true, 'max');
+return
+% }}}
+
+% function: learn_ols(x, y) {{{
+function [beta] = learn_ols(x, y)
+  beta = (x' * x) \ (x' * y);
+return
+% }}}
+
+% function: learn_lr(x, y) {{{
+function [beta] = learn_lr(x, y)
+  beta = mnrfit(x, y+1);
+return
+% }}}
+
+% function: learn_nn(x, y) {{{
+function [net, perf] = learn_nn(x, y)
+  % sub-sampling {{{
+  if size(x, 1) > 100000
+    index = randsample(size(x, 1), 100000);
+    x = x(index, :);
+    y = y(index);
+  end
+  % }}}
+
+  net = feedforwardnet(5);
+
+  % setup
+  net.layers{1}.transferFcn            = 'tansig';
+  net.layers{2}.transferFcn            = 'logsig';
+  net.inputs{1}.processFcns            = {'mapminmax'};
+  net.outputs{2}.processFcns           = {'mapminmax'};
+  net.outputs{2}.processParams{1}.ymin = 0;
+  net.outputs{2}.processParams{1}.ymax = 1;
+  net.divideParam.trainRatio           = 0.7;
+  net.divideParam.valratio             = 0.3;
+  net.divideParam.testRatio            = 0;
+  net.trainParam.epochs                = 100;
+  net.trainParam.max_fail              = 10;
+
+  net.trainParam.showWindow      = false;
+  net.trainParam.showCommandLine = false;
+
+  net         = init(net);
+  [net, info] = train(net, x', y');
+  perf        = info.best_vperf; % best performance on the validation set
 return
 % }}}
 
@@ -249,4 +419,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 01 Feb 2016 04:38:07 PM E
+% Last modified: Wed 03 Feb 2016 02:27:26 AM E

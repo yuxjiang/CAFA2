@@ -2,7 +2,7 @@ function [mids] = cafa_pick_models(k, bm, rho)
 %CAFA_PICK_MODELS CAFA pick models
 % {{{
 %
-% [mids] = CAFA_PICK_MODELS(k, bm, rho);
+% [mids] = CAFA_PICK_MODELS(k, bm, rho, sch);
 %
 %   Picks k "best" predictors from the pool of submitted predictions.
 %
@@ -20,18 +20,20 @@ function [mids] = cafa_pick_models(k, bm, rho)
 % Input
 % -----
 % [double]
-% k:    The number of models to pick.
-%       k = Inf indicates to pick all available models.
+% k:        The number of models to pick.
+%           k = Inf indicates to pick all available models.
 %
 % [char]
-% bm:   The benchmark, which is encoded as: <ontology>_<category>_<type>_<mode>
+% bm:       The benchmark, which is encoded as: <ontology>_<category>_<type>_<mode>
 %
-%       For example: mfo_HUMAN_type1_mode1
+%           For example: mfo_HUMAN_type1_mode1
 %
-%       Also, the specified benchmark should have been evaluated, i.e. there must
-%       be an existing subfolder (having the same name) under [CAFA_DIR]/evaluation/
-%
-% rho:  The correlation lower bound used to enforce non-redundancy.
+%           Also, the specified benchmark should have been evaluated, i.e. there
+%           must be an existing subfolder (having the same name) under
+%           [CAFA_DIR]/evaluation/
+% 
+% [double]  
+% rho:      The correlation lower bound used to enforce non-redundancy.
 %
 % Output
 % ------
@@ -126,4 +128,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 01 Feb 2016 04:11:15 PM E
+% Last modified: Tue 02 Feb 2016 10:20:41 AM E
