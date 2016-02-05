@@ -2,17 +2,23 @@ function [eia] = pfp_eia(DAG, A)
 %PFP_EIA Estimated information accretion
 % {{{
 %
-% [eia] = PFP_EIA(oa);
+% [eia] = PFP_EIA(DAG, A);
 %
 %   Estimates the information accretion for each term in the ontology.
 %
-%   Note:
-%   To avoid infinite 'eia', a pseudocount of one is added to each term.
+% Note
+% ----
+% To avoid infinite 'eia', a pseudocount of one is added to each term.
 %
 % Definition
 % ----------
 % Information accretion:
 % See the [Reference] below for details.
+%
+% Reference
+% ---------
+% W. Clark and P. Radivojac, Information theoretic evaluation of predicted
+% ontology annotations. Bioinformatics, 2013.
 %
 % Input
 % -----
@@ -28,11 +34,6 @@ function [eia] = pfp_eia(DAG, A)
 % ------
 % [double]
 % eia:  1 x m, an array of estimated information accretion.
-%
-% Reference
-% ---------
-% W. Clark and P. Radivojac, Information theoretic evaluation of predicted
-% ontology annotations. Bioinformatics, 2013.
 % }}}
 
   % check inputs {{{
@@ -82,4 +83,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 May 2015 11:23:44 AM E
+% Last modified: Wed 03 Feb 2016 07:14:07 PM E

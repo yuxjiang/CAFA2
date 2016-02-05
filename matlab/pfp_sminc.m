@@ -20,7 +20,7 @@ function [smin, point, t] = pfp_sminc(curve, tau, order)
 %   curve:  A k-by-2 RU-MI matrix (i.e. a curve)
 %
 %   [double]
-%   tau:    A 1-by-k vector of thresholds.
+%   tau:    A 1-by-k increasing thresholds.
 %
 %   (optional)
 %   [double]
@@ -60,7 +60,7 @@ function [smin, point, t] = pfp_sminc(curve, tau, order)
     % }}}
 
     % check the 2nd input 'tau' {{{
-    validateattributes(tau, {'double'}, {'numel', k}, '', 'tau', 2);
+    validateattributes(tau, {'double'}, {'numel', k, 'increasing'}, '', 'tau', 2);
     % }}}
 
     % check the 3rd input 'order' {{{

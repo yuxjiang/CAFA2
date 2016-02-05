@@ -35,6 +35,8 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
 % ------
 % [struct]
 % model:    The learned ensemble model, which contains the following:
+%           .scheme     one of {'lasso', 'sfs'}
+%           .learner    one of {'ols', 'lr', 'nn'}
 %           .iid        1-by-p cell array of model internal IDs.
 %           .dname      1-by-p cell array of model display names.
 %           .selected   1-by-k index
@@ -87,7 +89,7 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
   % }}}
 
   % load model iids {{{
-  param.mids = cafa_pick_models(Inf, bm, 1); % pick all models.
+  param.mids = cafa_pick_models(5, bm, 1); % pick all models.
   % }}}
 
   % load target values {{{
@@ -95,8 +97,9 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
   list_file = strcat(tokens{1}, '_', tokens{2}, '_', tokens{3}, '.txt');
   benchmark = pfp_loaditem(fullfile(param.CAFA_DIR, 'benchmark', 'lists', list_file), 'char');
 
-  data     = load(fullfile(param.CAFA_DIR, 'benchmark', 'groundtruth', [tokens{1}, 'a']), 'oa');
-  param.oa = pfp_oaproj(data.oa, benchmark, 'object'); % Y will be oa.annotation
+  data           = load(fullfile(param.CAFA_DIR, 'benchmark', 'groundtruth', [tokens{1}, 'a']), 'oa');
+  param.oa       = pfp_oaproj(data.oa, benchmark, 'object'); % Y will be oa.annotation
+  param.small_oa = pfp_annotsuboa(param.oa);
   % }}}
 
   % load predictions {{{
@@ -120,9 +123,9 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
   param.tv_benchmark = benchmark(tv);
   % }}}
 
-  % pick k models and learn an ensemble {{{
+  % learn an ensemble with k models {{{
   fprintf('learning an ensemble ...\n');
-  param.nfolds = 5; % do 5-fold cross-validation when needed
+  param.nfolds = 2; % do 5-fold cross-validation when needed
   model = learn_model(tv_x, tv_y, param);
   % }}}
 
@@ -202,6 +205,7 @@ function [model] = learn_model(x, y, param)
 % }}}
 
   % record configurations {{{
+  model.scheme  = param.scheme;
   cfile         = fullfile(param.CAFA_DIR, 'config', 'config.tab');
   model.learner = param.learner;
   model.iid     = param.mids;
@@ -228,6 +232,12 @@ function [model] = learn_model(x, y, param)
     [tr_x, tr_y] = preprocess_xy(tr_x, tr_y);
     % }}}
 
+    % make predictions on the small annotated sub-ontology
+    small_preds = cell(1, param.p);
+    for j = 1 : param.p
+      small_preds{j} = pfp_predproj(param.preds{j}, {param.small_oa.ontology.term.id}, 'term');
+    end
+
     % compute weighted votes of this fold
     selected = [];
     weight   = 0;
@@ -253,6 +263,7 @@ function [model] = learn_model(x, y, param)
         best_id    = 0;
         best_round = 0;
         for j = 1 : param.p
+          j
           if ismember(j, selected)
             continue;
           end
@@ -266,8 +277,10 @@ function [model] = learn_model(x, y, param)
           criterion.theta(candidates) = candid_param;
 
           % evaluate on the validation set
-          pred_va = apply_model(criterion, param.tv_benchmark, param.preds, param.oa);
-          perf    = pfp_seqmetric(param.tv_benchmark, pred_va, param.oa, 'fmax');
+          % pred_va = apply_model(criterion, param.tv_benchmark, param.preds, param.oa);
+          % perf    = pfp_seqmetric(param.tv_benchmark, pred_va, param.oa, 'fmax');
+          pred_va = apply_model(criterion, param.tv_benchmark, small_preds, param.small_oa);
+          perf    = pfp_seqmetric(param.tv_benchmark, pred_va, param.small_oa, 'fmax');
 
           if perf > best_round % found a better candidate
             best_round = perf;
@@ -335,6 +348,7 @@ function [pred] = apply_model(model, bm, preds, oa)
   pred.object   = bm;
   pred.ontology = oa.ontology;
   pred.score    = sparse(numel(bm), numel(oa.ontology.term));
+
   index = model.selected;
   % apply model
   if strcmp(model.learner, 'ols')
@@ -362,9 +376,12 @@ function [pred] = apply_model(model, bm, preds, oa)
   end
 
   % normalize each row (protein) separately
-  max_scores = pred.score(:, pfp_roottermidx(oa.ontology));
-  min_scores = min(pred.score, [], 2);
-  pred.score = pfp_minmaxnrm(pred.score', min_scores', max_scores')';
+  % max_scores = pred.score(:, pfp_roottermidx(oa.ontology));
+  % min_scores = min(pred.score, [], 2);
+  % pred.score = pfp_minmaxnrm(pred.score', min_scores', max_scores')';
+  min_score  = min(min(pred.score));
+  pred.score = cafa_norm_pred(pred.score - min_score);
+  % 
   pred = pfp_predprop(pred, true, 'max');
 return
 % }}}
@@ -419,4 +436,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Wed 03 Feb 2016 02:27:26 AM E
+% Last modified: Thu 04 Feb 2016 05:50:37 PM E

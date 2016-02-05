@@ -24,7 +24,7 @@ function [cm, tau] = pfp_confmatw(pred, ref, w, tau)
 %
 % (optional)
 % [double]
-% tau:  1-by-k thresholds.
+% tau:  1-by-k increasing thresholds.
 %       default: 0.00 : 0.01 : 1.00
 %
 % Output
@@ -63,7 +63,7 @@ function [cm, tau] = pfp_confmatw(pred, ref, w, tau)
   % }}}
 
   % check the 4th input 'tau' {{{
-  validateattributes(tau, {'double'}, {'row', '>=', 0, '<=', 1}, '', 'tau', 4);
+  validateattributes(tau, {'double'}, {'row', '>=', 0, '<=', 1, 'increasing'}, '', 'tau', 4);
   k = numel(tau);
   % }}}
   % }}}
@@ -90,4 +90,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 11:41:12 AM E
+% Last modified: Thu 04 Feb 2016 06:24:00 PM E

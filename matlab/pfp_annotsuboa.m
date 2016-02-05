@@ -10,14 +10,15 @@ function [oa] = pfp_annotsuboa(oa)
 % -----
 % [struct]
 % oa: The ontology annotation structure.
+%     See pfp_oabuild.m.
 %
 % Output
 % ------
 % [struct]
 % oa: The deflated ontology annotation structure.
 %
-% Dependency
-% ----------
+% See Also
+% --------
 %[>]pfp_oabuild.m
 % }}}
 
@@ -46,4 +47,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 May 2015 11:03:46 AM E
+% Last modified: Thu 04 Feb 2016 05:40:13 PM E

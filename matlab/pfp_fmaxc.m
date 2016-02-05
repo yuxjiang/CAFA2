@@ -16,7 +16,7 @@ function [fmax, point, t] = pfp_fmaxc(curve, tau, beta)
 % curve:  A k-by-2 precision-recall matrix (i.e. a curve).
 %
 % [double]
-% tau:    A 1-by-k vector of thresholds.
+% tau:    A 1-by-k (increasing) thresholds.
 %
 % (optional)
 % [double]
@@ -50,7 +50,7 @@ function [fmax, point, t] = pfp_fmaxc(curve, tau, beta)
   % }}}
 
   % check the 2nd input 'tau' {{{
-  validateattributes(tau, {'double'}, {'numel', k}, '', 'tau', 2);
+  validateattributes(tau, {'double'}, {'numel', k, 'increasing'}, '', 'tau', 2);
   % }}}
 
   % check the 3rd input 'beta' {{{
@@ -85,4 +85,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 14 Sep 2015 05:25:50 PM E
+% Last modified: Thu 04 Feb 2016 06:24:41 PM E
