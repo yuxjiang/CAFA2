@@ -89,7 +89,7 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
   % }}}
 
   % load model iids {{{
-  param.mids = cafa_pick_models(5, bm, 1); % pick all models.
+  param.mids = cafa_pick_models(Inf, bm, 1); % pick all models.
   % }}}
 
   % load target values {{{
@@ -125,7 +125,7 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
 
   % learn an ensemble with k models {{{
   fprintf('learning an ensemble ...\n');
-  param.nfolds = 2; % do 5-fold cross-validation when needed
+  param.nfolds = 5; % do 5-fold cross-validation when needed
   model = learn_model(tv_x, tv_y, param);
   % }}}
 
@@ -263,7 +263,6 @@ function [model] = learn_model(x, y, param)
         best_id    = 0;
         best_round = 0;
         for j = 1 : param.p
-          j
           if ismember(j, selected)
             continue;
           end
@@ -436,4 +435,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 04 Feb 2016 05:50:37 PM E
+% Last modified: Fri 05 Feb 2016 02:15:58 PM E
