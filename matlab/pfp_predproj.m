@@ -12,10 +12,10 @@ function [pred] = pfp_predproj(pred, lst, op)
 %
 %   Projects the prediction to subset of ontology terms.
 %
-%   Note:
-%   In the case of op being 'term', 'lst' must be a subset of 
-%   'pred.ontology.term', otherwise the prediction consistency might be
-%   violated.
+% Note
+% ----
+% In the case of op being 'term', 'lst' must be a subset of
+% 'pred.ontology.term', otherwise the prediction consistency might be violated.
 %
 % Input
 % -----
@@ -103,4 +103,4 @@ return
 % Yuxiang Jiang
 % School of Informatics and Computing
 % Indiana University Bloomington
-% Last modified: Mon 04 May 2015 11:58:54 AM E
+% Last modified: Sat 09 Jan 2016 10:35:59 AM C

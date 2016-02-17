@@ -6,17 +6,19 @@ function [idx] = pfp_gettermidx(ont, term_lst)
 %
 %   Returns an array of indices of the given term list.
 %
-%   Note: 
-%   1. If 'alt_list' is presented in the ontology structure, 'term_lst' will
-%      also be searched against that list, and if hit, their current IDs will be
-%      returned;
+% Note 
+% ----
+% 1. If 'alt_list' is presented in the ontology structure, 'term_lst' will
+%    also be searched against that list, and if hit, their current IDs will be
+%    returned;
 %
-%   2. For IDs that are not found, 0 will be returned as an index.
+% 2. For IDs that are not found, 0 will be returned as an index.
 %
 % Input
 % -----
 % [struct]
 % ont:      The ontology structure.
+%           See pfp_ontbuild.m
 %
 % [cell, char or struct]
 % term_lst: [cell]      - A cell of (char) term IDs.
@@ -26,10 +28,10 @@ function [idx] = pfp_gettermidx(ont, term_lst)
 % Output
 % ------
 % [double]
-% idx:      An array of indices.
+% idx:  An array of indices.
 %
-% Dependency
-% ----------
+% See Also
+% --------
 %[>]pfp_ontbuild.m
 % }}}
 
@@ -80,4 +82,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 06 Jul 2015 04:30:46 PM E
+% Last modified: Sat 09 Jan 2016 10:15:47 AM C

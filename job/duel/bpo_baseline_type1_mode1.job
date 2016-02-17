@@ -3,27 +3,27 @@
 # paths
 # -----
 # where is the parsed 'pred' structures
-pred_dir   = ~/cafa/duel/cafa1/prediction/mfo/
+pred_dir   = ~/cafa/duel/baseline/prediction/bpo/
 
 # where is pre-computed results?
-prev_dir   = ~/cafa/duel/cafa1/seq-centric/mfo/
+prev_dir   = ~/cafa/duel/baseline/seq-centric/bpo/
 
 # where to put output folder
-eval_dir   = ~/cafa/duel/cafa1/evaluation/
+eval_dir   = ~/cafa/duel/baseline/evaluation/
 
 # where is the annotation structure
-annotation = ~/cafa/duel/cafa1/benchmark/groundtruth/mfoa.mat
+annotation = ~/cafa/duel/cafa2/benchmark/groundtruth/bpoa.mat
 
 # benchmark list file
-benchmark  = ~/cafa/duel/cafa1/benchmark/lists/mfo_duel_type1.txt
+benchmark  = ~/cafa/duel/cafa2/benchmark/lists/bpo_duel_type1.txt
 
 # where is the bootstrap index
-bootstrap  = ~/cafa/config/bootstrap/mfo_duel_type1.mat
+bootstrap  = ~/cafa/config/bootstrap/bpo_duel_type1.mat
 
 # ontology
 # --------
 # options: mfo, bpo, cco, hpo
-ontology = mfo
+ontology = bpo
 
 # benchmark category
 # ------------------
@@ -55,10 +55,13 @@ metric = f
 # options: all (all regular models), +M*, -M*, +B*, -B* 
 # baseline (Naive/BLAST) options: B[NB][14][SGUA]
 # note: B[NB]4S is the most typical, which was trained on SwissProt Jan.2014
-model = all
+model = +BN1S
+model = +BN4S
+model = +BB1S
+model = +BB4S
 
 # -------------
 # Yuxiang Jiang (yuxjiang@indiana.edu)
 # Department of Computer Science
 # Indiana University, Bloomington
-# Last modified: Tue 16 Feb 2016 02:29:39 PM E
+# Last modified: Wed 17 Feb 2016 10:53:23 AM E

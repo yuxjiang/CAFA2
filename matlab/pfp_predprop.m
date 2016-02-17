@@ -36,7 +36,7 @@ function [pred] = pfp_predprop(pred, force, scheme)
 % Output
 % ------
 % [struct]
-% pred:   The same structure but with score propagated.
+% pred: The same structure but with score propagated.
 %
 % Dependency
 % ----------
@@ -121,4 +121,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 04 May 2015 12:00:02 PM E
+% Last modified: Sat 09 Jan 2016 10:36:19 AM C

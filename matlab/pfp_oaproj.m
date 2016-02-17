@@ -10,9 +10,10 @@ function [oa] = pfp_oaproj(oa, lst, option)
 %
 %   Projects the ontology annotations to a subset of terms.
 %
-%   Note:
-%   In the case of option = 'term', 'lst' must be a subset of terms in the given
-%   ontology (oa.ontology), otherwise an error message will be prompted.
+% Note
+% ----
+% In the case of option being 'term', 'lst' must be a subset of terms in the
+% given ontology (oa.ontology), otherwise an error message will be prompted.
 %
 % Input
 % -----
@@ -27,7 +28,7 @@ function [oa] = pfp_oaproj(oa, lst, option)
 %
 % Output
 % ------
-% oa:     The projected ontology annotation structure.
+% oa: The projected ontology annotation structure.
 %
 % Dependency
 % ----------
@@ -95,4 +96,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 May 2015 11:15:59 AM E
+% Last modified: Sat 09 Jan 2016 09:55:41 AM C

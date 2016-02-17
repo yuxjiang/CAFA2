@@ -6,29 +6,41 @@ function [pred] = pfp_blast(qseqid, B, oa, feature)
 %
 %   Returns the BLAST predcition.
 %
-%   Note: 
-%   The resulting structure 'pred' is similar to 'oa' except that it substitutes
-%   the field 'annotation' for a double matrix 'score'.
+% Note 
+% ----
+% The resulting structure 'pred' is similar to 'oa' except that it substitutes
+% the field 'annotation' for a double matrix 'score'.
 %       
 % Input
 % -----
 % [cell]
 % qseqid:   n-by-1, a list of query sequence ID.
+%           The sequence ID can of any type, as long as they are the same as
+%           those used in 'B.qseqid'. One can simply feed the function with
+%           'B.qseqid' as the 1st input so as to get the BLAST prediction of all
+%           sequences in 'B'.
 %
 % [char]
-% B:        The imported blastp results.
-%           See pfp_importblastp.
+% B:        The imported blastp results. Typically, blast test set against
+%           training set sequences.
+%           See pfp_importblastp.m for instructions of running blastp.
 %
 %           Note: one needs to make sure that the query sequence ID of 'B'
 %           "match" the 'qseqid' as the first argument.
 %
 % [struct]
-% oa:       The reference ontology annotation structure.
+% oa:       The reference ontology annotation structure. Typically, it's the
+%           annotation structure of the training set.
+%           See pfp_oabuild.m
 %
 % (optional)
 % [char]
 % feature:  The feature used to generate blast predictions. It has to be one
 %           of {'sid', 'rscore'}.
+%           'sid'     - sequence identity, uses 'pident' from blastp.
+%                       It's the widely used BLAST baseline for protein function
+%                       prediction methods.
+%           'rscore'  - R-score, -log(E-value) + 2
 %           default: 'sid'
 %
 % Output
@@ -47,8 +59,8 @@ function [pred] = pfp_blast(qseqid, B, oa, feature)
 %           [char]
 %           .date     
 %
-% Dependency
-% ----------
+% See Also
+% --------
 %[>]pfp_importblastp.m
 %[>]pfp_oabuild.m
 % }}}
@@ -130,4 +142,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 04 May 2015 11:51:44 AM E
+% Last modified: Sat 09 Jan 2016 10:33:18 AM C

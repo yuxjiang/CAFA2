@@ -9,9 +9,10 @@ function [pred] = pfp_naive(qseqid, oa)
 %   The naive function prediction simply predicts a term (for all query
 %   sequences) as the frequency in the annotation database.
 %
-%   Note:
-%   'Pred' is similar to 'oa' except that it changes the binary 'annotation'
-%   matrix to real-valued within [0, 1] matrix 'score'.
+% Note
+% ----
+% 'Pred' is similar to 'oa' except that it changes the binary 'annotation'
+% matrix to real-valued within [0, 1] matrix 'score'.
 %
 % Input
 % -----
@@ -25,21 +26,21 @@ function [pred] = pfp_naive(qseqid, oa)
 % Output
 % ------
 % [struct]
-% pred:   the naive prediction structure, having the following fields:
-%         [cell]
-%         .object     A cell of (char) query ID list.
+% pred: The naive prediction structure, having the following fields:
+%       [cell]
+%       .object     A cell of (char) query ID list.
 %
-%         [struct]
-%         .ontology   the ontology structure
+%       [struct]
+%       .ontology   the ontology structure
 %
-%         [double and sparse]
-%         .score      The scoring matrix.
+%       [double and sparse]
+%       .score      The scoring matrix.
 %
-%         [char]
-%         .date
+%       [char]
+%       .date
 %
-% Dependency
-% ----------
+% See Also
+% --------
 %[>]pfp_oabuild.m
 % }}}
 
@@ -73,4 +74,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 04 May 2015 11:53:52 AM E
+% Last modified: Sat 09 Jan 2016 10:35:16 AM C

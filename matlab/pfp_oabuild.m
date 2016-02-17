@@ -6,8 +6,9 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
 %
 %   Builds an ontology annotation structure from data file(s).
 %
-%   Note:
-%   Annotations with unmatched term IDs will be ignored.
+% Note
+% ----
+% Annotations with unmatched term IDs will be ignored.
 %
 % Input
 % -----
@@ -27,24 +28,24 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
 % Output
 % ------
 % [struct]
-% oa:       The ontology annotation structure, which has
-%           [cell]
-%           .object     (char) object ID array, of char type, ID here could 
-%                       be string that identifies an object e.g., HGNC ID
-%                       for genes, UniProt accession for proteins.
+% oa: The ontology annotation structure, which has
+%     [cell]
+%     .object     (char) object ID array, of char type, ID here could 
+%                 be string that identifies an object e.g., HGNC ID
+%                 for genes, UniProt accession for proteins.
 %
-%           [struct]
-%           .ontology   The ontology structure.
+%     [struct]
+%     .ontology   The ontology structure.
 %
-%           [logical and sparse]
-%           .annotation Annotation(i, j) = true means object i and term j
-%                       are associated.
+%     [logical and sparse]
+%     .annotation Annotation(i, j) = true means object i and term j
+%                 are associated.
 %
-%           [double]
-%           .eia        The estimated information accretion for each term.
+%     [double]
+%     .eia        The estimated information accretion for each term.
 %
-%           [char]
-%           .date       When it's been built.
+%     [char]
+%     .date       When it's been built.
 %
 % Dependency
 % ----------
@@ -180,4 +181,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 22 Sep 2015 11:38:46 AM E
+% Last modified: Sat 09 Jan 2016 09:54:02 AM C

@@ -15,8 +15,7 @@ function [ont] = pfp_ontbuild(ont_type, obo_file, ext_rel)
 % Input
 % -----
 % [char]
-% ont_type: The type of the ontology, must be one of the following {'GO', 'DO',
-%           'HPO'}
+% ont_type: The ontology type, must be one of {'GO', 'DO', 'HPO'}
 %
 %           Note:
 %           If 'ont_type' is set to 'GO' then it returns a collection of the 3
@@ -262,4 +261,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sat 22 Aug 2015 04:00:47 PM E
+% Last modified: Sat 09 Jan 2016 10:11:07 AM C

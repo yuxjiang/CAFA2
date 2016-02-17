@@ -1,33 +1,21 @@
 # template for an evaluation pipeline job
 
-# output
-# ------
-# 1. sequence-centric assessment
-#		 top10-model curve
-#		 top10-model bar
-#		 all-model sheets (NA and A)
-#
-# 2. term-centric assessment
-#		 all-term histogram
-#		 top20-/bottom20-term boxplot
-#		 all-term sheet (NA and A)
-
 # paths
 # -----
 # where is the parsed 'pred' structures
-pred_dir   = ~/cafa/prediction/bpo/
+pred_dir   = ~/cafa/duel/cafa2/prediction/bpo/
 
 # where is pre-computed results?
-prev_dir   = ~/cafa/seq-centric/bpo/
+prev_dir   = ~/cafa/duel/cafa2/seq-centric/bpo/
 
 # where to put output folder
-eval_dir   = ~/cafa/evaluation/
+eval_dir   = ~/cafa/duel/cafa2/evaluation/
 
 # where is the annotation structure
-annotation = ~/cafa/benchmark/groundtruth/bpoa.mat
+annotation = ~/cafa/duel/cafa2/benchmark/groundtruth/bpoa.mat
 
 # benchmark list file
-benchmark  = ~/cafa/benchmark/lists/bpo_duel_type1.txt
+benchmark  = ~/cafa/duel/cafa2/benchmark/lists/bpo_duel_type1.txt
 
 # where is the bootstrap index
 bootstrap  = ~/cafa/config/bootstrap/bpo_duel_type1.mat
@@ -57,10 +45,10 @@ mode = 1
 # options:
 # f (F1-max), s (S2-min), wf (weighted F1-max), ns (normalized S2-min), auc
 metric = f
-metric = wf
-metric = s
-metric = ns
-metric = auc
+# metric = wf
+# metric = s
+# metric = ns
+# metric = auc
 
 # model
 # -----
@@ -68,13 +56,9 @@ metric = auc
 # baseline (Naive/BLAST) options: B[NB][14][SGUA]
 # note: B[NB]4S is the most typical, which was trained on SwissProt Jan.2014
 model = all
-model = +BN1S
-model = +BB1S
-model = +BN4S
-model = +BB4S
 
 # -------------
 # Yuxiang Jiang (yuxjiang@indiana.edu)
 # Department of Computer Science
 # Indiana University, Bloomington
-# Last modified: Wed 10 Jun 2015 03:22:08 PM E
+# Last modified: Wed 17 Feb 2016 12:43:26 AM E

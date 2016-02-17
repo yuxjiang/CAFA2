@@ -26,10 +26,12 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 %         See cafa_eval_seq_fmax_bst.m
 %
 % [char]
-% naive:  The method name of the naive baseline.
+% naive:  The method id of the naive baseline. E.g. BN4S
+%         Could be empty: '' if not interested.
 %
 % [char]
-% blast:  The method name of the blast baseline.
+% blast:  The method id of the blast baseline. E.g. BB4S
+%         Could be empty: '' if not interested.
 %
 % [char]
 % config: The file having team information. The file should have the
@@ -114,11 +116,11 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
   % }}}
 
   % check the 3rd input 'naive' {{{
-  validateattributes(naive, {'char'}, {'nonempty'}, '', 'naive', 3);
+  validateattributes(naive, {'char'}, {}, '', 'naive', 3);
   % }}}
 
   % check the 4rd input 'blast' {{{
-  validateattributes(blast, {'char'}, {'nonempty'}, '', 'blast', 4);
+  validateattributes(blast, {'char'}, {}, '', 'blast', 4);
   % }}}
 
   % check the 5th input 'config' {{{
@@ -276,4 +278,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 25 Jan 2016 04:02:54 PM E
+% Last modified: Tue 16 Feb 2016 03:21:07 PM E

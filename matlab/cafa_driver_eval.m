@@ -6,33 +6,39 @@ function [] = cafa_driver_eval(config_info)
 %
 %   Evaluates CAFA models (based on pre-evaluation).
 %
-% Suggestion
-% ----------
-% It will be more organsized to keep everything under a single folder,
-% therefore, an example CAFA2 project folder looks like the following:
+% Note
+% ----
+% All CAFA2 related meterials are assumed to be put in a single folder:
+% (See cafa_driver_preeval.m for full file structures.)
 %
 % CAFA2
-% |--   config/           (configuration files)
-% |--   consolidated/     (consolidated plain-text prediction files)
-% |--   seq-centric/      (pre-evaluation results will appear here)
-% |--   prediction/       (imported predictions in Matlab structures)
-% |     |-- mfo/
-% |     |-- bpo/
-% |     |-- cco/
-% |     `-- hpo/
-% |--   filtered/         (filtered plain-text prediction file)
-% |--   benchmark/
+% |--   ...               (other sub-folders not listed)
+% |-- ! seq-centric/        (pre-evaluation results will appear here)
+% |     |-- ! mfo/
+% |     |-- ! bpo/
+% |     |-- ! cco/
+% |     `-- ! hpo/
+% |-- ! prediction/       (imported predictions in Matlab structures)
+% |     |-- ! mfo/
+% |     |-- ! bpo/
+% |     |-- ! cco/
+% |     `-- ! hpo/
+% |-- ! benchmark/
 % |     |-- lists/        (lists of benchmarks)
 % |     `-- groundtruth/  (pre-computed annotations, see pfp_oabuild.m)
-% |-- * evaluation/       (evaluation results will appear here)
-% `--   ontology/         (pre-computed ontologies, see pfp_ontbuild.m)
+% `-- * evaluation/       (evaluation results appear in sub-folders here)
+%       |-- ...
+%       `-- <eval_dir>    (The evalution results, one file for each model. And
+%                          the configuration guides this evaluation will also be
+%                          saved in this folder as 'eval_config.job')
 %
-% folders with * will be modified by this script.
+% folders marked with * will be updated.
+% ................... ! need to be prepared as prerequisites.
 %
 % Input
 % -----
 % [char or struct]
-% config_info:  the configuration file (job descriptor) or a parsed config
+% config_info:  The configuration file (job descriptor) or a parsed config
 %               structure.
 %
 %               See cafa_parse_config.m
@@ -45,23 +51,35 @@ function [] = cafa_driver_eval(config_info)
 %[>]cafa_eval_seq_fmax_bst.m
 %[>]cafa_eval_seq_smin_bst.m
 %[>]cafa_eval_term_auc.m
+%
+% See Also
+% --------
+%[>]cafa_driver_preeval.m
 % }}}
 
-  % parse and save config {{{
+  % check inputs {{{
+  if nargin ~= 1
+    error('cafa_driver_eval:InputCount', 'Expected 1 input.');
+  end
+
+  % check the 1st input 'config_info' {{{
+  validateattributes(config_info, {'char', 'struct'}, {'nonempty'}, '', 'config_info', 1);
+
   if ischar(config_info)
     config = cafa_parse_config(config_info);
     % save the configuration file for future reference
-    copyfile(config_info, strcat(config.eval_dir, 'eval_config.job'));
+    copyfile(config_info, fullfile(config.eval_dir, 'eval_config.job'));
   elseif isstruct(config_info)
     config = config_info;
   else
     error('cafa_driver_eval:InputErr', 'Unknown data type of ''config_info''');
   end
   % }}}
+  % }}}
 
   % evaluation {{{
   n = numel(config.model);
-  if n > 4
+  if n > 8
     % parallel evaluation for batch running
     p = gcp('nocreate');
     if isempty(p)
@@ -70,21 +88,22 @@ function [] = cafa_driver_eval(config_info)
 
     parfor i = 1 : n
       % specify info for the model
-      mid       = config.model{i};
-      prev_file = strcat(config.prev_dir, mid, '.mat');
-      pred_file = strcat(config.pred_dir, mid, '.mat');
-      eval_file = strcat(config.eval_dir, mid, '.mat');
+      local_cfg = config;
+      mid       = local_cfg.model{i};
+      prev_file = fullfile(local_cfg.prev_dir, strcat(mid, '.mat'));
+      pred_file = fullfile(local_cfg.pred_dir, strcat(mid, '.mat'));
+      eval_file = fullfile(local_cfg.eval_dir, strcat(mid, '.mat'));
 
-      eval_single(config, mid, prev_file, pred_file, eval_file);
+      eval_single(local_cfg, mid, prev_file, pred_file, eval_file);
     end
   else
     % serial evaluation for small jobs
     for i = 1 : n
       % specify info for the model
       mid       = config.model{i};
-      prev_file = strcat(config.prev_dir, mid, '.mat');
-      pred_file = strcat(config.pred_dir, mid, '.mat');
-      eval_file = strcat(config.eval_dir, mid, '.mat');
+      prev_file = fullfile(config.prev_dir, strcat(mid, '.mat'));
+      pred_file = fullfile(config.pred_dir, strcat(mid, '.mat'));
+      eval_file = fullfile(config.eval_dir, strcat(mid, '.mat'));
 
       eval_single(config, mid, prev_file, pred_file, eval_file);
     end
@@ -212,4 +231,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 14 Jan 2016 04:26:14 PM E
+% Last modified: Wed 17 Feb 2016 05:39:52 PM E

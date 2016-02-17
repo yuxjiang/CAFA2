@@ -19,6 +19,7 @@ function [term] = pfp_getterm(ont, term_lst)
 % -----
 % [struct]
 % ont:      The ontology structure.
+%           See pfp_ontbuild.m
 %
 % [cell or char]
 % term_lst: [cell]  - a cell of (char) term IDs.
@@ -27,10 +28,10 @@ function [term] = pfp_getterm(ont, term_lst)
 % Output
 % ------
 % [struct]
-% term:     An array of term structures.
+% term: An array of term structures.
 %
-% Dependency
-% ----------
+% See Also
+% --------
 %[>]pfp_ontbuild.m
 % }}}
 
@@ -90,4 +91,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 07 Aug 2015 01:40:40 PM E
+% Last modified: Sat 09 Jan 2016 10:14:39 AM C

@@ -10,14 +10,15 @@ function [idx] = pfp_roottermidx(ont)
 % -----
 % [struct]
 % ont:  The ontology structure.
+%       See pfp_ontbuild.m
 %
 % Output
 % ------
 % [double]
 % idx:  The index of the root(s).
 %
-% Dependency
-% ----------
+% See Also
+% --------
 %[>]pfp_ontbuild.m
 % }}}
 
@@ -40,4 +41,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 06 Jul 2015 04:32:51 PM E
+% Last modified: Sat 09 Jan 2016 10:05:14 AM C

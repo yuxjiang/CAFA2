@@ -10,6 +10,7 @@ function [idx] = pfp_ancestortermidx(ont, term_lst)
 % -----
 % [struct]
 % ont:      The ontology structure.
+%           See pfp_ontbuild.m
 %
 % [cell, char or struct]
 % term_lst: [cell]    - A cell of (char) term IDs.
@@ -19,11 +20,14 @@ function [idx] = pfp_ancestortermidx(ont, term_lst)
 % Output
 % ------
 % [double]
-% idx:      An array of ancestor term indices.
+% idx:  An array of ancestor term indices.
 %
 % Dependency
 % ----------
 %[>]pfp_gettermidx.m
+%
+% See Also
+% --------
 %[>]pfp_ontbuild.m
 % }}}
 
@@ -62,4 +66,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 06 Jul 2015 04:29:04 PM E
+% Last modified: Wed 13 Jan 2016 09:20:37 AM E

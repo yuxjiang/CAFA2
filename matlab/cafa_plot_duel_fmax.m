@@ -1,4 +1,4 @@
-function [] = cafa_plot_duel_fmax(pfile, pttl, data, bsl_data)
+function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
 %CAFA_PLOT_DUEL_FMAX CAFA plot duel Fmax
 % {{{
 %
@@ -12,9 +12,6 @@ function [] = cafa_plot_duel_fmax(pfile, pttl, data, bsl_data)
 % pfile:    The filename of the plot.
 %           Note that the file extension must be either 'eps' or 'png'.
 %           default: 'png'
-%
-% [char]
-% pttl:     The plot title.
 %
 % [struct]
 % data:     The data structure containing information for plot.
@@ -41,16 +38,23 @@ function [] = cafa_plot_duel_fmax(pfile, pttl, data, bsl_data)
 %           cell 3 - BLAST trained on CAFA1 training (2011 SwissProt)
 %           cell 4 - BLAST trained on CAFA2 training (2014 SwissProt)
 %           
-%           Each cell can be retrieved using cafa_sel_top_seq_fmax.m
+%           Each cell entry contains the evaluation result 'seq_fmax_bst'.
+%           See cafa_eval_seq_fmax_bst.m
+%
+% [double]
+% yrange:   [ymin, ymax] of the bar plot of baselines.
+%           --------
+%           recommended for mfo: [0.2, 0.7]
+%           recommended for bpo: [0.0, 0.5]
 %
 % Output
 % ------
 % None.
 %
-% Dependency
-% ----------
+% See Also
+% --------
 %[>]cafa_duel_seq_fmax.m
-%[>]cafa_sel_top_seq_fmax.m
+%[>]cafa_eval_seq_fmax_bst.m
 % }}}
 
   % check inputs {{{
@@ -72,40 +76,34 @@ function [] = cafa_plot_duel_fmax(pfile, pttl, data, bsl_data)
   end
   % }}}
 
-  % check the 2nd input 'pttl' {{{
-  validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
-
-  % check the 3rd input 'data' {{{
-  validateattributes(data, {'struct'}, {'nonempty'}, '', 'data', 3);
+  % check the 2nd input 'data' {{{
+  validateattributes(data, {'struct'}, {'nonempty'}, '', 'data', 2);
   n = numel(data.group1);
   m = numel(data.group2);
   % }}}
 
-  % check the 4th input 'bsl_data' {{{
-  validateattributes(bsl_data, {'cell'}, {'numel', 4}, '', 'bsl_data', 4);
+  % check the 3rd input 'bsl_data' {{{
+  validateattributes(bsl_data, {'cell'}, {'numel', 4}, '', 'bsl_data', 3);
+  % }}}
+
+  % check the 4th input 'yrange' {{{
+  validateattributes(yrange, {'double'}, {'numel', 2}, '', 'yrange', 4);
   % }}}
   % }}}
 
   % setting {{{
-  color1 = [196,  48,  43] / 255; % color for group1
-  color2 = [ 32, 128,  80] / 255; % color for group2
+  % color1 = [196,  48,  43] / 255; % color for group1, red
+  % color2 = [ 32, 128,  80] / 255; % color for group2, green
+  color1 = [250, 149,   0] / 255; % color for group1, yellow
+  color2 = [  0,  83, 159] / 255; % color for group2, blue
 
-  padding = 0.02;
-
+  padding    = 0.02;
   margin_max = 0.1;
+  bar_xmin   = 0.5;
+  bar_xmax   = 2.5;
+  bar_ymin   = yrange(1);
+  bar_ymax   = yrange(2);
 
-  bar_xmin = 0.5;
-  bar_xmax = 2.5;
-
-  % --------
-  % for mfo
-  % bar_ymin = 0.2;
-  % bar_ymax = 0.7;
-  % --------
-  % for bpo
-  bar_ymin = 0.0;
-  bar_ymax = 0.5;
   % --------
   bar_xrange = bar_xmax - bar_xmin;
   bar_yrange = bar_ymax - bar_ymin;
@@ -284,4 +282,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 19 Jul 2015 04:31:14 PM E
+% Last modified: Wed 17 Feb 2016 04:45:29 PM E

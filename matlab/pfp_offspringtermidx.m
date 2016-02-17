@@ -9,21 +9,25 @@ function [idx] = pfp_offspringtermidx(ont, term_lst)
 % Input
 % -----
 % [struct]
-% ont:      the ontology structure
+% ont:      The ontology structure.
+%           See pfp_ontbuild.m
 %
 % [cell, char or struct]
-% term_lst: [cell]      - A cell of (char) term IDs.
-%           [char]      - A single (char) term ID.
-%           [struct]    - An array of term structures.
+% term_lst: [cell]    - A cell of (char) term IDs.
+%           [char]    - A single (char) term ID.
+%           [struct]  - An array of term structures.
 %
 % Output
 % ------
 % [double]
-% idx:      An array of offspring term indices.
+% idx:  An array of offspring term indices.
 %
 % Dependency
 % ----------
 %[>]pfp_gettermidx.m
+%
+% See Also
+% --------
 %[>]pfp_ontbuild.m
 % }}}
 
@@ -62,4 +66,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 06 Jul 2015 04:31:41 PM E
+% Last modified: Wed 13 Jan 2016 09:21:52 AM E

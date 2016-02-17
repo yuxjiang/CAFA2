@@ -28,10 +28,12 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 %           See cafa_eval_seq_prcurve.m
 %
 % [char]
-% naive:    The model name of the naive baseline.
+% naive:    The model id of the naive baseline. E.g. BN4S
+%           Could be empty: '' if not interested.
 %
 % [char]
-% blast:    The model name of the blast baseline.
+% blast:    The model id of the blast baseline. E.g. BB4S
+%           Could be empty: '' if not interested.
 %
 % [char]
 % config:   The team info file which should have the following columns:
@@ -123,11 +125,11 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
   % }}}
 
   % check the 3rd input 'naive' {{{
-  validateattributes(naive, {'char'}, {'nonempty'}, '', 'naive', 3);
+  validateattributes(naive, {'char'}, {}, '', 'naive', 3);
   % }}}
 
   % check the 4rd input 'blast' {{{
-  validateattributes(blast, {'char'}, {'nonempty'}, '', 'blast', 4);
+  validateattributes(blast, {'char'}, {}, '', 'blast', 4);
   % }}}
 
   % check the 5th input 'config' {{{
@@ -323,4 +325,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 25 Jan 2016 03:53:46 PM E
+% Last modified: Tue 16 Feb 2016 03:18:21 PM E

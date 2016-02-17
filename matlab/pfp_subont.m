@@ -10,9 +10,9 @@ function [subont] = pfp_subont(ont, term_lst)
 % ---------
 % topologically sort terms from leaves to root
 % for each term [t] in this order:
-%     if [t] is not selected:
-%         let [t]'s parents adopt all its children
-%     else
+%   if [t] is not selected:
+%     let [t]'s parents adopt all its children
+%   else
 % end
 %
 % Caveat
@@ -25,10 +25,11 @@ function [subont] = pfp_subont(ont, term_lst)
 % -----
 % [struct]
 % ont:      The ontology structure.
+%           see pfp_ontbuild.m
 % 
 % [cell or struct]
-% term_lst: [cell]      - An array of term IDs.
-%           [struct]    - An array of term structures.
+% term_lst: [cell]    - An array of term IDs.
+%           [struct]  - An array of term structures.
 %
 % Output
 % ------
@@ -38,6 +39,9 @@ function [subont] = pfp_subont(ont, term_lst)
 % Dependency
 % ----------
 %[>]Bioinformatics Toolbox:graphtopoorder
+%
+% See Also
+% --------
 %[>]pfp_ontbuild.m
 % }}}
 
@@ -104,4 +108,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 May 2015 10:56:01 AM E
+% Last modified: Sat 09 Jan 2016 10:04:09 AM C
