@@ -16,7 +16,7 @@ function [cm] = pfp_seqcm(target, pred, oa, varargin)
 % -----
 % [cell]
 % target: A list of target objects.
-%         For those target sequences that are not in pred.object, their 
+%         For those target sequences that are not in pred.object, their
 %         predicted associtated scores for each term will be 0.00, as if they
 %         are not predicted.
 %

@@ -6,11 +6,11 @@ function [pred] = pfp_blast(qseqid, B, oa, feature)
 %
 %   Returns the BLAST predcition.
 %
-% Note 
+% Note
 % ----
 % The resulting structure 'pred' is similar to 'oa' except that it substitutes
 % the field 'annotation' for a double matrix 'score'.
-%       
+%
 % Input
 % -----
 % [cell]
@@ -57,7 +57,7 @@ function [pred] = pfp_blast(qseqid, B, oa, feature)
 %           .score      predicted association scores
 %
 %           [char]
-%           .date     
+%           .date
 %
 % See Also
 % --------

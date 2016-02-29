@@ -5,7 +5,7 @@ function [blast] = pfp_importblastp(filename, ksh)
 %
 %   Reads "blastp" result in tab-splited format.
 %
-% Note 
+% Note
 % ----
 % 1. By default, self-matched hits will be removed.
 % 2. If 'ksh' is set to false, sequences that have only self-hits are removed.
@@ -21,7 +21,7 @@ function [blast] = pfp_importblastp(filename, ksh)
 %           Note: use the following option to specify the output format when
 %           running BLAST (v2.2.28+)
 %
-%           -outfmt "6 qseqid sseqid evalue length pident nident" 
+%           -outfmt "6 qseqid sseqid evalue length pident nident"
 %
 % [logical]
 % ksh:      A toggle for "keep-self-hits"
@@ -141,7 +141,7 @@ function [blast] = pfp_importblastp(filename, ksh)
     % process the block }}}
   end
   fclose(fid);
-  
+
   % collect the last "remained" entry {{{
   if ~isempty(remained{1})
     collected = collected + 1;
@@ -200,4 +200,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 22 Sep 2015 11:50:40 AM E
+% Last modified: Fri 26 Feb 2016 02:40:42 AM E

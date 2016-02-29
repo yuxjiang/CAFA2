@@ -44,18 +44,18 @@ function [eia] = pfp_eia(DAG, A)
   % check the 1st input 'DAG' {{{
   validateattributes(DAG, {'double'}, {'square'}, '', 'DAG', 1);
   m = size(DAG, 1);
-  % check the 1st input 'DAG' }}}
+  % }}}
 
   % check the 2nd input 'A' {{{
   validateattributes(A, {'logical'}, {'ncols', m}, '', 'A', 2);
-  % check the 2nd input 'A' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % find annotated "sub-ontology" {{{
   has_seq = any(A, 1);
   subDAG  = DAG(has_seq, has_seq) ~= 0; % make it logical
   subA    = A(:, has_seq);
-  % find annotated "sub-ontology" }}}
+  % }}}
 
   % calculate eia for annotated sub-ontology {{{
   k      = size(subDAG, 1);
@@ -71,16 +71,16 @@ function [eia] = pfp_eia(DAG, A)
     S        = sum(support);
     subia(i) = sum(support & subA(:, i)) / S;
   end
-  % calculate eia for annotated sub-ontology }}}
+  % }}}
 
   % prepare output {{{
   eia          = zeros(1, m);
   eia(has_seq) = -log(subia);
-  % prepare output }}}}
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 03 Feb 2016 07:14:07 PM E
+% Last modified: Mon 29 Feb 2016 01:17:46 PM E

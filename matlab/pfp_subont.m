@@ -26,7 +26,7 @@ function [subont] = pfp_subont(ont, term_lst)
 % [struct]
 % ont:      The ontology structure.
 %           see pfp_ontbuild.m
-% 
+%
 % [cell or struct]
 % term_lst: [cell]    - An array of term IDs.
 %           [struct]  - An array of term structures.

@@ -6,7 +6,7 @@ function [idx] = pfp_gettermidx(ont, term_lst)
 %
 %   Returns an array of indices of the given term list.
 %
-% Note 
+% Note
 % ----
 % 1. If 'alt_list' is presented in the ontology structure, 'term_lst' will
 %    also be searched against that list, and if hit, their current IDs will be

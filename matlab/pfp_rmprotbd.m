@@ -31,7 +31,7 @@ function [oa] = pfp_rmprotbd(oa)
 
   % find and remove objects {{{
 
-  % mask out annotations to the terms that are ancestors of GO:0005515 
+  % mask out annotations to the terms that are ancestors of GO:0005515
   % (protein binding). Any sequence has no annotation left should be removed.
   masked_oa = oa.annotation;
   masked_oa(:, pfp_ancestortermidx(oa.ontology, 'GO:0005515')) = false;

@@ -12,7 +12,7 @@ function [fmax, point, t]  = pfp_fmax(pred, ref, tau, beta)
 %
 % Input
 % -----
-% pred:   An n-by-m predictions from m predictors, predicted scores must be 
+% pred:   An n-by-m predictions from m predictors, predicted scores must be
 %         within [0, 1].
 %
 % ref:    An n-by-1 binary reference label corresponding to each term.
@@ -32,7 +32,7 @@ function [fmax, point, t]  = pfp_fmax(pred, ref, tau, beta)
 % t:      The best corresponding threshold.
 %
 %         Note:
-%         For m = 1, this function simply returns a tuple of plain data, 
+%         For m = 1, this function simply returns a tuple of plain data,
 %         instead of a tuple of 1-by-1 cells.
 %
 % Dependency

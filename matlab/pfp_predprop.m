@@ -28,7 +28,7 @@ function [pred] = pfp_predprop(pred, force, scheme)
 %         'ind'   - The score of a parent 's' is
 %                   s = 1 - \prod_i{1 - s_i}
 %                   where s_i is the score of its i-th child.
-%                   (It Assumes scores are probabilities and scores of its 
+%                   (It Assumes scores are probabilities and scores of its
 %                   children are pairwise independent.)
 %
 %         default: 'max'

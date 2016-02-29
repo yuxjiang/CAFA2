@@ -82,7 +82,7 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
   % }}}
 
   % compute metric {{{
-  if strcmpi(metric, 'pr') || strcmpi(metric, 'wpr') 
+  if strcmpi(metric, 'pr') || strcmpi(metric, 'wpr')
     % m = [(weighted) precision, (weighted) recall]
     % Precision can be NaN for (TP + FP) = 0, no (positive) prediction
     % recall can be NaN for (FP + FN) = 0, no (positive) annotation

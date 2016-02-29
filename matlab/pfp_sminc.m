@@ -7,7 +7,7 @@ function [smin, point, t] = pfp_sminc(curve, tau, order)
 %
 %   [smin, point, t] = PFP_SMINC(curve, tau, order);
 %
-%       Returns the minimum semantic distance of a RU-MI curve with a specific 
+%       Returns the minimum semantic distance of a RU-MI curve with a specific
 %       type of norm.
 %
 %       Note:
@@ -82,7 +82,7 @@ function [smin, point, t] = pfp_sminc(curve, tau, order)
     MI = curve(:, 2);
 
     % Note that f(x) = x^(1/order) is monotonic, so we don't need to compute it
-    % for every point. 
+    % for every point.
     sd_sq = RU .^ order + MI .^ order;
     smin_sq = min(sd_sq);
 

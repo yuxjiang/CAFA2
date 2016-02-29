@@ -34,7 +34,7 @@ function [oa] = pfp_annotsuboa(oa)
 
   % prepare for the output {{{
   has_annot = any(oa.annotation, 1);
-  
+
   oa.ontology.term = oa.ontology.term(has_annot);
   oa.ontology.DAG  = oa.ontology.DAG(has_annot, has_annot);
   oa.annotation    = oa.annotation(:, has_annot);

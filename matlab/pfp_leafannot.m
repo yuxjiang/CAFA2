@@ -29,8 +29,8 @@ function [annotation] = pfp_leafannot(oa)
 
   % check the 1st input 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 1);
-  % check the 1st input 'oa' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % calculation {{{
   n = numel(oa.object);
@@ -53,11 +53,11 @@ function [annotation] = pfp_leafannot(oa)
     % clear current annotation if any of the child has annotation
     annotation(any(annotation(:, c), 2), t) = false;
   end
-  % calculation }}}
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 May 2015 11:22:20 AM E
+% Last modified: Fri 26 Feb 2016 08:44:27 PM E

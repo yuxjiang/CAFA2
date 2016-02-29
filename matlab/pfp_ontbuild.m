@@ -116,8 +116,8 @@ function [ont] = pfp_ontbuild(ont_type, obo_file, ext_rel)
   tid(term_end)   = -(1 : numel(term_begin));
   tid             = cumsum(tid);
   tid             = max([0; tid(1 : end - 1)], tid);
-  
-  % hereafter, for any positive integer k, tid(i) = k indicates 
+
+  % hereafter, for any positive integer k, tid(i) = k indicates
   % the i-th line belongs to the k-th Term stanza.
 
   % these hash keys must match with those in hashkeywords

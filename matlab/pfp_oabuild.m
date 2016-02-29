@@ -30,7 +30,7 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
 % [struct]
 % oa: The ontology annotation structure, which has
 %     [cell]
-%     .object     (char) object ID array, of char type, ID here could 
+%     .object     (char) object ID array, of char type, ID here could
 %                 be string that identifies an object e.g., HGNC ID
 %                 for genes, UniProt accession for proteins.
 %
@@ -148,7 +148,7 @@ function [plain_oa] = oaread(afiles)
 %
 %           <object ID> <ontology term ID>
 %
-% Output 
+% Output
 % ------
 % [struct]
 % plain_oa: ontology annotation, which has
