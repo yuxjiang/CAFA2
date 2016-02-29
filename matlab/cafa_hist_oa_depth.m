@@ -32,6 +32,7 @@ function [] = cafa_hist_oa_depth(pfile, pttl, bm, oa)
 %[>]pfp_leafannot.m
 %[>]pfp_oabuild.m
 %[>]embed_canvas.m
+%[>]adapt_yaxis.m
 % }}}
 
   % check inputs {{{
@@ -63,7 +64,7 @@ function [] = cafa_hist_oa_depth(pfile, pttl, bm, oa)
     bm = pfp_loaditem(bm, 'char');
   end
   % }}}
-  
+
   % check the 4th input 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 4);
   % }}}
@@ -79,7 +80,8 @@ function [] = cafa_hist_oa_depth(pfile, pttl, bm, oa)
   for i = 1 : numel(oa.object)
     all_depth = [all_depth, depth(full(annotation(i, :)))];
   end
-  max_depth = max(all_depth);
+  max_depth = 12; % 12 is the maximum depth among all 3 GO and HPO
+  % max_depth = max(all_depth);
 
   [N, edges] = histcounts(all_depth, [1:max_depth,Inf]);
   N = N / sum(N); % normalize to percentages
@@ -100,10 +102,12 @@ function [] = cafa_hist_oa_depth(pfile, pttl, bm, oa)
     rectangle('Position', rpos, 'FaceColor', mcolor, 'EdgeColor', mcolor);
   end
 
-  [l, u, ts] = adapt_yaxis(min(N), max(N), 0, 1, [0.1, 0.05]);
+  [ylim, ts] = adapt_yaxis([min(N), max(N)], [0, 1], [0.1, 0.05]);
+  l = ylim(1);
+  u = ylim(2);
   ax = gca;
   ax.XLim  = [0, max_depth+1];
-  ax.YLim  = [l, u];
+  ax.YLim  = ylim;
   ax.XTick = 1 : max_depth;
   ax.YTick = l : ts : u;
 
@@ -121,4 +125,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 07 Jul 2015 03:27:45 PM E
+% Last modified: Mon 29 Feb 2016 04:24:31 PM E

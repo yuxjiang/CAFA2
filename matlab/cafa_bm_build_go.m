@@ -57,9 +57,9 @@ function [bm] = cafa_bm_build_go(gont, raw_goa0, raw_goa1)
 
   % split the raw annotation files. {{{
   fprintf('Splitting raw annotation files ... ');
-  awk_cmd_mfo ='awk -F''\t'' ''{if ($3 == "F") print $1"\t"$2}'' '; 
-  awk_cmd_bpo ='awk -F''\t'' ''{if ($3 == "P") print $1"\t"$2}'' '; 
-  awk_cmd_cco ='awk -F''\t'' ''{if ($3 == "C") print $1"\t"$2}'' '; 
+  awk_cmd_mfo ='awk -F''\t'' ''{if ($3 == "F") print $1"\t"$2}'' ';
+  awk_cmd_bpo ='awk -F''\t'' ''{if ($3 == "P") print $1"\t"$2}'' ';
+  awk_cmd_cco ='awk -F''\t'' ''{if ($3 == "C") print $1"\t"$2}'' ';
 
   system([awk_cmd_mfo, raw_goa0, ' > /tmp/cafa_bm_mfo_t0']);
   system([awk_cmd_bpo, raw_goa0, ' > /tmp/cafa_bm_bpo_t0']);

@@ -62,7 +62,7 @@ function [dname] = cafa_team_iid2dname(team_file, iid)
   if ~all(found)
     error('cafa_team_iid2dname:IDErr', 'Invalid internal ID.');
   end
-  
+
   if iscell(iid)
     dname = reshape(dnames(index), 1, []);
   else

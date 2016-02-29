@@ -110,7 +110,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
   % check the 1st input 'K' {{{
   validateattributes(K, {'double'}, {'nonnegative'}, '', 'K', 1);
   % }}}
-  
+
   % check the 2nd input 'fmaxs' {{{
   validateattributes(fmaxs, {'cell'}, {'nonempty'}, '', 'fmaxs', 2);
   % }}}

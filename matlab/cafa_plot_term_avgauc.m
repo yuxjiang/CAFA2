@@ -8,7 +8,7 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
 %   If the number of terms is greater than 20, this function generates 3 plots:
 %   (1) averaged AUC for all terms, (2) ... for the top 10 terms and (3) ... for
 %   the bottom 10 terms, otherwise, it only generates a boxplot for all terms.
-%   
+%
 %
 % Input
 % -----
@@ -130,7 +130,7 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
   % remove NaN avg_auc's
   drop        = isnan(s_auc_avg);
   order(drop) = [];
-  
+
   % update 'm'
   m = numel(order);
   % }}}
@@ -138,7 +138,7 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
   % settings {{{
   base_fs = 10;
   % fcolor  = [0.6, 0.6, 0.6];
-  % bcolor  = [0.8, 0.3, 0.3]; 
+  % bcolor  = [0.8, 0.3, 0.3];
   fcolor  = [  0,  83, 159]/255;
   bcolor  = [196,  48,  43]/255; % color for the naive baseline
   bar_w   = 0.8;

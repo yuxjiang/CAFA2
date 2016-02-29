@@ -76,7 +76,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 % [cell]
 % bsl:  The baseline curves and related information. Each cell has the
 %       same structure as 'sel'.
-%   
+%
 %
 % Dependency
 % ----------
@@ -94,7 +94,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
   % check the 1st input 'K' {{{
   validateattributes(K, {'double'}, {'nonnegative', 'integer'}, '', 'K', 1);
   % }}}
-  
+
   % check the 2nd input 'rmcurves' {{{
   validateattributes(rmcurves, {'cell'}, {'nonempty'}, '', 'rmcurves', 2);
   % }}}

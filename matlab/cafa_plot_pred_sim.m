@@ -132,7 +132,7 @@ function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method
   model_names = model_index;
 
   n = numel(model_index);
-  
+
   % replace 'BN4S' with 'Naive', 'BB4S' with 'BLAST'
   model_names = regexprep(model_names, 'BN4[SH]', 'Naive');
   model_names = regexprep(model_names, 'BB4[SH]', 'BLAST');
@@ -146,7 +146,7 @@ function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method
       error('cafa_plot_pred_sim:MIDErr', 'Some models are not found in team config.');
     end
     new_name = team_name(index);
-    
+
     [found, index] = ismember(mid, model_index);
     if ~all(found)
       error('cafa_plot_pred_sim:MIDErr', 'Some models are not found in predictions.');
@@ -243,8 +243,8 @@ function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method
 
   % settings {{{
   base_fs = 5;
-  
-  maxcolor = [196,  48,  43] / 255; 
+
+  maxcolor = [196,  48,  43] / 255;
   midcolor = [  1,   1,   1]; % white
   mincolor = [  0,  83, 159] / 255;
 
@@ -264,7 +264,7 @@ function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method
       if isinf(dist(i, j))
         value{i, j} = maxcolor;
         value{j, i} = maxcolor;
-      elseif dist(i, j) <= midval 
+      elseif dist(i, j) <= midval
         prop = dist(i, j) / midval;
         rc = mincolor + prop * (midcolor - mincolor);
         value{i, j} = max([[0, 0, 0]; rc]);

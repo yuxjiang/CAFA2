@@ -116,7 +116,7 @@ function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, config, isdump, anonymo
     end
 
     [found, index] = ismember(smin{i}.id, team_id);
-    if ~found 
+    if ~found
       error('cafa_sheet_seq_smin:IDErr', 'Invalid model ID.');
     end
     smin{i}.eid  = ext_id{index};

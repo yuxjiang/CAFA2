@@ -31,8 +31,8 @@ function [mids] = cafa_pick_models(k, bm, rho)
 %           Also, the specified benchmark should have been evaluated, i.e. there
 %           must be an existing subfolder (having the same name) under
 %           [CAFA_DIR]/evaluation/
-% 
-% [double]  
+%
+% [double]
 % rho:      The correlation lower bound used to enforce non-redundancy.
 %
 % Output

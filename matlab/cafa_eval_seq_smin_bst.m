@@ -23,7 +23,7 @@ function [ev] = cafa_eval_seq_smin_bst(id, bm, rm, ev_mode, BI)
 %
 %           [cell of double]
 %           .metric     - 1-by-k RU-MI pair sets, where 'k'
-%                         is the number of distinct thresholds. In most 
+%                         is the number of distinct thresholds. In most
 %                         cases, k = 101, corresponding to 101 thresholds:
 %                         tau = 0.00 : 0.01 : 1.00
 %                         Each cell contains a n-by-2 double array, which
@@ -71,8 +71,8 @@ function [ev] = cafa_eval_seq_smin_bst(id, bm, rm, ev_mode, BI)
 %     [double]
 %     .coverage_bst   B-by-1, coverage of the model for each bootstrap.
 %
-%                     Note that 'coverge' always refers to the one in 'full' 
-%                     evaluation mode. ('partial' mode has a trivial 100% 
+%                     Note that 'coverge' always refers to the one in 'full'
+%                     evaluation mode. ('partial' mode has a trivial 100%
 %                     coverage)
 %
 % Dependency
@@ -123,7 +123,7 @@ function [ev] = cafa_eval_seq_smin_bst(id, bm, rm, ev_mode, BI)
   ev.tau_bst      = zeros(B, 1);
   ev.ncovered_bst = zeros(B, 1);
   ev.coverage_bst = zeros(B, 1);
-  
+
   [~, ev_index] = ismember(bm, rm.object);
 
   for b = 1 : B

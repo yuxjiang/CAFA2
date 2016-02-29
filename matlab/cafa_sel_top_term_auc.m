@@ -108,7 +108,7 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config,
   % check the 1st input 'K' {{{
   validateattributes(K, {'double'}, {'nonnegative', 'integer'}, '', 'K', 1);
   % }}}
-  
+
   % check the 2nd input 'aucs' {{{
   validateattributes(aucs, {'cell'}, {'nonempty'}, '', 'aucs', 2);
   % }}}

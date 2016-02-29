@@ -34,7 +34,7 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
 %           .object   - n-by-1 sequence id
 %
 %           [cell of n-by-2 double]
-%           .metric   - 1-by-k, consists of k sets of points, where 'k' is the 
+%           .metric   - 1-by-k, consists of k sets of points, where 'k' is the
 %                       number of distinct thresholds. In most cases, k = 101,
 %                       corresponding to 101 thresholds:
 %
@@ -45,7 +45,7 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
 %
 %           [double]
 %           .tau      - A 1-by-k array of thresholds. (not used)
-%           
+%
 %           [logical]
 %           .covered  - n-by-1 indicator of if sequence i is predicted by the
 %                       model.
@@ -118,7 +118,7 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
   ev.id    = id;
   ev.curve = zeros(k, 2);
   ev.tau   = reshape(preeval.tau, 1, []);
-  
+
   [~, ev_index] = ismember(bm, preeval.object);
   ev.ncovered = sum(preeval.covered(ev_index));
   ev.coverage = ev.ncovered / numel(bm);
@@ -146,7 +146,7 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
   %
   % But for (weighted) recall as well as (normalized) RU, (normalized) MI, they
   % shall never have NaN values.
-  % 
+  %
   % In short, we will always use 'nanmean' to avoid this issue.
   for i = 1 : k
     ev.curve(i, :) = nanmean(preeval.metric{i}(ev_index, :), 1);

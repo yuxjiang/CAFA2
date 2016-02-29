@@ -92,7 +92,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 %
 %       [double]
 %       .color      assigned color (1-by-3 RGB tuple).
-%       
+%
 %
 % [cell]
 % bsl:  The baseline curves and related information. Each cell has the same
@@ -119,7 +119,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
   % check the 1st input 'K' {{{
   validateattributes(K, {'double'}, {'nonnegative', 'integer'}, '', 'K', 1);
   % }}}
-  
+
   % check the 2nd input 'prcurves' {{{
   validateattributes(prcurves, {'cell'}, {'nonempty'}, '', 'prcurves', 2);
   % }}}

@@ -116,7 +116,7 @@ function [] = cafa_sheet_seq_fmax(sfile, fmax, fmax_bst, config, isdump, anonymo
     end
 
     [found, index] = ismember(fmax{i}.id, team_id);
-    if ~found 
+    if ~found
       error('cafa_sheet_seq_fmax:IDErr', 'Invalid model ID.');
     end
     fmax{i}.eid  = ext_id{index};

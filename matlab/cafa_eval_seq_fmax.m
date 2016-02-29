@@ -1,6 +1,6 @@
 function [ev] = cafa_eval_seq_fmax(id, bm, pr, md, beta)
 %CAFA_EVAL_SEQ_FMAX CAFA evaluation sequence-centric Fmax
-% {{{ 
+% {{{
 %
 % [ev] = CAFA_EVAL_SEQ_FMAX(id, bm, pr, md, beta);
 %
@@ -25,7 +25,7 @@ function [ev] = cafa_eval_seq_fmax(id, bm, pr, md, beta)
 %
 %       [cell of double]
 %       .metric     - 1-by-k precision-recall pair sets, where 'k'
-%                     is the number of distinct thresholds. In most 
+%                     is the number of distinct thresholds. In most
 %                     cases, k = 101, corresponding to 101 thresholds:
 %                     tau = 0.00 : 0.01 : 1.00
 %                     Each cell contains a n-by-2 double array, which
@@ -70,8 +70,8 @@ function [ev] = cafa_eval_seq_fmax(id, bm, pr, md, beta)
 %     [double]
 %     .coverage   scalar, coverage of the model.
 %
-%                 Note that 'coverge' always refers to the one in 'full' 
-%                 evaluation mode. ('partial' mode has a trivial 100% 
+%                 Note that 'coverge' always refers to the one in 'full'
+%                 evaluation mode. ('partial' mode has a trivial 100%
 %                 coverage)
 %
 %     [char]

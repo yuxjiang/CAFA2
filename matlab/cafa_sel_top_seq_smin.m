@@ -106,7 +106,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
   % check the 1st input 'K' {{{
   validateattributes(K, {'double'}, {'nonnegative', 'integer'}, '', 'K', 1);
   % }}}
-  
+
   % check the 2nd input 'smins' {{{
   validateattributes(smins, {'cell'}, {'nonempty'}, '', 'smins', 2);
   % }}}

@@ -73,7 +73,7 @@ function [] = cafa_hist_oa_count(pfile, pttl, bm, oa, propagated)
     bm = pfp_loaditem(bm, 'char');
   end
   % }}}
-  
+
   % check the 4th input 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 4);
   % }}}

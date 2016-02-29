@@ -192,7 +192,7 @@ function [] = cafa_scatterplot_methods(pfile, task)
   else
     ylim([0, 15]);
   end
-  
+
   embed_canvas(h, 5, 5);
   print(h, pfile, device_op, '-r300');
   close;

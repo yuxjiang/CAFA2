@@ -118,7 +118,7 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
   % split (training + validation, test) {{{
   tv = randsample(n, floor(0.90*n)); % training + validation set
   ts = setdiff(1:n, tv); % test set
-  
+
   [tv_x, tv_y, ts_x, ts_y] = split_ds(x, param.oa.annotation, tv, ts);
   param.tv_benchmark = benchmark(tv);
   % }}}
@@ -380,7 +380,7 @@ function [pred] = apply_model(model, bm, preds, oa)
   % pred.score = pfp_minmaxnrm(pred.score', min_scores', max_scores')';
   min_score  = min(min(pred.score));
   pred.score = cafa_norm_pred(pred.score - min_score);
-  % 
+  %
   pred = pfp_predprop(pred, true, 'max');
 return
 % }}}

@@ -75,8 +75,8 @@ function [ev] = cafa_eval_seq_fmax_bst(id, bm, pr, ev_mode, BI, beta)
 %     [double]
 %     .coverage_bst   B-by-1, coverage of the model for each bootstrap.
 %
-%                     Note that 'coverge' always refers to the one in 'full' 
-%                     evaluation mode. ('partial' mode has a trivial 100% 
+%                     Note that 'coverge' always refers to the one in 'full'
+%                     evaluation mode. ('partial' mode has a trivial 100%
 %                     coverage)
 %
 % Dependency
@@ -135,7 +135,7 @@ function [ev] = cafa_eval_seq_fmax_bst(id, bm, pr, ev_mode, BI, beta)
   ev.tau_bst      = zeros(B, 1);
   ev.ncovered_bst = zeros(B, 1);
   ev.coverage_bst = zeros(B, 1);
-  
+
   [~, ev_index] = ismember(bm, pr.object);
 
   for b = 1 : B

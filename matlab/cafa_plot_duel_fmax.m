@@ -37,7 +37,7 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
 %           cell 2 - Naive trained on CAFA2 training (2014 SwissProt)
 %           cell 3 - BLAST trained on CAFA1 training (2011 SwissProt)
 %           cell 4 - BLAST trained on CAFA2 training (2014 SwissProt)
-%           
+%
 %           Each cell entry contains the evaluation result 'seq_fmax_bst'.
 %           See cafa_eval_seq_fmax_bst.m
 %

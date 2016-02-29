@@ -88,7 +88,7 @@ function [] = cafa_team_output_as_node(filename, team_cfg, eval_dir)
   header = 'Name\tType\tPI\tColor\tIS_TOP10\n';
   % format: team.name, team.type (q/d/b/n), team.pi, team.hex, is_top10?
   format = '%s\t%s\t%s\t#%s\t%s\n';
-  
+
   n = numel(team.iid);
 
   fprintf(fid, header);

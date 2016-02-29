@@ -1,6 +1,6 @@
 function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 %CAFA_EVAL_TERM_AUC CAFA evaluation term-centric AUC
-% {{{ 
+% {{{
 %
 % [ev] = CAFA_EVAL_TERM_AUC(id, bm, pred, oa, ev_mode, varargin);
 %

@@ -113,12 +113,12 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, isdump, anonymous, sort_m
   n = numel(aucs);
   for i = 1 : n
     [found, index] = ismember(aucs{i}.id, team_id);
-    if ~found 
+    if ~found
       error('cafa_sheet_term_auc:IDErr', 'Invalid model ID.');
     end
     aucs{i}.eid  = ext_id{index};
     aucs{i}.team = disp_name{index};
-    
+
     % record the index of blast method for sorting {{{
     if strcmp(aucs{i}.id, sort_mid) % before: if strcmpi('blast', aucs{i}.team)
       blast_index = i;

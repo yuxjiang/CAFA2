@@ -59,6 +59,7 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 % ----------
 %[>]cafa_sel_top_term_auc.m
 %[>]embed_canvas.m
+%[>]adapt_yaxis.m
 % }}}
 
   % check inputs {{{
@@ -167,7 +168,9 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
       end
     end
 
-    [ylim_l, ylim_u, unit] = adapt_yaxis(auc_min, auc_max, 0.0, 1.0, [0.1, 0.05, 0.02, 0.01]);
+    [ylim, unit] = adapt_yaxis([auc_min, auc_max], [0.0, 1.0], [0.1, 0.05, 0.02, 0.01]);
+    ylim_l = ylim(1);
+    ylim_r = ylim(2);
   else
     ylim_l = yaxis(1);
     ylim_u = yaxis(2);
@@ -257,4 +260,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 31 Aug 2015 09:18:34 AM E
+% Last modified: Mon 29 Feb 2016 04:19:09 PM E

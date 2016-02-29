@@ -264,7 +264,7 @@ function [oindex, tindex, score, dup_o, dup_t] = remove_duplication(oindex, tind
   for i = 1 : numel(b_bg)
     a = b_bg(i); b = b_ed(i);
     block_index = (a:b)';
-    if a < b && numel(unique(tindex(block_index))) < numel(block_index) 
+    if a < b && numel(unique(tindex(block_index))) < numel(block_index)
       % duplication detected!
       [tindex(a:b), index] = sort(tindex(a:b));
 

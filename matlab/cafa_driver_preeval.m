@@ -1,6 +1,6 @@
 function [] = cafa_driver_preeval(cafa_dir, do_filter, do_import, is_duel)
 %CAFA_DRIVER_PREEVAL CAFA driver pre-evaluation (sequence-centric)
-% {{{ 
+% {{{
 %
 % [] = CAFA_DRIVER_PREEVAL(cafa_dir, do_filter, do_import);
 % [] = CAFA_DRIVER_PREEVAL(cafa_dir, do_filter, do_import, is_duel);
@@ -45,12 +45,12 @@ function [] = cafa_driver_preeval(cafa_dir, do_filter, do_import, is_duel)
 % |     |   `-- hpo_HUMAN_typex.txt ..................... hpo benchmarks
 % |     `-- ! groundtruth/  (pre-computed annotations, see pfp_oabuild.m)
 % |           |-- mfoa.mat (containing 'oa' struct. See pfp_oabuild.m)
-% |           |-- bpoa.mat 
-% |           |-- ccoa.mat 
-% |           `-- hpoa.mat 
+% |           |-- bpoa.mat
+% |           |-- ccoa.mat
+% |           `-- hpoa.mat
 % |--   evaluation/         (evaluation results, not touched here)
 % `-- ! ontology/           (pre-computed ontologies, see pfp_ontbuild.m.
-%                            However, the original ontology structures here 
+%                            However, the original ontology structures here
 %                            will not be used directly by this function. They
 %                            are used to construct groundtruth annotations,
 %                            while the one embeded in those 'oa' are in turn
@@ -82,7 +82,7 @@ function [] = cafa_driver_preeval(cafa_dir, do_filter, do_import, is_duel)
 % [logical]
 % is_duel:    Does pre-evaluation on duel setting?
 %             default: false.
-%   
+%
 % Dependency
 % ----------
 %[>]cafa_filter.m
