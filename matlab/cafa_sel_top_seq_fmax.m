@@ -56,7 +56,6 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 %
 % [logical]
 % isdump: A switch for using dump name instead of display name.
-%         default: false.
 %
 % Output
 % ------
@@ -278,4 +277,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 16 Feb 2016 03:21:07 PM E
+% Last modified: Wed 02 Mar 2016 01:54:01 PM E

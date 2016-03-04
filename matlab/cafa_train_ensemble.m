@@ -327,16 +327,16 @@ function [pred] = apply_model(model, bm, preds, oa)
 % Input
 % -----
 % [struct]
-% model: learned model.
+% model: The learned model.
 %
 % [cell]
-% bm:    a list of benchmark.
+% bm:    A list of benchmark.
 %
 % [cell]
-% preds: a cell of pred structures.
+% preds: A cell of pred structures.
 %
 % [struct]
-% oa:    the ontology annotation structure.
+% oa:    The ontology annotation structure.
 %
 % Output
 % ------
@@ -435,4 +435,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Fri 05 Feb 2016 02:15:58 PM E
+% Last modified: Tue 01 Mar 2016 01:50:46 PM E

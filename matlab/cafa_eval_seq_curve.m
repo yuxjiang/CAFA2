@@ -21,13 +21,13 @@ function [ev] = cafa_eval_seq_curve(id, bm, preeval, md)
 % input
 % -----
 % [char]
-% id:       a string for model id.
+% id:       A string for model id.
 %
 % [char or cell]
-% bm:       a benchmark filename or a list of benchmark target ids.
+% bm:       A benchmark filename or a list of benchmark target ids.
 %
 % [struct]
-% preeval:  the pre-computed curve per sequence.
+% preeval:  The pre-computed curve per sequence.
 %           [cell of char]
 %           .centric  - should always be 'sequence' (not used)
 %
@@ -158,4 +158,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 02:57:54 PM E
+% Last modified: Tue 01 Mar 2016 01:50:12 PM E

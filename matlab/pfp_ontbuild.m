@@ -1,126 +1,173 @@
-function [ont] = pfp_ontbuild(ont_type, obo_file, ext_rel)
+function [onts] = pfp_ontbuild(obofile, rel)
 %PFP_ONTBUILD Ontology build
 % {{{
 %
-% [ont] = PFP_ONTBUILD(ont_type, obo_file);
+% [onts] = PFP_ONTBUILD(obofile);
+% [onts] = PFP_ONTBUILD(obofile, rel);
 %
-%   Builds up an ontology structure while only extract "is_a" or "part_of" from
-%   a local OBO file.
+%   Builds ontology structure(s) from a plain-text OBO file.
 %
-% [ont] = PFP_ONTBUILD(ont_type, obo_file, ext_rel);
+% Note
+% ----
+% This "parser" is NOT meant to fully support OBO format 1.2. It considers the
+% OBO file format to be the following, which is suffice to build a DAG.
 %
-%   Builds up an ontology structure while extracting extra relations as well
-%   (specified by 'ext_rel'), from a local OBO file.
+% OBO syntax (without "trailing modifiers"): {{{
+% <obo file>        -> <header>\n<stanzas>
+% <header>          -> <tag-value pairs>
+% <stanzas>         -> <stanza>|<stanzas>\n<stanza>
+% <stanza>          -> <stanza name>\n<tag-value pairs>
+% <tag-value pairs> -> <tag-value pair>|<tag-value pairs>\n<tag-value pair>
+% <tag-value pair>  -> <tag>: <value>
+% <stanza name>     -> [STRING]
+% <tag>             -> STRING
+% <value>           -> STRING
+%
+% Comments start with !
+%
+% 1. <header> is generally ignored by this parser, expect for these two optional
+%    tag "date", which will be saved as a field of output structure; and
+%    "default-namespace" which indicates the default namespace for all
+%    <stanza>s.
+% 2. Required <tag> for each <stanza>: "id", "name"
+% }}}
+%
+% This "parser" also makes the following STRONG assumptions:
+% 1. [Term] is the only stanza to extract.
+% 2. "is_a" is presented as the basic relationship between [Term]s, and will
+%    always be extracted.
+% 3. <tag> namespace indicates the ontology to which a [Term] belongs to, and it
+%    will be passed to the output as its field: ont_type. If "namespace" is not
+%    given for a [Term], it will take the default-namespace. Further, if
+%    "default-namespace" is not given in the <header>, those terms with empty
+%    namespace will be grouped in a single ontology with ont_type: 'unknown'.
+% 4. Only these <tag>s will be extracted:
+%    <tag> -> id|name|namespace|is_a|alt_id|is_obsoleted|relationship
+% 5. Only obsoleted terms have this <tag-value pair>
+%    is_obsoleted: true
+%    and its value should always be true.
 %
 % Input
 % -----
+% (required)
 % [char]
-% ont_type: The ontology type, must be one of {'GO', 'DO', 'HPO'}
-%
-%           Note:
-%           If 'ont_type' is set to 'GO' then it returns a collection of the 3
-%           GO ontologies, i.e., BPO, CCO, MFO, as 3 fields of 'ont'.
-%
-% [char]
-% obo_file: The OBO file name.
+% obofile:  The ontology file in OBO format.
 %
 % (optional)
-% [char]
-% ext_rel:  Extra relations to be extracted besides "is_a" and "part_of".
-%           default: {}
+% [cell]
+% rel:      A cell array of relationship other than "is_a" to extract. Other
+%           relationship codes in the given OBO file are ignored. It is passed
+%           to the output as one of its field: 'rel_code'.
+%           default: {'part_of'} (as mostly used for Gene Ontology)
 %
 % Output
 % ------
-% [struct]
-% ont:      The ontology structure having the following fields:
+% [cell or struct]
+% onts:     The built ontology structure.
+%           If the given OBO file only has one ontology structure, 'onts' is a
+%           single variable of type 'struct'; while multiple ontologies result
+%           in a cell array of ontology structures. In either cases, the
+%           structure has the following fields:
+%
 %           [struct]
 %           .term       A term structure array, each has two fields:
-%
-%             [char]
-%             .id       The term ID.
-%
-%             [char]
-%             .name     The name tag attached to each term.
+%             .id       [char] The term ID.
+%             .name     [char] The name tag attached to each term.
 %
 %           [struct]
 %           .alt_list   The alternative ID list.
-%
-%             [char]
-%             .old      The old ID.
-%
-%             [char]
-%             .new      The corresponding new ID.
+%             .old      [char] The old ID.
+%             .new      [char] The corresponding new ID.
 %
 %           [double and sparse]
-%           .DAG        The adjacency matrix (for a directed acyclic graph)
-%                       where DAG(i, j) = t indicates term i has relation type
-%                       'rel_code{t}' with term j, typically,
-%                       t = 1 ("is_a")
-%                       t = 2 ("part_of")
+%           .DAG        The adjacency matrix corresponding to a directed
+%                       acyclic graph, where DAG(i, j) = t indicates term i has
+%                       relationship type 'rel_code{t}' with term j.
 %
 %           [cell]
-%           .rel_code   A relationship code array, typically, {'is_a',
-%                       'part_of'}
+%           .rel_code   A relationship code array, typically, for example, it
+%                       could be {'is_a', 'part_of'} for gene ontology.
 %
 %           [char]
-%           .ont_type   The ontology name tag.
-%                       One of {'DO', 'BPO', 'CCO', 'MFO', 'HPO'}
+%           .ont_type   The ontology name tag. E.g. 'molecular_function',
+%                       'human_phenotype', etc.
 %
 %           [char]
-%           .date       The date when this 'ont' was built.
+%           .date       The date tag of this OBO file if "date" is presented in
+%                       <header>; Otherwise, it stores the current date.
 % }}}
 
   % check inputs {{{
-  if nargin < 2 || nargin > 3
-    error('pfp_ontbuild:InputCount', 'Expected 2 or 3 inputs.');
+  if nargin ~= 1 && nargin ~= 2
+    error('pfp_ontbuild:InputCount', 'Expected 1 or 2 inputs.');
   end
 
-  % check the 1st argument 'ont_type' {{{
-  validateattributes(ont_type, {'char'}, {'nonempty'}, '', 'ont_type', 1);
-  ont_type = validatestring(ont_type, {'GO', 'DO', 'HPO'});
-  % check the 1st argument 'ont_type' }}}
-
-  % check the 2nd argument 'obo_file' {{{
-  validateattributes(obo_file, {'char'}, {'nonempty'}, '', 'obo_file', 2);
-  % check the 2nd argument 'obo_file' }}}
-
-  % check the (optional) 3rd arugment 'ext_rel' {{{
-  if ~exist('ext_rel', 'var');
-    ext_rel = {};
-  else
-    ext_rel(ismember(ext_rel, {'is_a', 'part_of'})) = [];
+  if nargin == 1
+    rel = {'part_of'};
   end
-  REL = [{'is_a', 'part_of'}, reshape(ext_rel, 1, [])];
-  % check the (optional) 3rd arugment 'ext_rel' }}}
-  % check inputs }}}
 
-  % check and read OBO file {{{
-  fid = fopen(obo_file, 'r');
+  % check the 1st input 'obofile' {{{
+  validateattributes(obofile, {'char'}, {'nonempty'}, '', 'obofile', 1);
+  fid = fopen(obofile, 'r');
   if fid == -1
-    error('pfp_ontbuild:FileErr', 'Cannot open the OBO file [%s].', obo_file);
+    error('pfp_ontbuild:FileErr', 'Cannot open OBO file.');
   end
+  % }}}
+
+  % check the 2nd input 'rel' {{{
+  validateattributes(rel, {'cell'}, {'nonempty'}, '', 'rel', 2);
+  % }}}
+  % }}}
+
+  % read the OBO file as a whole {{{
   obo = textscan(fid, '%s', 'WhiteSpace', '\n');
   obo = obo{1};
   fclose(fid);
-  % check and read OBO file }}}
+  % }}}
 
   % parse obo file {{{
-  stanza_begin = find(cellfun(@length, regexp(obo, '^\[.+\]')));
-  is_term      = strcmpi(obo(stanza_begin), '[Term]'); % locate the line: [Term]
-  term_begin   = stanza_begin(is_term);
-  stanza_end   = [stanza_begin(2 : end) - 1; numel(obo)];
-  term_end     = stanza_end(is_term);
+  % locate the [b]eginning and [e]nding line number of each [Term] stanza {{{
+  stanza_b = find(cellfun(@length, regexp(obo, '^\[.+\]')));
+  is_term  = strcmpi(obo(stanza_b), '[Term]');
+  term_b   = stanza_b(is_term);
+  stanza_e = [stanza_b(2:end)-1; numel(obo)];
+  term_e   = stanza_e(is_term);
 
-  tid             = zeros(numel(obo), 1);
-  tid(term_begin) = 1 : numel(term_begin);
-  tid(term_end)   = -(1 : numel(term_begin));
-  tid             = cumsum(tid);
-  tid             = max([0; tid(1 : end - 1)], tid);
+  tid         = zeros(numel(obo), 1);
+  tid(term_b) = 1:numel(term_b);    % tid = [0 0 1 0 0  0 2 0  0 0 0 3 0  0]
+  tid(term_e) = -(1:numel(term_b)); % tid = [0 0 1 0 0 -1 2 0 -2 0 0 3 0 -3]
+  tid         = cumsum(tid);        % tid = [0 0 1 1 1  0 2 2  0 0 0 3 3  0]
+  tid         = max([0; tid(1:end-1)], tid);
 
-  % hereafter, for any positive integer k, tid(i) = k indicates
-  % the i-th line belongs to the k-th Term stanza.
+  % tid(i) = 0 indicates the i-th line can be ignored
+  % tid(i) = k (k > 0) indicates the i-th line belongs to the k-th [Term]
+  % stanza, ie., tid(i) is either <stanza name> or one of its <tag-value pair>s.
+  loi = tid > 0; % line-of-interest
+  % }}}
 
-  % these hash keys must match with those in hashkeywords
+  % parse header for date {{{
+  % locate the line number of the first [Term] <stanza>
+  dt         = datestr(now, 'mm/dd/yyyy HH:MM'); % default date
+  default_ns = 'unknown'; % default namespace
+  begin_of_stanzas = min(stanza_b);
+  for i = 1 : begin_of_stanzas-1
+    pair = regexp(obo{i}, '(?<tag>\S+):\s*(?<value>.*$)', 'names');
+    if isempty(pair)
+      continue;
+    elseif strcmpi(pair.tag, 'date')
+      % parse date string
+      d = regexp(pair.value, '(?<dd>\d{2}):(?<mm>\d{2}):(?<yyyy>\d{4}) (?<HH>\d{2}):(?<MM>\d{2})', 'names');
+      dt = sprintf('%s/%s/%s %s:%s', d.mm, d.dd, d.yyyy, d.HH, d.MM);
+    elseif strcmpi(pair.tag, 'default-namespace')
+      default_ns = pair.value;
+    end
+  end
+  % }}}
+
+  % hash the first 6 character of each line to make a list of tags {{{
+  % Note: these hash keys must match with those in hashkeywords
+  hk = hashkeywords;
+
   HK_ID     = 1;
   HK_NAME   = 2;
   HK_NAMESP = 3;
@@ -129,136 +176,160 @@ function [ont] = pfp_ontbuild(ont_type, obo_file, ext_rel)
   HK_IS_OBS = 6; % is_obsoleted
   HK_RELATI = 7; % relationship
 
-  hk = hashkeywords;
-
-  key = max(0, char(regexp(obo, '^\w{1,6}', 'match', 'once')) - '`');
+  % key-length: 6
+  % extract the first up to 6 character of each line to be the hash key for that
+  % line. (Note that ^\w{1,6} matches the first up to 6 [A-Za-z_]). Since this
+  % script only sensitive to a few <tag>s which are all consist of lower case
+  % letters and '_', so we extract '`' (0x60, the last character before 'a' in
+  % the ASCII table) from these keys. (Note that '_': 0x5F becomes 0 after the
+  % max(0, x-'`') operation.)
+  key = max(0, char(regexp(obo, '^\w{1,6}', 'match', 'once'))-'`');
   if size(key, 2) < 6
-    % append zeros columns if the 'key' matrix has less than 6 columns
-    key = [key, zeros(size(key, 1), 6 - size(key, 2))];
+    % in case no line has at least 6 characters, although rare..
+    key = [key, zeros(size(key,1), 6-size(key,2))];
   end
-  tags = full(hk(key * [27^5; 27^4; 27^3; 27^2; 27; 1] + 1));
+  % 'key' is then a n-by-6 non-negative double matrix.
+  % must be the same powers as in function: hashkeywords
+  powers = [27^5;27^4;27^3;27^2;27;1];
+  tags   = full(hk(key*powers+1));
 
-  % keep only those values and remove matched tags
+  % clear "tags", ie., <tag>: <value> --> <value>
   obo = regexprep(obo, '^\w+:\s*', '');
+  % }}}
 
-  % extract lines of interest
-  id   = obo(tid & (tags == HK_ID));
-  name = obo(tid & (tags == HK_NAME));
-  if strcmp(ont_type, 'GO')
-    ns   = obo(tid & (tags == HK_NAMESP));
+  % extract id and name {{{
+  % we assume each [Term] has only exactly one "id" and "name"
+  id   = obo(loi & (tags == HK_ID));
+  name = obo(loi & (tags == HK_NAME));
+  % }}}
+
+  % extract namespace {{{
+  ns = repmat({default_ns}, numel(id), 1);
+  is_ns = loi & (tags == HK_NAMESP);
+  ns_index = tid(is_ns);
+  if ~isempty(ns_index)
+    ns(ns_index) = obo(is_ns);
   end
+  % }}}
 
-  rel = cell(numel(REL), 1);
-  for i = 1 : numel(REL)
-    rel{i}         = ~cellfun(@isempty, regexp(obo, sprintf('^%s', REL{i}), 'match', 'once'));
-    rel_index{i}   = tid & (tags == HK_RELATI) & rel{i};
-    rel_list.l1{i} = id(tid(rel_index{i}));
-    rel_list.l2{i} = regexprep(obo(rel_index{i}), sprintf('^%s\\s*(\\S*).*', REL{i}), '$1');
-    rel_list.l2{i} = rel_list.l2{i};
+  % extract is_a relationship {{{
+  is_a_index = loi & (tags == HK_IS_A);
+  % note: [is_a_list.src] is a [is_a_list.dst]
+  is_a_list.src = id(tid(is_a_index));
+  is_a_list.dst = regexprep(obo(is_a_index), '\s*([^\s!]+).*', '$1');
+  % }}}
+
+  % extract other relationships {{{
+  for i = 1 : numel(rel)
+    % '^rel{i}' matches any line starts with i-th relationship, say '^part_of'
+    is_this_rel = ~cellfun(@isempty, regexp(obo, sprintf('^%s', rel{i}), 'match', 'once'));
+    % in most cases (is_this_rel == true) implies (loi == true) & (tags == %
+    % HK_RELATI) however, sometimes a [Typedef] <stanza> could contain a
+    % <tag-value pair> as id: part_of
+    is_this_rel     = is_this_rel & loi & (tags == HK_RELATI);
+    rel_list.src{i} = id(tid(is_this_rel));
+    rel_list.dst{i} = regexprep(obo(is_this_rel), sprintf('^%s\\s*([^\\s!]+).*', rel{i}), '$1');
   end
+  % }}}
 
-  is_a_index = tid & (tags == HK_IS_A);
-  % note: [is_a_list.l1] is a [is_a_list.l2]
-  is_a_list.l1 = id(tid(is_a_index));
-  is_a_list.l2 = regexprep(obo(is_a_index), '\s*!.*', '');
+  % extract alt_id {{{
+  alt_id_index = loi & (tags == HK_ALT_ID);
+  % note: [alt_list.src] is an alternative id of [alt_list.dst]
+  alt_list.src = obo(alt_id_index);
+  alt_list.dst = id(tid(alt_id_index));
+  % }}}
 
-  alt_id_index = tid & (tags == HK_ALT_ID);
-  % note: [alt_list.l1] is an alternative id of [alt_list.l2]
-  alt_list.l1 = obo(alt_id_index);
-  alt_list.l2 = id(tid(alt_id_index));
-
-  % remove obseleted terms
-  is_obs = tid(tid & (tags == HK_IS_OBS));
+  % remove obsoleted terms {{{
+  is_obs = tid(loi & (tags == HK_IS_OBS));
   id(is_obs)   = [];
   name(is_obs) = [];
-  if strcmp(ont_type, 'GO')
-    ns(is_obs)   = [];
-  end
+  ns(is_obs)   = [];
+  % }}}
 
-  % construct 'term'
-  if strcmp(ont_type, 'GO') % special treatment for GO
-    is_mfo   = strcmpi(ns, 'molecular_function');
-    is_bpo   = strcmpi(ns, 'biological_process');
-    is_cco   = strcmpi(ns, 'cellular_component');
-    mfo_term = cell2struct([id(is_mfo), name(is_mfo)], {'id', 'name'}, 2);
-    bpo_term = cell2struct([id(is_bpo), name(is_bpo)], {'id', 'name'}, 2);
-    cco_term = cell2struct([id(is_cco), name(is_cco)], {'id', 'name'}, 2);
-    ont.MFO  = construct_ont('MFO', mfo_term, alt_list, is_a_list, REL, rel_list);
-    ont.BPO  = construct_ont('BPO', bpo_term, alt_list, is_a_list, REL, rel_list);
-    ont.CCO  = construct_ont('CCO', cco_term, alt_list, is_a_list, REL, rel_list);
-  else
+  % split ontologies according to namespaces {{{
+  ont_types = unique(ns);
+  if numel(ont_types) == 1
     term = cell2struct([id, name], {'id', 'name'}, 2);
-    otype = upper(ont_type);
-    if numel(REL) == 0
-      ont = construct_ont(otype, term, alt_list, is_a_list);
-    else
-      ont = construct_ont(otype, term, alt_list, is_a_list, REL, rel_list);
+    onts = make_ont(term, alt_list, is_a_list, rel, rel_list);
+
+    onts.ont_type = ont_types{1};
+    onts.date     = dt;
+  else
+    onts = cell(1, numel(ont_types));
+    for i = 1 : numel(ont_types)
+      this_ont = strcmpi(ns, ont_types{i});
+      term = cell2struct([id(this_ont), name(this_ont)], {'id', 'name'}, 2);
+      onts{i} = make_ont(term, alt_list, is_a_list, rel, rel_list);
+
+      onts{i}.ont_type = ont_types{i};
+      onts{i}.date = dt;
     end
   end
+  % }}}
   % parse obo file }}}
 return
 
-% function: hashkeywords % {{{
+% function: hashkeywords {{{
 function [hk] = hashkeywords
-    powers = [27^5; 27^4; 27^3; 27^2; 27; 1];
-    hk = sparse(27^6, 1);
-    hk(max(0, 'id    '-'`') * powers + 1) = 1;
-    hk(max(0, 'name  '-'`') * powers + 1) = 2;
-    hk(max(0, 'namesp'-'`') * powers + 1) = 3;
-    hk(max(0, 'is_a  '-'`') * powers + 1) = 4;
-    hk(max(0, 'alt_id'-'`') * powers + 1) = 5;
-    hk(max(0, 'is_obs'-'`') * powers + 1) = 6;
-    hk(max(0, 'relati'-'`') * powers + 1) = 7; % relationship
+  powers = [27^5;27^4;27^3;27^2;27;1];
+  hk = sparse(27^6, 1);
+  hk(max(0,'id    '-'`')*powers+1) = 1;
+  hk(max(0,'name  '-'`')*powers+1) = 2;
+  hk(max(0,'namesp'-'`')*powers+1) = 3; % namespace
+  hk(max(0,'is_a  '-'`')*powers+1) = 4;
+  hk(max(0,'alt_id'-'`')*powers+1) = 5;
+  hk(max(0,'is_obs'-'`')*powers+1) = 6; % is_obsoleted
+  hk(max(0,'relati'-'`')*powers+1) = 7; % relationship
 return
-% function: hashkeywords % }}}
+% }}}
 
 % function: construct ont {{{
-function ont = construct_ont(ont_type, term, alt_list, is_a_list, REL, rel_list)
-    [~, order] = sort({term.id}); % sort by id
-    ont.term = term(order);
-    n = numel(term);
+function ont = make_ont(term, alt_list, is_a_list, rel, rel_list)
+  [~, order] = sort({term.id}); % sort by id
+  ont.term = term(order);
+  n = numel(term);
 
-    % construct 'alt' list
-    found = ismember(alt_list.l2, {ont.term.id});
-    ont.alt_list.old = alt_list.l1(found);
-    ont.alt_list.new = alt_list.l2(found);
+  % construct 'alt' list
+  found = ismember(alt_list.dst, {ont.term.id});
+  ont.alt_list.old = alt_list.src(found);
+  ont.alt_list.new = alt_list.dst(found);
 
-    % construct 'DAG'
-    ont.rel_code = {'is_a'}; type_cnt = numel(ont.rel_code);
-    [found1, index1] = ismember(is_a_list.l1, {ont.term.id});
-    [found2, index2] = ismember(is_a_list.l2, {ont.term.id});
-    valid = found1 & found2;
-    from = index1(valid);
-    to   = index2(valid);
-    val  = ones(sum(valid), 1);
+  % construct 'DAG'
+  % make a list of (source, destination, relationship index)
+  ont.rel_code = {'is_a'};
+  [found_src, index_src] = ismember(is_a_list.src, {ont.term.id});
+  [found_dst, index_dst] = ismember(is_a_list.dst, {ont.term.id});
+  valid = found_src & found_dst;
+  src = index_src(valid);
+  dst = index_dst(valid);
+  ind = ones(sum(valid), 1); % index of "is_a": 1
 
-    if exist('REL', 'var')
-        for i = 1 : numel(REL)
-            if isempty(rel_list.l1{i}) || isempty(rel_list.l2{i})
-                continue;
-            end
+  % append (src, dst, ind) for each 'rel'
+  rel_count = 1;
+  if exist('rel', 'var')
+    for i = 1 : numel(rel)
+      if isempty(rel_list.src{i}) || isempty(rel_list.dst{i})
+        continue;
+      end
 
-            ont.rel_code{type_cnt+1} = REL{i};
-            type_cnt = type_cnt + 1; % increase type count
-            [found1, index1] = ismember(rel_list.l1{i}, {ont.term.id});
-            [found2, index2] = ismember(rel_list.l2{i}, {ont.term.id});
-            valid = found1 & found2;
-            % appending
-            from = [from; index1(valid)];
-            to   = [to; index2(valid)];
-            val  = [val; type_cnt * ones(sum(valid), 1)];
-        end
+      rel_count = rel_count + 1;
+      ont.rel_code = [ont.rel_code, rel(i)];
+      [found_src, index_src] = ismember(rel_list.src{i}, {ont.term.id});
+      [found_dst, index_dst] = ismember(rel_list.dst{i}, {ont.term.id});
+      valid = found_src & found_dst;
+
+      % appending
+      src = [src; index_src(valid)];
+      dst = [dst; index_dst(valid)];
+      ind = [ind; rel_count * ones(sum(valid), 1)];
     end
-    ont.DAG = sparse(from, to, val, n, n);
-
-    % preparing output
-    ont.ont_type = upper(ont_type);
-    ont.date     = date;
+  end
+  ont.DAG = sparse(src, dst, ind, n, n);
 return
-% function: construct ont }}}
+% }}}
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
-% Indiana University Bloomington
-% Last modified: Sat 09 Jan 2016 10:11:07 AM C
+% Indiana University, Bloomington
+% Last modified: Fri 04 Mar 2016 12:32:08 PM E
