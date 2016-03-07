@@ -52,7 +52,7 @@ function [subont] = pfp_subont(ont, term_lst)
 
   % check the 1st argument 'ont' {{{
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % check the 1st argument 'ont' }}}
+  % }}}
 
   % check the 2nd argument 'term_lst' {{{
   validateattributes(term_lst, {'cell', 'struct'}, {'nonempty'}, '', 'term_lst', 2);
@@ -60,8 +60,8 @@ function [subont] = pfp_subont(ont, term_lst)
   if isstruct(term_lst)
     term_lst = {term_lst.id};
   end
-  % check the 2nd argument 'term_lst' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % find valid terms {{{
   [found, index] = ismember(term_lst, {ont.term.id});
@@ -71,7 +71,7 @@ function [subont] = pfp_subont(ont, term_lst)
   end
 
   selected = index(found);
-  % find valid terms }}}
+  % }}}
 
   % run algorithm to find selected terms {{{
   DAG        = ont.DAG ~= 0;
@@ -89,7 +89,7 @@ function [subont] = pfp_subont(ont, term_lst)
 
   % sort selected terms
   [~, order] = sort(selected);
-  % run algorithm to find selected terms }}}
+  % }}}
 
   % preparing output {{{
   subont.term     = ont.term(selected(order));
@@ -100,12 +100,12 @@ function [subont] = pfp_subont(ont, term_lst)
   else
     subont.rel_code = {'undefined'};
   end
-  subont.date = date;
-  % preparing output }}}
+  subont.date = datestr(now, 'mm/dd/yyyy HH:MM');
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sat 09 Jan 2016 10:04:09 AM C
+% Last modified: Sun 06 Mar 2016 07:49:55 PM E

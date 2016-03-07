@@ -1,0 +1,23 @@
+pred_dir   = ~/cafa/prediction/bpo/
+prev_dir   = ~/cafa/seq-centric/bpo/
+eval_dir   = ~/cafa/evaluation/
+annotation = ~/cafa/benchmark/groundtruth/bpoa.mat
+benchmark  = ~/cafa/benchmark/lists/bpo_all_type2.txt
+bootstrap  = ~/cafa/config/bootstrap/bpo_all_type2.mat
+
+ontology = bpo
+category = all
+type = 2
+mode = 1
+
+metric = f
+metric = wf
+metric = s
+metric = ns
+metric = auc
+
+model = all
+model = +BN1S
+model = +BB1S
+model = +BN4S
+model = +BB4S

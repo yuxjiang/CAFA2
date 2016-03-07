@@ -15,6 +15,11 @@ function [oa] = pfp_oaproj(oa, lst, option)
 % In the case of option being 'term', 'lst' must be a subset of terms in the
 % given ontology (oa.ontology), otherwise an error message will be prompted.
 %
+% In the case of projecting to another ontology which have different structures,
+% e.g., allowing different sets of relationships, see pfp_oaconv.m.
+%
+% 'eia' of the given oa will be removed due to the change of ontology structure.
+%
 % Input
 % -----
 % [struct]
@@ -34,6 +39,10 @@ function [oa] = pfp_oaproj(oa, lst, option)
 % ----------
 %[>]pfp_oabuild.m
 %[>]pfp_subont.m
+%
+% See Also
+% --------
+%[>]pfp_oaconv.m
 % }}}
 
   % check inputs {{{
@@ -43,16 +52,16 @@ function [oa] = pfp_oaproj(oa, lst, option)
 
   % check the 1st argument 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 1);
-  % check the 1st argument 'oa' }}}
+  % }}}
 
   % check the 2nd argument 'lst' {{{
   validateattributes(lst, {'cell'}, {'nonempty'}, '', 'lst', 2);
-  % check the 2nd argument 'lst' }}}
+  % }}}
 
   % check the 3rd argument 'option' {{{
   option = validatestring(option, {'object', 'term'}, '', 'option', 3);
-  % check the 3rd argument 'option' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % project oa {{{
   switch option
@@ -80,20 +89,22 @@ function [oa] = pfp_oaproj(oa, lst, option)
 
     % set up output
     oa.ontology = pfp_subont(oa.ontology, lst);
-    oa.eia      = oa.eia(index);
+    if isfield(oa, 'eia')
+      oa = rmfield(oa, 'eia');
+    end
   otherwise
     % nop
   end
-  % project oa }}}
+  % }}}
 
   % update oa {{{
   oa.annotation = annotation;
-  oa.date = date;
-  % update oa }}}
+  oa.date = datestr(now, 'mm/dd/yyyy HH:MM');
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sat 09 Jan 2016 09:55:41 AM C
+% Last modified: Sun 06 Mar 2016 07:46:59 PM E

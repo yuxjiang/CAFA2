@@ -1,0 +1,21 @@
+pred_dir   = ~/cafa/prediction/hpo/
+prev_dir   = ~/cafa/seq-centric/hpo/
+eval_dir   = ~/cafa/evaluation/
+annotation = ~/cafa/benchmark/groundtruth/hpoa.mat
+benchmark  = ~/cafa/benchmark/lists/hpo_HUMAN_type1.txt
+bootstrap  = ~/cafa/config/bootstrap/hpo_HUMAN_type1.mat
+
+ontology = hpo
+category = HUMAN
+type = 1
+mode = 1
+
+metric = f
+metric = wf
+metric = s
+metric = ns
+metric = auc
+
+model = all
+model = +BN4H
+model = +BB4H

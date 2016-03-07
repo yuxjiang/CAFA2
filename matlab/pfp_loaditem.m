@@ -31,13 +31,13 @@ function [items] = pfp_loaditem(filename, data_type)
   if fid == -1
     error('pfp_loaditem:FileErr', 'Cannot open [%s].', filename);
   end
-  % check the 1st input 'filename' }}}
+  % }}}
 
   % check the 2nd input 'data_type' {{{
   validateattributes(data_type, {'char'}, {'nonempty'}, '', 'data_type', 2);
   dtype = validatestring(data_type, {'char', 'numeric'});
-  % check the 2nd input 'data_type' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % load data {{{
   switch dtype
@@ -52,7 +52,7 @@ function [items] = pfp_loaditem(filename, data_type)
     items = [];
   end
   fclose(fid);
-  % load data }}}
+  % }}}
 return
 
 % -------------

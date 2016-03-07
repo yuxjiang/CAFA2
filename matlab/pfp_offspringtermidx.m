@@ -38,17 +38,17 @@ function [idx] = pfp_offspringtermidx(ont, term_lst)
 
   % check the 1st argument 'ont' {{{
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % check the 1st argument 'ont' }}}
+  % }}}
 
   % check the 2nd arugment 'term_lst' {{{
   validateattributes(term_lst, {'cell', 'char', 'struct'}, {'nonempty'}, '', 'term_lst', 2);
-  % check the 2nd arugment 'term_lst' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % find indices {{{
   index = pfp_gettermidx(ont, term_lst);
   index(index == 0) = [];
-  % find indices }}}
+  % }}}
 
   % find offsprings {{{
   walking        = false(numel(ont.term), 1);
@@ -59,7 +59,7 @@ function [idx] = pfp_offspringtermidx(ont, term_lst)
     walking = full(any(ont.DAG(:, walking), 2)) & ~visited;
   end
   idx = reshape(find(visited), 1, []);
-  % find offsprings }}}
+  % }}}
 return
 
 % -------------

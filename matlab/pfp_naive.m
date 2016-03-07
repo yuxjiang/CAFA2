@@ -51,27 +51,27 @@ function [pred] = pfp_naive(qseqid, oa)
 
   % check the 1st input 'qseqid' {{{
   validateattributes(qseqid, {'cell'}, {'nonempty'}, '', 'qseqid', 1);
-  % check the 1st input 'qseqid' }}}
+  % }}}
 
   % check the 2nd input 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 2);
-  % check the 2nd input 'oa' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % prepare for the output {{{
-  pred.object = reshape(qseqid, [], 1); % make it vertical
+  pred.object   = reshape(qseqid, [], 1); % make it vertical
   pred.ontology = oa.ontology;
 
   score = sparse(sum(oa.annotation, 1));
   score = score ./ max(score);
 
   pred.score = repmat(score, numel(qseqid), 1);
-  pred.date  = date;
-  % prepare for the output }}}
+  pred.date  = datestr(now, 'mm/dd/yyyy HH:MM');
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sat 09 Jan 2016 10:35:16 AM C
+% Last modified: Sun 06 Mar 2016 05:55:17 PM E

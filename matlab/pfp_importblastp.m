@@ -1,6 +1,8 @@
 function [blast] = pfp_importblastp(filename, ksh)
 %PFP_IMPORTBLASTP Read BLAST
 % {{{
+%
+% [blast] = PFP_IMPORTBLASTP(filename);
 % [blast] = PFP_IMPORTBLASTP(filename, ksh);
 %
 %   Reads "blastp" result in tab-splited format.
@@ -12,6 +14,7 @@ function [blast] = pfp_importblastp(filename, ksh)
 %
 % Input
 % -----
+% (required)
 % [char]
 % filename: BLAST result filename.
 %           Note that the result file contains the following content:
@@ -23,9 +26,10 @@ function [blast] = pfp_importblastp(filename, ksh)
 %
 %           -outfmt "6 qseqid sseqid evalue length pident nident"
 %
+% (optional)
 % [logical]
-% ksh:      A toggle for "keep-self-hits"
-%           default: false
+% ksh:      A toggle indicates to "keep-self-hits".
+%           default: false.
 %
 % Output
 % ------
@@ -71,12 +75,12 @@ function [blast] = pfp_importblastp(filename, ksh)
   if fid == -1
     error('pfp_importblast:FileErr', 'Cannot open the file [%s].', filename);
   end
-  % check the 1st input 'filename' }}}
+  % }}}
 
   % check the 2nd input 'ksh' {{{
   validateattributes(ksh, {'logical'}, {'nonempty'}, '', 'ksh', 2);
-  % check the 2nd input 'ksh' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % read blast results {{{
   block_size = 1e5;
@@ -137,8 +141,8 @@ function [blast] = pfp_importblastp(filename, ksh)
         remained{i}(1 : start - 1) = [];
       end
     end
-    % clear processed entries }}}
-    % process the block }}}
+    % }}}
+    % }}}
   end
   fclose(fid);
 
@@ -152,11 +156,11 @@ function [blast] = pfp_importblastp(filename, ksh)
     info{collected}.pident = remained{5};
     info{collected}.nident = remained{6};
   end
-  % collect the last "remained" entry }}}
+  % }}}
 
   blast.qseqid = qseqid;
   blast.info   = info;
-  % read blast results }}}
+  % }}}
 return
 
 % function: first_chunk_last_pos {{{
@@ -188,7 +192,7 @@ function [pos] = first_chunk_last_pos(L, pos_a, pos_b)
       end
       step = step / 2;
     end
-    % binary search }}}
+    % }}}
 
     if ~strcmp(L(pos_a), L(pos))
       pos = pos - 1;
@@ -200,4 +204,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 26 Feb 2016 02:40:42 AM E
+% Last modified: Sun 06 Mar 2016 05:53:06 PM E

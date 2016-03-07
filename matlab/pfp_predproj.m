@@ -54,17 +54,17 @@ function [pred] = pfp_predproj(pred, lst, op)
 
   % check the 1st input 'pred' {{{
   validateattributes(pred, {'struct'}, {'nonempty'}, '', 'pred', 1);
-  % check the 1st input 'pred' }}}
+  % }}}
 
   % check the 2nd input 'lst' {{{
   validateattributes(lst, {'cell', 'struct'}, {'nonempty'}, '', 'lst', 2);
-  % check the 2nd input 'lst' }}}
+  % }}}
 
   % check the 3rd input 'op' {{{
   validateattributes(op, {'char'}, {'nonempty'}, '', 'op', 3);
   op = validatestring(op, {'object', 'term'});
-  % check the 3rd input 'op' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % project items {{{
   switch op
@@ -91,16 +91,16 @@ function [pred] = pfp_predproj(pred, lst, op)
   otherwise
     % nop
   end
-  % project items }}}
+  % }}}
 
   % prepare for the output {{{
   pred.score = score;
-  pred.date = date;
-  % prepare for the output }}}
+  pred.date = datestr(now, 'mm/dd/yyyy HH:MM');
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang
 % School of Informatics and Computing
 % Indiana University Bloomington
-% Last modified: Sat 09 Jan 2016 10:35:59 AM C
+% Last modified: Sun 06 Mar 2016 07:50:03 PM E

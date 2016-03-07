@@ -251,16 +251,15 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast, scheme)
     saveto = strcat(config.eval_dir, saveto_prefix, 'avg_auc_bar', plot_ext);
     aucs = cafa_collect(config.eval_dir, 'term_auc');
 
-    % load term acc <--> term name table
-    fid = fopen(config.ont_term, 'r');
-    terms = textscan(fid, '%s%s', 'Delimiter', '\t');
-    fclose(fid);
+    % % load term acc <--> term name table
+    % fid = fopen(config.ont_term, 'r');
+    % terms = textscan(fid, '%s%s', 'Delimiter', '\t');
+    % fclose(fid);
 
     % note that filtered aucs could be empty, for all terms are fully annotated
     % like root, which results in NaN AUC.
     aucs = cafa_sel_valid_term_auc(aucs); % keep only participating models
     if ~isempty(aucs)
-      % [~, index] = ismember(aucs{1}.term, terms{1});
       cafa_plot_term_avgauc(saveto, ont_str, aucs, config.oa.ontology, yaxis_auc);
     else
       warning('No model is selected.');
@@ -275,10 +274,10 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast, scheme)
     [~, ~, info] = cafa_sel_top_seq_fmax(5, fmaxs, naive, blast, cfg, isdump);
     aucs = cafa_collect(config.eval_dir, 'term_auc');
 
-    % load term acc <--> term name table
-    fid = fopen(config.ont_term, 'r');
-    terms = textscan(fid, '%s%s', 'Delimiter', '\t');
-    fclose(fid);
+    % % load term acc <--> term name table
+    % fid = fopen(config.ont_term, 'r');
+    % terms = textscan(fid, '%s%s', 'Delimiter', '\t');
+    % fclose(fid);
 
     % select top 5 methods
     aucs = cafa_get_term_auc(aucs, info.top_mid);
@@ -287,7 +286,6 @@ function [] = cafa_driver_result(eval_dir, cfg, naive, blast, scheme)
     % like root, which results in NaN AUC.
     aucs = cafa_sel_valid_term_auc(aucs); % keep only participating models
     if ~isempty(aucs)
-      % [~, index] = ismember(aucs{1}.term, terms{1});
       cafa_plot_term_avgauc(saveto, ont_str, aucs, config.oa.ontology, yaxis_auc);
     else
       warning('No model is selected.');
@@ -355,4 +353,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Wed 17 Feb 2016 05:47:12 PM E
+% Last modified: Sat 05 Mar 2016 03:48:03 PM E

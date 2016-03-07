@@ -58,7 +58,7 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
   % check inputs {{{
   % check the 1st argument 'ont' {{{
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % check the 1st argument 'ont' }}}
+  % }}}
 
   % check the 2nd argument 'afile' {{{
   validateattributes(afile, {'char'}, {'nonempty'}, '', 'afile', 2);
@@ -67,7 +67,7 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
   end
   afiles = cell(1, 1 + numel(varargin));
   afiles{1} = afile;
-  % check the 2nd argument 'afile' }}}
+  % }}}
 
   % check additional arguments 'varargin' {{{
   for i = 1 : numel(varargin)
@@ -77,8 +77,8 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
       end
       afiles{i + 1} = varargin{i};
   end
-  % check additional arguments 'varargin' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % read ontology annotation data file(s) {{{
   plain_oa = oaread(afiles); % See below for definination
@@ -96,7 +96,7 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
     plain_oa.term_id(dummy)  = [];
     plain_oa.annot(:, dummy) = [];
   end
-  % read ontology annotation data file(s) }}}
+  % }}}
 
   % build oa structure {{{
   oa.object     = plain_oa.obj_id;
@@ -129,8 +129,8 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
 
   oa.annotation = pfp_annotprop(oa.ontology.DAG, oa.annotation);
   oa.eia        = pfp_eia(oa.ontology.DAG, oa.annotation);
-  oa.date       = date;
-  % build oa structure }}}
+  oa.date       = datestr(now, 'mm/dd/yyyy HH:MM');
+  % }}}
 return
 
 % function: oaread {{{
@@ -175,10 +175,10 @@ function [plain_oa] = oaread(afiles)
   plain_oa.annot   = sparse(indexO, indexT, 1, numel(plain_oa.obj_id), numel(plain_oa.term_id));
   plain_oa.annot   = logical(plain_oa.annot);
 return
-% function: oaread }}}
+% }}}
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sat 09 Jan 2016 09:54:02 AM C
+% Last modified: Sun 06 Mar 2016 07:51:33 PM E

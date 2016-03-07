@@ -79,20 +79,20 @@ function [pred] = pfp_blast(qseqid, B, oa, feature)
 
   % check the 1st input 'qseqid' {{{
   validateattributes(qseqid, {'cell'}, {'nonempty'}, '', 'qseqid', 1);
-  % check the 1st input 'qseqid' }}}
+  % }}}
 
   % check the 2nd input 'B' {{{
   validateattributes(B, {'struct'}, {'nonempty'}, '', 'B', 2);
-  % check the 2nd input 'B' }}}
+  % }}}
 
   % check the 3rd input 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 3);
-  % check the 3rd input 'oa' }}}
+  % }}}
 
   % check the 4th input 'feature' {{{
   feature = validatestring(feature, {'sid', 'rscore'}, '', 'feature', 4);
-  % check the 4th input 'feature' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % preparing output {{{
   pred.object   = reshape(qseqid, [], 1);
@@ -101,9 +101,9 @@ function [pred] = pfp_blast(qseqid, B, oa, feature)
   n = numel(pred.object);
   m = numel(pred.ontology.term);
 
-  pred.score    = sparse(n, m);
-  pred.date     = date;
-  % preparing output }}}
+  pred.score = sparse(n, m);
+  pred.date  = datestr(now, 'mm/dd/yyyy HH:MM');
+  % }}}
 
   % compute the blast prediction {{{
   [found, index] = ismember(pred.object, B.qseqid);
@@ -135,11 +135,11 @@ function [pred] = pfp_blast(qseqid, B, oa, feature)
       pred.score(i, :) = max(anno_mat, [], 1);
     end
   end
-  % compute the blast prediction }}}
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sat 09 Jan 2016 10:33:18 AM C
+% Last modified: Sun 06 Mar 2016 05:54:48 PM E

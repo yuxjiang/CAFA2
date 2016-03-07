@@ -1,0 +1,17 @@
+pred_dir = ~/cafa/duel/cafa2/prediction/mfo/
+prev_dir = ~/cafa/duel/cafa2/seq-centric/mfo/
+annotation = ~/cafa/duel/cafa2/benchmark/groundtruth/mfoa.mat
+benchmark = ~/cafa/duel/cafa2/benchmark/lists/mfo_all_type1.txt
+
+ontology = mfo
+category = all
+
+metric = f
+
+model = all
+
+# -------------
+# Yuxiang Jiang (yuxjiang@indiana.edu)
+# Department of Computer Science
+# Indiana University, Bloomington
+# Last modified: Mon 07 Mar 2016 12:09:25 AM E

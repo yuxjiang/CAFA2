@@ -38,11 +38,11 @@ function [idx] = pfp_gettermidx(ont, term_lst)
   % check inputs {{{
   % check the 1st argument 'ont' {{{
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % check the 1st argument 'ont' }}}
+  % }}}
 
   % check the 2nd argument 'term_lst' {{{
   validateattributes(term_lst, {'cell', 'char', 'struct'}, {'nonempty'}, '', 'term_lst', 2);
-  % check the 2nd argument 'term_lst' }}}
+  % }}}
   switch class(term_lst)
   case 'char'
     term_lst = {term_lst};
@@ -51,7 +51,7 @@ function [idx] = pfp_gettermidx(ont, term_lst)
   otherwise
     % case: cell, nothing to do
   end
-  % check inputs }}}
+  % }}}
 
   % find ID of requested terms {{{
   idx = zeros(numel(term_lst), 1);
@@ -75,7 +75,7 @@ function [idx] = pfp_gettermidx(ont, term_lst)
     idx(found) = index(found);
   end
   idx = reshape(idx, 1, []);
-  % find ID of requested terms }}}
+  % }}}
 return
 
 % -------------

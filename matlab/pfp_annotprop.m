@@ -35,12 +35,12 @@ function [A] = pfp_annotprop(DAG, A)
   % check the 1st input 'DAG' {{{
   validateattributes(DAG, {'double'}, {'square'}, '', 'DAG', 1);
   m = size(DAG, 1);
-  % check the 1st input 'DAG' }}}
+  % }}}
 
   % check the 2nd input 'A' {{{
   validateattributes(A, {'logical'}, {'ncols', m}, '', 'A', 2);
-  % check the 2nd input 'A' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % propagation {{{
   DAG = DAG ~= 0; % make it logical
@@ -52,7 +52,7 @@ function [A] = pfp_annotprop(DAG, A)
     p = DAG(order(i), :); % parent term(s)
     A(:, p) = bsxfun(@or, A(:, p), A(:, order(i)));
   end
-  % propagation }}}
+  % }}}
 return
 
 % -------------

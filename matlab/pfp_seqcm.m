@@ -188,7 +188,7 @@ function [cm] = pfp_seqcm(target, pred, oa, varargin)
     % nop
   end
   cm.cm   = cell2mat(cm.cm);
-  cm.date = date;
+  cm.date = datestr(now, 'mm/dd/yyyy HH:MM');
   % }}}
 return
 
@@ -196,4 +196,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 21 Oct 2015 06:24:28 PM E
+% Last modified: Sun 06 Mar 2016 07:47:38 PM E

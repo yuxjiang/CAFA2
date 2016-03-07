@@ -1,0 +1,18 @@
+pred_dir   = ~/cafa/duel/cafa2/prediction/bpo/
+prev_dir   = ~/cafa/duel/cafa2/seq-centric/bpo/
+eval_dir   = ~/cafa/duel/cafa2/evaluation/
+annotation = ~/cafa/duel/cafa2/benchmark/groundtruth/bpoa.mat
+benchmark  = ~/cafa/duel/cafa2/benchmark/lists/bpo_duel_type1.txt
+bootstrap  = ~/cafa/config/bootstrap/bpo_duel_type1.mat
+ontology = bpo
+category = duel
+type = 1
+mode = 1
+metric = f
+model = all
+
+# -------------
+# Yuxiang Jiang (yuxjiang@indiana.edu)
+# Department of Computer Science
+# Indiana University, Bloomington
+# Last modified: Sat 05 Mar 2016 04:08:49 PM E

@@ -42,7 +42,7 @@ function [term] = pfp_getterm(ont, term_lst)
 
   % check the 1st argument 'ont' {{{
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % check the 1st argument 'ont' }}}
+  % }}}
 
   % check the 2nd argument 'term_lst' {{{
   validateattributes(term_lst, {'cell', 'char'}, {'nonempty'}, '', 'term_lst', 2);
@@ -50,8 +50,8 @@ function [term] = pfp_getterm(ont, term_lst)
   if ischar(term_lst)
     term_lst = {term_lst};
   end
-  % check the 2nd argument 'term_lst' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % find ID of requested terms {{{
   acc  = repmat({''}, numel(term_lst), 1);
@@ -75,16 +75,16 @@ function [term] = pfp_getterm(ont, term_lst)
     [found, index] = ismember(term_lst, {ont.term.id});
     acc(found) = {ont.term(index(found)).id};
   end
-  % find ID of requested terms }}}
+  % }}}
 
   % get term names {{{
   [found, index] = ismember(acc, {ont.term.id});
   name(found) = {ont.term(index(found)).name};
-  % get term names }}}
+  % }}}
 
   % prepare output {{{
   term = cell2struct([acc, name], {'id', 'name'}, 2);
-  % prepare output }}}
+  % }}}
 return
 
 % -------------

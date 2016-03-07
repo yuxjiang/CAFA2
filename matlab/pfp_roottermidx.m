@@ -29,12 +29,12 @@ function [idx] = pfp_roottermidx(ont)
 
   % check the 1st input 'ont' {{{
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % check the 1st input 'ont' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % root term index {{{
   idx = reshape(find(~any(ont.DAG ~= 0, 2)), 1, []);
-  % root term index }}}
+  % }}}
 return
 
 % -------------

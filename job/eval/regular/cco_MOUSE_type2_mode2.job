@@ -1,0 +1,23 @@
+pred_dir   = ~/cafa/prediction/cco/
+prev_dir   = ~/cafa/seq-centric/cco/
+eval_dir   = ~/cafa/evaluation/
+annotation = ~/cafa/benchmark/groundtruth/ccoa.mat
+benchmark  = ~/cafa/benchmark/lists/cco_MOUSE_type2.txt
+bootstrap  = ~/cafa/config/bootstrap/cco_MOUSE_type2.mat
+
+ontology = cco
+category = MOUSE
+type = 2
+mode = 2
+
+metric = f
+metric = wf
+metric = s
+metric = ns
+metric = auc
+
+model = all
+model = +BN1S
+model = +BB1S
+model = +BN4S
+model = +BB4S

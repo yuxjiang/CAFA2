@@ -26,8 +26,8 @@ function [oa] = pfp_rmprotbd(oa)
   % check inputs {{{
   % check the 1st argument 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 1);
-  % check the 1st argument 'oa' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % find and remove objects {{{
 
@@ -43,12 +43,12 @@ function [oa] = pfp_rmprotbd(oa)
 
   % update eia, re-estimate information accretion
   oa.eia  = pfp_eia(oa.ontology.DAG, oa.annotation);
-  oa.date = date;
-  % find and remove objects }}}
+  oa.date = datestr(now, 'mm/dd/yyyy HH:MM');
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 May 2015 11:13:57 AM E
+% Last modified: Sun 06 Mar 2016 07:49:20 PM E

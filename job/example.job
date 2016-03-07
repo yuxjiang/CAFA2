@@ -1,62 +1,76 @@
-# Example for an evaluation pipeline job
+# Example for an pre-evaluation/evaluation pipeline job
 
-# paths
-# -----
-# where is the parsed 'pred' structures
-pred_dir   = ~/cafa/prediction/mfo/
+# paths to folder/files
+# ----
+# folder for prediction structure files
+pred_dir = ~/cafa/prediction/mfo/
 
-# where is pre-computed results?
-prev_dir   = ~/cafa/seq-centric/mfo/
+# folder for pre-evaluation results
+prev_dir = ~/cafa/seq-centric/mfo/
 
-# where to put output folder
-eval_dir   = ~/cafa/evaluation/mfo_all_type1_mode1/
+# folder for evaluation results
+eval_dir = ~/cafa/evaluation/mfo_all_type1_mode1/
 
-# where is the ontology term list file
-ont_term   = ~/cafa/ontology/mfo_term.txt
-
-# where is the annotation structure
+# file for groundtruth annotation
 annotation = ~/cafa/benchmark/groundtruth/mfoa.mat
 
-# benchmark list file
-benchmark  = ~/cafa/benchmark/mfo_all_type1.txt
+# file for benchmark protein list
+benchmark = ~/cafa/benchmark/lists/mfo_all_type1.txt
 
-# where is the bootstrap index
-bootstrap  = ~/cafa/config/bootstrap/mfo_all_type1.mat
+# file for bootstrap benchmark index (for repeatable results)
+bootstrap = ~/cafa/config/bootstrap/mfo_all_type1.mat
 
 # ontology
-# --------
+# ----
+# a string indicates which of the four ontologies
 # options: mfo, bpo, cco, hpo
 ontology = mfo
 
 # benchmark category
-# ------------------
-# options: all, easy, hard, eukarya, prokarya, species
+# ----
+# a string indicate evaluation category
+# options: all, easy, hard, eukarya, prokarya, or SPECIES (e.g., HUMAN, MOUSE)
 category = all
 
 # type
 # ----
-# options: 1, 2
+# evaluation benchmark type, options: 1, 2
+# type 1: no-knowledge (NK)
+# type 2: limited-knowledge (LK)
 type = 1
 
 # mode
 # ----
-# options: 1, 2
+# evaluation mode, options: 1, 2
+# mode 1: full
+# mode 2: partial
 mode = 1
 
 # metric
-# ------
-# options:
-# f (F1-max), s (S2-min), wf (weighted F1-max), ns (normalized S2-min), auc
+# ----
+# choice of metrics of interest, any combination of the following options:
+# f (F1-max),
+# s (S2-min),
+# wf (weighted F1-max),
+# ns (normalized S2-min),
+# auc (area under the ROC curve)
 metric = f
 metric = wf
 metric = s
 metric = ns
 metric = auc
 
+# optional metric specifications:
+# beta in F_{beta} measure
+# beta = 1
+# default (1)
+
 # model
-# -----
-# options: all (all regular models), +M*, -M*, +B*, -B* 
-# baseline (Naive/BLAST) options: B[NB][14][SGUA]
+# ----
+# choice of models of interest, any combination of submitted methods and
+# baselines, all submitted methods can be referred to as shortcut: all
+# options: all (all regular models) # +M*, -M*, +B*, -B*
+# baseline (Naive/BLAST): B[NB][14][SGUA]
 # note: B[NB]4S is the most typical, which was trained on SwissProt Jan.2014
 model = all
 model = +BN1S
@@ -68,4 +82,4 @@ model = +BB4S
 # Yuxiang Jiang (yuxjiang@indiana.edu)
 # Department of Computer Science
 # Indiana University, Bloomington
-# Last modified: Fri 17 Jul 2015 02:28:56 PM E
+# Last modified: Mon 07 Mar 2016 12:13:46 AM E

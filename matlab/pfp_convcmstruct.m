@@ -82,7 +82,7 @@ function [res] = pfp_convcmstruct(cmstruct, metric, varargin)
   end
   res.tau     = cmstruct.tau;
   res.covered = (cmstruct.npp > 0);
-  res.date    = date;
+  res.date    = datestr(now, 'mm/dd/yyyy HH:MM');
   % }}}
 return
 
@@ -90,4 +90,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Wed 21 Oct 2015 06:34:46 PM E
+% Last modified: Sun 06 Mar 2016 07:51:44 PM E

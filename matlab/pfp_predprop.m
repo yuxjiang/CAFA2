@@ -54,17 +54,17 @@ function [pred] = pfp_predprop(pred, force, scheme)
 
   % check the 1st input 'pred' {{{
   validateattributes(pred, {'struct'}, {'nonempty'}, '', 'pred', 1);
-  % check the 1st input 'pred' }}}
+  % }}}
 
   % check the 2nd input 'force' {{{
   validateattributes(force, {'logical'}, {'nonempty'}, '', 'force', 2);
-  % check the 2nd input 'force' }}}
+  % }}}
 
   % check the 3rd input 'scheme' {{{
   validateattributes(scheme, {'char'}, {'nonempty'}, '', 'scheme', 3);
   scheme = validatestring(scheme, {'max', 'ind'});
-  % check the 3rd input 'scheme' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % Topologically sort terms from leaf to root. {{{
   order = graphtopoorder(pred.ontology.DAG);
@@ -72,7 +72,7 @@ function [pred] = pfp_predprop(pred, force, scheme)
   % Start with the deepest term which has a score.
   deepest = min(find(sum(pred.score(order), 1) > 0));
   order(1 : deepest - 1) = [];
-  % Topologically sort terms from leaf to root. }}}
+  % }}}
 
   % propagate scores {{{
   switch scheme
@@ -114,7 +114,7 @@ function [pred] = pfp_predprop(pred, force, scheme)
     otherwise
       % nop
   end
-  % propagate scores }}}
+  % }}}
 return
 
 % -------------

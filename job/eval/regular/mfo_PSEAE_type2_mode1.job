@@ -1,0 +1,23 @@
+pred_dir   = ~/cafa/prediction/mfo/
+prev_dir   = ~/cafa/seq-centric/mfo/
+eval_dir   = ~/cafa/evaluation/
+annotation = ~/cafa/benchmark/groundtruth/mfoa.mat
+benchmark  = ~/cafa/benchmark/lists/mfo_PSEAE_type2.txt
+bootstrap  = ~/cafa/config/bootstrap/mfo_PSEAE_type2.mat
+
+ontology = mfo
+category = PSEAE
+type = 2
+mode = 1
+
+metric = f
+metric = wf
+metric = s
+metric = ns
+metric = auc
+
+model = all
+model = +BN1S
+model = +BB1S
+model = +BN4S
+model = +BB4S

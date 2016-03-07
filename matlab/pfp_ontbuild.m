@@ -115,7 +115,7 @@ function [onts] = pfp_ontbuild(obofile, rel)
   % }}}
 
   % check the 2nd input 'rel' {{{
-  validateattributes(rel, {'cell'}, {'nonempty'}, '', 'rel', 2);
+  validateattributes(rel, {'cell'}, {}, '', 'rel', 2);
   % }}}
   % }}}
 
@@ -220,6 +220,7 @@ function [onts] = pfp_ontbuild(obofile, rel)
   % }}}
 
   % extract other relationships {{{
+  rel_list = [];
   for i = 1 : numel(rel)
     % '^rel{i}' matches any line starts with i-th relationship, say '^part_of'
     is_this_rel = ~cellfun(@isempty, regexp(obo, sprintf('^%s', rel{i}), 'match', 'once'));
@@ -266,7 +267,7 @@ function [onts] = pfp_ontbuild(obofile, rel)
     end
   end
   % }}}
-  % parse obo file }}}
+  % }}}
 return
 
 % function: hashkeywords {{{
@@ -306,7 +307,7 @@ function ont = make_ont(term, alt_list, is_a_list, rel, rel_list)
 
   % append (src, dst, ind) for each 'rel'
   rel_count = 1;
-  if exist('rel', 'var')
+  if ~isempty(rel)
     for i = 1 : numel(rel)
       if isempty(rel_list.src{i}) || isempty(rel_list.dst{i})
         continue;
@@ -332,4 +333,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Fri 04 Mar 2016 12:32:08 PM E
+% Last modified: Sat 05 Mar 2016 01:29:11 PM E

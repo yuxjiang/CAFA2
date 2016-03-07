@@ -29,8 +29,8 @@ function [oa] = pfp_annotsuboa(oa)
 
   % check the 1st input 'oa' {{{
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 1);
-  % check the 1st input 'oa' }}}
-  % check inputs }}}
+  % }}}
+  % }}}
 
   % prepare for the output {{{
   has_annot = any(oa.annotation, 1);
@@ -39,12 +39,12 @@ function [oa] = pfp_annotsuboa(oa)
   oa.ontology.DAG  = oa.ontology.DAG(has_annot, has_annot);
   oa.annotation    = oa.annotation(:, has_annot);
   oa.eia           = oa.eia(has_annot);
-  oa.date          = date;
-  % prepare for the output }}}
+  oa.date          = datestr(now, 'mm/dd/yyyy HH:MM');
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 04 Feb 2016 05:40:13 PM E
+% Last modified: Sun 06 Mar 2016 07:51:21 PM E
