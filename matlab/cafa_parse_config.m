@@ -164,7 +164,7 @@ function [config] = cafa_parse_config(config_file)
   if ismember('all', models)
     % get all model ids in prediction dir
     models = setdiff(models, 'all');
-    files  = dir(strcat(config.cons_dir, 'M*'));
+    files  = dir(strcat(config.pred_dir, 'M*'));
     models = union(models, regexprep({files.name}, '\..*', ''));
   end
   models = union(models, models_plus);
@@ -207,4 +207,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 07 Mar 2016 12:05:00 AM E
+% Last modified: Mon 07 Mar 2016 01:08:34 AM E
