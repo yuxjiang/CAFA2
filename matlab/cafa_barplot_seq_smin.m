@@ -110,7 +110,9 @@ function [] = cafa_barplot_seq_smin(pfile, pttl, data, bsl_data)
     end
   end
 
-  [ylim_l, ylim_u, unit] = adapt_yaxis(smin_min, smin_max, 0.0, 100.0, [10.0, 5.0, 2.0, 1.0, 0.5, 0.2, 0.1]);
+  [ylim, unit] = adapt_yaxis([smin_min, smin_max], [0.0, 100.0], [10.0, 5.0, 2.0, 1.0, 0.5, 0.2, 0.1]);
+  ylim_l = ylim(1);
+  ylim_u = ylim(2);
   % }}}
 
   % settings {{{
@@ -204,4 +206,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 05 Aug 2015 04:32:43 PM E
+% Last modified: Mon 07 Mar 2016 10:47:52 AM E
