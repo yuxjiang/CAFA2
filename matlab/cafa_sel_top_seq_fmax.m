@@ -214,7 +214,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, reg, i
       end
     end
   else
-    % keep find the next team until
+    % keep finding the next team until
     % 1. find K (= 10) models, or
     % 2. exhaust the list
     % Note that we only allow one model selected per PI.
@@ -258,4 +258,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 17 Mar 2016 01:11:00 PM E
+% Last modified: Thu 17 Mar 2016 05:03:47 PM E
