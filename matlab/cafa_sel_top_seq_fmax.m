@@ -1,8 +1,8 @@
-function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config, isdump)
+function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, reg, isdump)
 %CAFA_SEL_TOP_SEQ_FMAX CAFA select top sequence-centric Fmax
 % {{{
 %
-% [sel, bsl, info] = CAFA_SEL_TOP_SEQ_FMAX(fmaxs, naive, blast, config, isdump);
+% [sel, bsl, info] = CAFA_SEL_TOP_SEQ_FMAX(fmaxs, naive, blast, reg, isdump);
 %
 %   Picks the top bootstrapped Fmax.
 %
@@ -34,9 +34,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 %         Could be empty: '' if not interested.
 %
 % [char]
-% config: The file having team information. The file should have the
-%         folloing columns:
-%
+% reg:    The team register, which should have the folloing columns:
 %       * 1. <internalID>
 %       * 2. <externalID>
 %         3. <teamname>
@@ -61,44 +59,27 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
 % ------
 % [cell]
 % sel:  The bars and related information ready for plotting:
-%
-%       [double]
-%       .fmax_mean      scalar, "bar height".
-%
-%       [double]
-%       .fmax_q05       scalar, 5% quantiles.
-%
-%       [double]
-%       .fmax_q95       scalar, 95% quantiles.
-%
-%       [double]
-%       .coverage       scalar, averaged coverage.
-%
-%       [char]
-%       .tag            tag of the model.
-%
-%       [char]
-%       .pi_name        name of the PI.
-%
-%       [double]
-%       .color          assigned color (1-by-3 RGB tuple).
+%       .fmax_mean  [double]  scalar, "bar height".
+%       .fmax_q05   [double]  scalar, 5% quantiles.
+%       .fmax_q95   [double]  scalar, 95% quantiles.
+%       .coverage   [double]  scalar, averaged coverage.
+%       .tag        [char]    tag of the model.
+%       .pi_name    [char]    name of the PI.
+%       .color      [double]  assigned color (1-by-3 RGB tuple).
 %
 % [cell]
-% bsl:    The baseline bars and related information. Each cell has the
-%         same structure as 'sel'.
+% bsl:  The baseline bars and related information. Each cell has the
+%       same structure as 'sel'.
 %
 % [struct]
-% info:   Extra information.
-%         [cell]
-%         .all_mid: Method name of all participating models.
-%
-%         [cell]
-%         .top_mid: Method name of top K models (ranked from 1 to K)
+% info: Extra information.
+%       .all_mid  [cell]  Method name of all participating models.
+%       .top_mid  [cell]  Method name of top K models (ranked from 1 to K)
 %
 % Dependency
 % ----------
 %[>]cafa_eval_seq_fmax_bst.m
-%[>]cafa_team_read_config.m
+%[>]cafa_team_register.m
 % }}}
 
   % check inputs {{{
@@ -122,9 +103,9 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, config
   validateattributes(blast, {'char'}, {}, '', 'blast', 4);
   % }}}
 
-  % check the 5th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  % check the 5th input 'reg' {{{
+  validateattributes(reg, {'char'}, {}, '', 'reg', 5);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_register(reg);
   % }}}
 
   % check the 6th input 'isdump' {{{
@@ -277,4 +258,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 02 Mar 2016 01:54:01 PM E
+% Last modified: Thu 17 Mar 2016 01:11:00 PM E

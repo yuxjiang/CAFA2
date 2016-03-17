@@ -15,26 +15,6 @@ function [] = cafa_driver_preeval(config_info)
 % organized as follows:
 %
 % CAFA2 (which needs to be given as input)
-% |--   config/             (configuration files, not needed here)
-% |--   consolidated/       (consolidated plain-text prediction files. We assume
-% |                         predicted scores from all models have been
-% |                         cosolidated and stored in this folder with their
-% |                         internal model ID as filenames, w/o file extension.
-% |                         Also, this script assumes internal ID starts with
-% |                         'M' and followed by 3 decimal digits.
-% |                         "Consolidation" is done using preprocessing scripts
-% |                         with necessary manual interferences.)
-% |-- * seq-centric/        (pre-evaluation results will appear here)
-% |     |-- * mfo/
-% |     |-- * bpo/
-% |     |-- * cco/
-% |     `-- * hpo/
-% |-- ! prediction/         (imported predictions in Matlab structures)
-% |     |-- * mfo/
-% |     |-- * bpo/
-% |     |-- * cco/
-% |     `-- * hpo/
-% |--   filtered/           (filtered plain-text prediction file)
 % |-- ! benchmark/
 % |     |-- ! lists/        (lists of benchmarks)
 % |     |   |-- all.txt             The union list of all benchmarks
@@ -47,12 +27,33 @@ function [] = cafa_driver_preeval(config_info)
 % |           |-- bpoa.mat
 % |           |-- ccoa.mat
 % |           `-- hpoa.mat
+% |--   bootstrap/          (bootstrap indicies, for reproducibility)
+% |--   consolidated/       (consolidated plain-text prediction files. We assume
+% |                          predicted scores from all models have been
+% |                          cosolidated and stored in this folder with their
+% |                          internal model ID as filenames, w/o file extension.
+% |                          Also, this script assumes internal ID starts with
+% |                          'M' and followed by 3 decimal digits.
+% |                          "Consolidation" is done using preprocessing scripts
+% |                          with necessary manual interferences.)
 % |--   evaluation/         (evaluation results, not touched here)
-% `-- ! ontology/           (pre-computed ontologies, see pfp_ontbuild.m.
-%                            However, the original ontology structures here
-%                            are not given directly in the configuration file,
-%                            they are instead given as the ‘ontology' field of
-%                            the groundtruth ontology annotation.)
+% |--   filtered/           (filtered plain-text prediction file)
+% |-- ! ontology/           (pre-computed ontologies, see pfp_ontbuild.m.
+% |                          However, the original ontology structures here
+% |                          are not given directly in the configuration file,
+% |                          they are instead given as the ‘ontology' field of
+% |                          the groundtruth ontology annotation.)
+% |-- ! prediction/         (imported predictions in Matlab structures)
+% |     |-- * mfo/
+% |     |-- * bpo/
+% |     |-- * cco/
+% |     `-- * hpo/
+% |-- * seq-centric/        (pre-evaluation results will appear here)
+% |     |-- * mfo/
+% |     |-- * bpo/
+% |     |-- * cco/
+% |     `-- * hpo/
+% `--   register/           (register files, not needed here)
 %
 % folders marked with * will be updated.
 % ................... ! need to be prepared as prerequisites.
@@ -152,4 +153,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 06 Mar 2016 11:52:09 PM E
+% Last modified: Thu 17 Mar 2016 01:40:38 PM E

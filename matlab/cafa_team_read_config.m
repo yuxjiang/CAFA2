@@ -1,8 +1,8 @@
-function [iid, eid, tname, ttype, dname, dname2, pname, kw, chex] = cafa_team_read_config(team_file)
-%CAFA_TEAM_READ_CONFIG CAFA team read config
+function [iid, eid, tname, ttype, dname, dname2, pname, kw, chex] = cafa_team_register(team_file)
+%CAFA_TEAM_REGISTER CAFA team register
 % {{{
 %
-% [iid, eid, tname, ttype, dname, pname, kw, chex, dname2] = CAFA_TEAM_READ_CONFIG(team_file);
+% [iid, eid, tname, ttype, dname, pname, kw, chex, dname2] = CAFA_TEAM_REGISTER(team_file);
 %
 %   Reads and parses team information file.
 %
@@ -11,7 +11,7 @@ function [iid, eid, tname, ttype, dname, dname2, pname, kw, chex] = cafa_team_re
 % [char]
 % team_file:  The team information file.
 %
-%             Note: team information/configuration file consists of 8 columns:
+%             Note: team register file consists of 8 columns:
 %             1. Method ID (internal ID, starts with 'M' for participating
 %                methods and 'B' for baseline methods)
 %             2. Method ID (external ID, each method should be aware of its own
@@ -37,8 +37,8 @@ function [iid, eid, tname, ttype, dname, dname2, pname, kw, chex] = cafa_team_re
 % tname:  The registered team name.
 %
 % [cell]
-% ttype:  One of qualified/disqualified/naive/blast.
-%         possible value: q/d/n/b
+% ttype:  One of qualified, disqualified, naive, or blast.
+%         possible value: 'q', 'd', n', b'
 %
 % [cell]
 % dname:  The model name to display.
@@ -59,14 +59,14 @@ function [iid, eid, tname, ttype, dname, dname2, pname, kw, chex] = cafa_team_re
 
   % check inputs {{{
   if nargin ~= 1
-    error('cafa_team_read_config:InputCount', 'Expected 1 input.');
+    error('cafa_team_register:InputCount', 'Expected 1 input.');
   end
 
   % check the 1st input 'team_file' {{{
   validateattributes(team_file, {'char'}, {'nonempty'}, '', 'team_file', 1);
   fid = fopen(team_file, 'r');
   if fid == -1
-    error('cafa_team_read_config:FileErr', 'Cannot open the team file [%s].', team_file);
+    error('cafa_team_register:FileErr', 'Cannot open the team file [%s].', team_file);
   end
   % }}}
   % }}}
@@ -92,4 +92,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 20 Oct 2015 11:22:50 AM E
+% Last modified: Thu 17 Mar 2016 01:01:58 PM E

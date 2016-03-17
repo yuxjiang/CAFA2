@@ -1,8 +1,8 @@
-function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method, mid, team_cfg)
+function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method, mid, reg)
 %CAFA_PLOT_PRED_SIM CAFA plot prediction similarity
 % {{{
 %
-% [team, sim, dist] = CAFA_PLOT_PRED_SIM(pfile, pttl, pred_dir, method, mid, team_cfg);
+% [team, sim, dist] = CAFA_PLOT_PRED_SIM(pfile, pttl, pred_dir, method, mid, reg);
 %
 %   Plots prediction similarity.
 %
@@ -10,56 +10,56 @@ function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method
 % -----
 % (required)
 % [char]
-% pfile:    The filename of the plot.
-%           Note that the file extension should be either 'eps' or 'png'.
-%           default: 'png'
+% pfile:        The filename of the plot.
+%               Note that the file extension should be either 'eps' or 'png'.
+%               default: 'png'
 %
 % [char]
-% pttl:     The plot title.
+% pttl:         The plot title.
 %
 % [char or struct]
-% config_info:  the configuration file (job descriptor) or a parsed config
+% config_info:  The configuration file (job descriptor) or a parsed config
 %               structure.
 %
 %               See cafa_parse_config.m
 %
 % [char]
-% method:       one of the following:
+% method:       One of the following:
 %               1. 'pcorr':   Pearson's correlation over all proteins and terms
 %               2. 'hamming': Hamming distance between binarized leaf terms'
 %               score.
 %
 % (optional)
 % [cell or char]
-% mid:          a list of team names to disclose.
+% mid:          A list of team names to disclose.
 %               default: {}
 %
 %               Note: 'mid' could be set to 'all' for disclose all methods.
 %
 % [char]
-% team_cfg:     the team information. It's not used if 'mid' is empty.
+% reg:          The team information. It's not used if 'mid' is empty.
 %               default: ''
 %
 % Output
 % ------
 % [cell]
-% team:         Ordered team names on plot.
+% team: Ordered team names on plot.
 %
 % [double]
-% sim:          Similarity matrix. Could be one of the following depending on
-%               the specified 'method'.
-%               1. r, Pearson's correlation ('pcorr')
-%               2. 1/d_H ('hamming')
+% sim:  Similarity matrix. Could be one of the following depending on the
+%       specified 'method'.
+%       1. r, Pearson's correlation ('pcorr')
+%       2. 1/d_H ('hamming')
 %
-% dist:         Distance matrix. Could be one of the following depending on the
-%               specified 'method'.
-%               1. 1-r ('pcorr')
-%               2. d_H, Hamming distance ('hamming')
+% dist: Distance matrix. Could be one of the following depending on the
+%       specified 'method'.
+%       1. 1-r ('pcorr')
+%       2. d_H, Hamming distance ('hamming')
 %
 % Dependency
 % ----------
 %[>]cafa_parse_config.m
-%[>]cafa_team_read_config.m
+%[>]cafa_team_register.m
 %[>]pfp_predproj.m
 %[>]pfp_oaproj.m
 %[>]pfp_annotsuboa.m
@@ -71,8 +71,8 @@ function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method
   end
 
   if nargin == 4
-    mid      = {};
-    team_cfg = '';
+    mid = {};
+    reg = '';
   end
 
   % check the 1st input 'pfile' {{{
@@ -113,12 +113,12 @@ function [team, sim, dist] = cafa_plot_pred_sim(pfile, pttl, config_info, method
   end
   % }}}
 
-  % check the 6th input 'team_cfg' {{{
+  % check the 6th input 'reg' {{{
   if ~isempty(mid)
-    validateattributes(team_cfg, {'char'}, {'nonempty'}, '', 'team_cfg', 6);
-    [team_id, ~, team_name] = cafa_team_read_config(team_cfg);
+    validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 6);
+    [team_id, ~, team_name] = cafa_team_register(reg);
   else
-    % nop, 'team_cfg' is ignored.
+    % nop, 'reg' is ignored.
   end
   % }}}
   % }}}
@@ -310,4 +310,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 28 Jul 2015 02:18:58 PM E
+% Last modified: Thu 17 Mar 2016 01:08:52 PM E

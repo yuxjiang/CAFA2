@@ -3,7 +3,7 @@ prev_dir   = ~/cafa/seq-centric/cco/
 eval_dir   = ~/cafa/evaluation/
 annotation = ~/cafa/benchmark/groundtruth/ccoa.mat
 benchmark  = ~/cafa/benchmark/lists/cco_prokarya_type2.txt
-bootstrap  = ~/cafa/config/bootstrap/cco_prokarya_type2.mat
+bootstrap  = ~/cafa/bootstrap/cco_prokarya_type2.mat
 
 ontology = cco
 category = prokarya

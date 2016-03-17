@@ -1,8 +1,8 @@
-function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config, isdump)
+function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, reg, isdump)
 %CAFA_SEL_TOP_SEQ_SMIN CAFA curve top sequence-centric Smin
 % {{{
 %
-% [sel, bsl] = CAFA_SEL_TOP_SEQ_SMIN(K, rmcurves, naive, blast, config, isdump);
+% [sel, bsl] = CAFA_SEL_TOP_SEQ_SMIN(K, rmcurves, naive, blast, reg, isdump);
 %
 %   Picks the top RU-MI curves in Smin.
 %
@@ -29,9 +29,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 %           Could be empty: '' if not interested.
 %
 % [char]
-% config:   The file having team information. The file should have the
-%           folloing columns:
-%
+% reg:      The team register, which has following columns:
 %         * 1. <internalID>
 %         * 2. <externalID>
 %           3. <teamname>
@@ -57,21 +55,11 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 % ------
 % [cell]
 % sel:  The curves and related information ready for plotting:
-%
-%       [double]
-%       .curve      n x 2, points on the curve.
-%
-%       [double]
-%       .opt_point  1 x 2, the optimal point (corresp. to Smin).
-%
-%       [char]
-%       .tag        for the legend of the plot.
-%
-%       [char]
-%       .pi_name    name of the PI.
-%
-%       [double]
-%       .color      assigned color (1-by-3 RGB tuple).
+%       .curve      [double]  n x 2, points on the curve.
+%       .opt_point  [double]  1 x 2, the optimal point (corresp. to Smin).
+%       .tag        [char]    for the legend of the plot.
+%       .pi_name    [char]    name of the PI.
+%       .color      [double]  assigned color (1-by-3 RGB tuple).
 %
 % [cell]
 % bsl:  The baseline curves and related information. Each cell has the
@@ -82,7 +70,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
 % ----------
 %[>]pfp_sminc.m
 %[>]cafa_collect.m
-%[>]cafa_team_read_config.m
+%[>]cafa_team_register.m
 %[>]cafa_eval_seq_curve.m
 % }}}
 
@@ -107,9 +95,9 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, config
   validateattributes(blast, {'char'}, {}, '', 'blast', 4);
   % }}}
 
-  % check the 5th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  % check the 5th input 'reg' {{{
+  validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 5);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_register(reg);
   % }}}
 
   % check the 6th input 'isdump' {{{
@@ -261,4 +249,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 16 Feb 2016 03:18:01 PM E
+% Last modified: Thu 17 Mar 2016 01:14:08 PM E

@@ -3,7 +3,7 @@ prev_dir   = ~/cafa/seq-centric/bpo/
 eval_dir   = ~/cafa/evaluation/
 annotation = ~/cafa/benchmark/groundtruth/bpoa.mat
 benchmark  = ~/cafa/benchmark/lists/bpo_MOUSE_type2.txt
-bootstrap  = ~/cafa/config/bootstrap/bpo_MOUSE_type2.mat
+bootstrap  = ~/cafa/bootstrap/bpo_MOUSE_type2.mat
 
 ontology = bpo
 category = MOUSE

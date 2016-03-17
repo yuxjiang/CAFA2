@@ -18,7 +18,7 @@ annotation = ~/cafa/benchmark/groundtruth/mfoa.mat
 benchmark = ~/cafa/benchmark/lists/mfo_all_type1.txt
 
 # file for bootstrap benchmark index (for repeatable results)
-bootstrap = ~/cafa/config/bootstrap/mfo_all_type1.mat
+bootstrap = ~/cafa/bootstrap/mfo_all_type1.mat
 
 # ontology
 # ----

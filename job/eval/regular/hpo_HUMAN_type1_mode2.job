@@ -3,7 +3,7 @@ prev_dir   = ~/cafa/seq-centric/hpo/
 eval_dir   = ~/cafa/evaluation/
 annotation = ~/cafa/benchmark/groundtruth/hpoa.mat
 benchmark  = ~/cafa/benchmark/lists/hpo_HUMAN_type1.txt
-bootstrap  = ~/cafa/config/bootstrap/hpo_HUMAN_type1.mat
+bootstrap  = ~/cafa/bootstrap/hpo_HUMAN_type1.mat
 
 ontology = hpo
 category = HUMAN

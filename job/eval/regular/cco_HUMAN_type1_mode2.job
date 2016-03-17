@@ -3,7 +3,7 @@ prev_dir   = ~/cafa/seq-centric/cco/
 eval_dir   = ~/cafa/evaluation/
 annotation = ~/cafa/benchmark/groundtruth/ccoa.mat
 benchmark  = ~/cafa/benchmark/lists/cco_HUMAN_type1.txt
-bootstrap  = ~/cafa/config/bootstrap/cco_HUMAN_type1.mat
+bootstrap  = ~/cafa/bootstrap/cco_HUMAN_type1.mat
 
 ontology = cco
 category = HUMAN

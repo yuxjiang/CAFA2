@@ -3,7 +3,7 @@ prev_dir   = ~/cafa/seq-centric/bpo/
 eval_dir   = ~/cafa/evaluation/
 annotation = ~/cafa/benchmark/groundtruth/bpoa.mat
 benchmark  = ~/cafa/benchmark/lists/bpo_ARATH_type1.txt
-bootstrap  = ~/cafa/config/bootstrap/bpo_ARATH_type1.mat
+bootstrap  = ~/cafa/bootstrap/bpo_ARATH_type1.mat
 
 ontology = bpo
 category = ARATH

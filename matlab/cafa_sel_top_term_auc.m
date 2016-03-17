@@ -1,8 +1,8 @@
-function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config, isdump)
+function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, reg, isdump)
 %CAFA_SEL_TOP_TERM_AUC CAFA select top term-centric AUC
 % {{{
 %
-% [sel, bsl, info] = CAFA_SEL_TOP_TERM_AUC(K, aucs, naive, blast, config, isdump);
+% [sel, bsl, info] = CAFA_SEL_TOP_TERM_AUC(K, aucs, naive, blast, reg, isdump);
 %
 %   Picks the top AUC methods.
 %
@@ -29,9 +29,7 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config,
 %         Could be empty: '' if not interested.
 %
 % [char]
-% config: The file having team information. The file should have the
-%         folloing columns:
-%
+% reg:    The team register, which has the following columns:
 %       * 1. <internalID>
 %       * 2. <externalID>
 %         3. <teamname>
@@ -57,30 +55,14 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config,
 % ------
 % [cell]
 % sel:  The bars and related information ready for plotting:
-%
-%       [double]
-%       .auc_mean   scalar, "bar height".
-%
-%       [double]
-%       .auc_q05    scalar, 5% quantiles.
-%
-%       [double]
-%       .auc_q95    scalar, 95% quantiles.
-%
-%       [double]
-%       .auc_std    scalar, standard deviation
-%
-%       [double]
-%       .auc_ste    scalar, standard error (std / sqrt(N))
-%
-%       [char]
-%       .tag        tag of the model.
-%
-%       [char]
-%       .pi_name    name of the PI.
-%
-%       [double]
-%       .color      assigned color (1-by-3 RGB tuple).
+%       .auc_mean [double]  scalar, "bar height".
+%       .auc_q05  [double]  scalar, 5% quantiles.
+%       .auc_q95  [double]  scalar, 95% quantiles.
+%       .auc_std  [double]  scalar, standard deviation
+%       .auc_ste  [double]  scalar, standard error (std / sqrt(N))
+%       .tag      [cell]    tag of the model.
+%       .pi_name  [cell]    name of the PI.
+%       .color    [double]  assigned color (1-by-3 RGB tuple).
 %
 % [cell]
 % bsl:  The baseline bars and related information. Each cell has the same
@@ -88,16 +70,13 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config,
 %
 % [struct]
 % info: Extra information.
-%       [cell]
-%       .all_mid: model name of all participating models.
-%
-%       [cell]
-%       .top_mid: model name of top K models (ranked from 1 to K)
+%       .all_mid  [cell]  model name of all participating models.
+%       .top_mid  [cell]  model name of top K models (ranked from 1 to K)
 %
 % Dependency
 % ----------
 %[>]cafa_eval_term_auc.m
-%[>]cafa_team_read_config.m
+%[>]cafa_team_register.m
 % }}}
 
   % check inputs {{{
@@ -121,9 +100,9 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, config,
   validateattributes(blast, {'char'}, {}, '', 'blast', 4);
   % }}}
 
-  % check the 5th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  % check the 5th input 'reg' {{{
+  validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 5);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_register(reg);
   % }}}
 
   % check the 6th input 'isdump' {{{
@@ -263,4 +242,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 16 Feb 2016 03:20:33 PM E
+% Last modified: Thu 17 Mar 2016 01:16:44 PM E

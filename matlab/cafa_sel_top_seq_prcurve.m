@@ -1,12 +1,12 @@
-function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config, isdump, rmcurves)
+function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, isdump, rmcurves)
 %CAFA_SEL_TOP_SEQ_FMAX CAFA select top sequence-centric Fmax
 % {{{
 %
-% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, config, isdump);
+% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, reg, isdump);
 %
 %   Picks the top precision-recall curves in Fmax.
 %
-% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, config, isdump, rmcurves);
+% [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, reg, isdump, rmcurves);
 %
 %   Picks the top precision-recall curves in Fmax (output corresponding optimal
 %   Smin ru-mi pairs).
@@ -36,8 +36,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 %           Could be empty: '' if not interested.
 %
 % [char]
-% config:   The team info file which should have the following columns:
-%
+% reg:      The team regiser, which has the following columns:
 %         * 1. <internalID>
 %         * 2. <externalID>
 %           3. <teamname>
@@ -74,25 +73,14 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 % ------
 % [cell]
 % sel:  The curves and related information ready for plotting:
+%       .curve      [double]  n x 2, points on the curve.
+%       .opt_point  [double]  1 x 2, the optimal point (corresp. to Fmax).
+%       .tag        [char]    for the legend of the plot.
+%       .pi_name    [char]    name of the PI.
+%       .color      [double]  assigned color (1-by-3 RGB tuple).
 %
-%       [double]
-%       .curve      n x 2, points on the curve.
-%
-%       [double]
-%       .opt_point  1 x 2, the optimal point (corresp. to Fmax).
-%
-%       [double] (optional: if 'rmcurves' is present)
-%       .alt_point  1 x 2, the alternative point (corresp. to Smin).
-%
-%       [char]
-%       .tag        for the legend of the plot.
-%
-%       [char]
-%       .pi_name    name of the PI.
-%
-%       [double]
-%       .color      assigned color (1-by-3 RGB tuple).
-%
+%       (optional: if 'rmcurves' is present)
+%       .alt_point  [double]  1 x 2, the alternative point (corresp. to Smin).
 %
 % [cell]
 % bsl:  The baseline curves and related information. Each cell has the same
@@ -103,7 +91,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
 %[>]pfp_fmaxc.m
 %[>]pfp_sminc.m
 %[>]cafa_collect.m
-%[>]cafa_team_read_config.m
+%[>]cafa_team_register.m
 %[>]cafa_eval_seq_curve.m
 % }}}
 
@@ -132,9 +120,9 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, config
   validateattributes(blast, {'char'}, {}, '', 'blast', 4);
   % }}}
 
-  % check the 5th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  % check the 5th input 'reg' {{{
+  validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 5);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_register(reg);
   % }}}
 
   % check the 6th input 'isdump' {{{
@@ -325,4 +313,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 16 Feb 2016 03:18:21 PM E
+% Last modified: Thu 17 Mar 2016 01:13:04 PM E

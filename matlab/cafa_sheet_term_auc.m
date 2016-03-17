@@ -1,8 +1,8 @@
-function [] = cafa_sheet_term_auc(sfile, aucs, config, isdump, anonymous, sort_mid)
+function [] = cafa_sheet_term_auc(sfile, aucs, reg, isdump, anonymous, sort_mid)
 %CAFA_SHEET_TERM_AUC CAFA sheet term-centric AUC
 % {{{
 %
-% [] = CAFA_SHEET_TERM_AUC(sfile, aucs, config, anonymous, sort_mid);
+% [] = CAFA_SHEET_TERM_AUC(sfile, aucs, reg, anonymous, sort_mid);
 %
 %   Builds AUC evaluation report (*.csv).
 %
@@ -25,9 +25,7 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, isdump, anonymous, sort_m
 %             See cafa_eval_term_auc.m
 %
 % [char]
-% config:     The file having team information. The file should have the
-%             folloing columns:
-%
+% reg:        The team register, which has the following columns:
 %           * 1. <internalID>
 %           * 2. <externalID>
 %             3. <teamname>
@@ -63,7 +61,7 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, isdump, anonymous, sort_m
 %
 % Dependency
 % ----------
-%[>]cafa_team_read_config.m
+%[>]cafa_team_register.m
 %[>]cafa_eval_term_auc.m
 % }}}
 
@@ -88,9 +86,9 @@ function [] = cafa_sheet_term_auc(sfile, aucs, config, isdump, anonymous, sort_m
   validateattributes(aucs, {'cell'}, {'nonempty'}, '', 'aucs', 2);
   % }}}
 
-  % check the 3rd input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 3);
-  [team_id, ext_id, ~, team_type, disp_name, dump_name] = cafa_team_read_config(config);
+  % check the 3rd input 'reg' {{{
+  validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 3);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name] = cafa_team_register(reg);
   % }}}
 
   % check the 4th input 'isdump' {{{
@@ -192,4 +190,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 20 Oct 2015 11:21:11 AM E
+% Last modified: Thu 17 Mar 2016 01:19:37 PM E

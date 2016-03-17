@@ -1,8 +1,8 @@
-function [] = cafa_team_output_as_node(filename, team_cfg, eval_dir)
+function [] = cafa_team_output_as_node(filename, reg, eval_dir)
 %CAFA_TEAM_OUTPUT_AS_NODE CAFA team output as (network) node
 % {{{
 %
-% [] = CAFA_TEAM_OUTPUT_AS_NODE(filename, team_cfg, eval_dir);
+% [] = CAFA_TEAM_OUTPUT_AS_NODE(filename, reg, eval_dir);
 %
 %   Outputs a tab-split-value file describes teams as network nodes.
 %
@@ -17,9 +17,9 @@ function [] = cafa_team_output_as_node(filename, team_cfg, eval_dir)
 % filename: The output file name.
 %
 % [char]
-% team_cfg: The team configuration file.
+% reg:      The team register file.
 %
-%           See cafa_team_read_config.m
+%           See cafa_team_register.m
 %
 % [cell]
 % eval_dir: The evaluation directory containing evaluation results.
@@ -30,7 +30,7 @@ function [] = cafa_team_output_as_node(filename, team_cfg, eval_dir)
 %
 % Dependency
 % ----------
-%[>]cafa_team_read_config.m
+%[>]cafa_team_register.m
 %[>]cafa_sel_top_seq_fmax.m
 % }}}
 
@@ -47,9 +47,9 @@ function [] = cafa_team_output_as_node(filename, team_cfg, eval_dir)
   end
   % }}}
 
-  % check the 2nd input 'team_cfg' {{{
-  validateattributes(team_cfg, {'char'}, {'nonempty'}, '', 'team_cfg', 2);
-  [team.iid, team.eid, team.name, team.type, team.display, team.dump, team.pi, team.kw, team.hex] = cafa_team_read_config(team_cfg);
+  % check the 2nd input 'reg' {{{
+  validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 2);
+  [team.iid, team.eid, team.name, team.type, team.display, team.dump, team.pi, team.kw, team.hex] = cafa_team_register(reg);
   % }}}
 
   % check the 3rd input 'eval_dir' {{{
@@ -62,7 +62,7 @@ function [] = cafa_team_output_as_node(filename, team_cfg, eval_dir)
 
   % get mid of top 10 methods
   % use dummy tag '.' for baseline methods
-  [~, ~, info] = cafa_sel_top_seq_fmax(10, fmaxs, '.', '.', team_cfg, false);
+  [~, ~, info] = cafa_sel_top_seq_fmax(10, fmaxs, '.', '.', reg, false);
 
   n = numel(fmaxs);
   mid     = cell(1, n);
@@ -108,4 +108,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Wed 21 Oct 2015 07:03:15 PM E
+% Last modified: Thu 17 Mar 2016 01:22:18 PM E

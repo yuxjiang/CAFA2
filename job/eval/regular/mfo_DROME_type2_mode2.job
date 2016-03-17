@@ -3,7 +3,7 @@ prev_dir   = ~/cafa/seq-centric/mfo/
 eval_dir   = ~/cafa/evaluation/
 annotation = ~/cafa/benchmark/groundtruth/mfoa.mat
 benchmark  = ~/cafa/benchmark/lists/mfo_DROME_type2.txt
-bootstrap  = ~/cafa/config/bootstrap/mfo_DROME_type2.mat
+bootstrap  = ~/cafa/bootstrap/mfo_DROME_type2.mat
 
 ontology = mfo
 category = DROME

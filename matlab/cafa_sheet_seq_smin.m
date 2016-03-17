@@ -1,8 +1,8 @@
-function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, config, isdump, anonymous)
+function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, reg, isdump, anonymous)
 %CAFA_SHEET_SEQ_SMIN CAFA sheet sequence-centric Smin
 % {{{
 %
-% [] = CAFA_SHEET_SEQ_SMIN(sfile, smin, smin_bst, config, isdump, anonymous);
+% [] = CAFA_SHEET_SEQ_SMIN(sfile, smin, smin_bst, reg, isdump, anonymous);
 %
 %   Builds evaluation reports (*.csv).
 %
@@ -32,9 +32,7 @@ function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, config, isdump, anonymo
 %             See cafa_eval_seq_smin_bst.m
 %
 % [char]
-% config:     The file having team information. The file should have the
-%             folloing columns:
-%
+% reg:        The team register, which has the following columns:
 %           * 1. <internalID>
 %           * 2. <externalID>
 %             3. <teamname>
@@ -67,7 +65,7 @@ function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, config, isdump, anonymo
 % ----------
 %[>]cafa_eval_seq_smin.m
 %[>]cafa_eval_seq_smin_bst.m
-%[>]cafa_team_read_config.m
+%[>]cafa_team_register.m
 % }}}
 
   % check inputs {{{
@@ -91,9 +89,9 @@ function [] = cafa_sheet_seq_smin(sfile, smin, smin_bst, config, isdump, anonymo
   validateattributes(smin_bst, {'cell'}, {'nonempty'}, '', 'smin_bst', 3);
   % }}}
 
-  % check the 4th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 4);
-  [team_id, ext_id, ~, team_type, disp_name, dump_name] = cafa_team_read_config(config);
+  % check the 4th input 'reg' {{{
+  validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 4);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name] = cafa_team_register(reg);
   % }}}
 
   % check the 5th input 'isdump' {{{
@@ -168,4 +166,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 20 Oct 2015 11:19:23 AM E
+% Last modified: Thu 17 Mar 2016 01:18:38 PM E

@@ -13,7 +13,7 @@ function [] = cafa_driver_eval(config_info)
 %
 % CAFA2
 % |--   ...               (other sub-folders not listed)
-% |-- ! seq-centric/        (pre-evaluation results will appear here)
+% |-- ! seq-centric/      (pre-evaluation results will appear here)
 % |     |-- ! mfo/
 % |     |-- ! bpo/
 % |     |-- ! cco/
@@ -231,4 +231,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 17 Feb 2016 05:39:52 PM E
+% Last modified: Thu 17 Mar 2016 01:36:32 PM E

@@ -1,38 +1,36 @@
-function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config, isdump)
+function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, reg, isdump)
 %CAFA_SEL_TOP_SEQ_SMIN CAFA bar top sequence-centric Smin
 % {{{
 %
-% [sel, bsl, info] = CAFA_SEL_TOP_SEQ_SMIN(K, smins, cnaive, blast, config, isdump);
+% [sel, bsl, info] = CAFA_SEL_TOP_SEQ_SMIN(K, smins, cnaive, blast, reg, isdump);
 %
 %   Picks the top bootstrapped Smin.
 %
 % Input
 % -----
 % [double]
-% K:        The number of teams/methods to pick.
+% K:      The number of teams/methods to pick.
 %
 % [cell]
-% smins:    The pre-calculated Smin structures.
-%           [char]      [1-by-n]    .id
-%           [double]    [B-by-1]    .smin_bst
-%           [double]    [B-by-2]    .point_bst
-%           [double]    [B-by-1]    .tau_bst
-%           [double]    [B-by-1]    .coverage_bst
+% smins:  The pre-calculated Smin structures.
+%         [char]      [1-by-n]    .id
+%         [double]    [B-by-1]    .smin_bst
+%         [double]    [B-by-2]    .point_bst
+%         [double]    [B-by-1]    .tau_bst
+%         [double]    [B-by-1]    .coverage_bst
 %
-%           See cafa_eval_seq_smin_bst.m
-%
-% [char]
-% naive:    The model id of the naive baseline. E.g. BN4S
-%           Could be empty: '' if not interested.
+%         See cafa_eval_seq_smin_bst.m
 %
 % [char]
-% blast:    The model id of the blast baseline. E.g. BB4S
-%           Could be empty: '' if not interested.
+% naive:  The model id of the naive baseline. E.g. BN4S
+%         Could be empty: '' if not interested.
 %
 % [char]
-% config: The file having team information. The file should have the
-%         folloing columns:
+% blast:  The model id of the blast baseline. E.g. BB4S
+%         Could be empty: '' if not interested.
 %
+% [char]
+% reg:    The team register, which has following columns:
 %       * 1. <internalID>
 %       * 2. <externalID>
 %         3. <teamname>
@@ -58,27 +56,13 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
 % ------
 % [cell]
 % sel:  The bars and related information ready for plotting:
-%
-%       [double]
-%       .smin_mean      scalar, "bar height".
-%
-%       [double]
-%       .smin_q05       scalar, 5% quantiles.
-%
-%       [double]
-%       .smin_q95       scalar, 95% quantiles.
-%
-%       [double]
-%       .coverage       scalar, averaged coverage.
-%
-%       [char]
-%       .tag            tag of the model.
-%
-%       [char]
-%       .pi_name        name of the PI.
-%
-%       [double]
-%       .color          assigned color (1-by-3 RGB tuple).
+%       .smin_mean  [double]  scalar, "bar height".
+%       .smin_q05   [double]  scalar, 5% quantiles.
+%       .smin_q95   [double]  scalar, 95% quantiles.
+%       .coverage   [double]  scalar, averaged coverage.
+%       .tag        [char]    tag of the model.
+%       .pi_name    [char]    name of the PI.
+%       .color      [double]  assigned color (1-by-3 RGB tuple).
 %
 % [cell]
 % bsl:  The baseline bars and related information. Each cell has the
@@ -86,16 +70,13 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
 %
 % [struct]
 % info: Extra information.
-%       [cell]
-%       .all_mid: The name of all participating models.
-%
-%       [cell]
-%       .top_mid: The name of top K models (ranked from 1 to K)
+%       .all_mid  [cell]  The name of all participating models.
+%       .top_mid  [cell]  The name of top K models (ranked from 1 to K)
 %
 % Dependency
 % ----------
 %[>]cafa_eval_seq_smin_bst.m
-%[>]cafa_team_read_config.m
+%[>]cafa_team_register.m
 % }}}
 
   % check inputs {{{
@@ -119,9 +100,9 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, config
   validateattributes(blast, {'char'}, {}, '', 'blast', 4);
   % }}}
 
-  % check the 5th input 'config' {{{
-  validateattributes(config, {'char'}, {'nonempty'}, '', 'config', 5);
-  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_read_config(config);
+  % check the 5th input 'reg' {{{
+  validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 5);
+  [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_register(reg);
   % }}}
 
   % check the 6th input 'isdump' {{{
@@ -257,4 +238,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 16 Feb 2016 03:19:32 PM E
+% Last modified: Thu 17 Mar 2016 01:15:40 PM E
