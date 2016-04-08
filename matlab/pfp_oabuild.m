@@ -17,8 +17,7 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
 %
 % [char]
 % afile:    An annotation data file. This function assumes that the data
-%           file contains two columns:
-%
+%           file contains two columns, splitted by TAB
 %           <object id> <term id>
 %
 % (optional)
@@ -63,7 +62,7 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
   % check the 2nd argument 'afile' {{{
   validateattributes(afile, {'char'}, {'nonempty'}, '', 'afile', 2);
   if ~exist(afile, 'file')
-      error('pfp_oabuild:FileErr', 'File [%s] doesn''t exist.', afile);
+    error('pfp_oabuild:FileErr', 'File [%s] doesn''t exist.', afile);
   end
   afiles = cell(1, 1 + numel(varargin));
   afiles{1} = afile;
@@ -71,11 +70,11 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
 
   % check additional arguments 'varargin' {{{
   for i = 1 : numel(varargin)
-      validateattributes(varargin{i}, {'char'}, {'nonempty'}, '', 'varargin', 3);
-      if ~exist(varargin{i}, 'file')
-          error('pfp_oabuild:FileErr', 'File [%s] doesn''t exist.', varargin{i});
-      end
-      afiles{i + 1} = varargin{i};
+    validateattributes(varargin{i}, {'char'}, {'nonempty'}, '', 'varargin', 3);
+    if ~exist(varargin{i}, 'file')
+      error('pfp_oabuild:FileErr', 'File [%s] doesn''t exist.', varargin{i});
+    end
+    afiles{i + 1} = varargin{i};
   end
   % }}}
   % }}}
@@ -161,7 +160,7 @@ function [plain_oa] = oaread(afiles)
   tm = {};
   for i = 1 : numel(afiles)
     fid  = fopen(afiles{i}, 'r');
-    data = textscan(fid, '%s%s');
+    data = textscan(fid, '%s%s', 'Delimiter', '\t');
     fclose(fid);
 
     gp = [gp; data{1}];
@@ -181,4 +180,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 06 Mar 2016 07:51:33 PM E
+% Last modified: Tue 05 Apr 2016 12:30:53 AM E

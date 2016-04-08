@@ -191,7 +191,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, reg, i
       qld{kept}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
       % }}}
     else
-      % nop
+      % 'x' nop
     end
   end
   qld(kept+1 : end)       = []; % truncate the trailing empty cells
@@ -258,4 +258,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 17 Mar 2016 05:03:47 PM E
+% Last modified: Thu 07 Apr 2016 04:27:03 PM E

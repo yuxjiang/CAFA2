@@ -187,7 +187,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_smin(K, smins, naive, blast, reg, i
       qld{kept}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
       % }}}
     else
-      % do nothing
+      % 'x' do nothing
     end
   end
   qld(kept + 1 : end)       = []; % truncate the trailing empty cells
@@ -238,4 +238,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 17 Mar 2016 01:15:40 PM E
+% Last modified: Thu 07 Apr 2016 04:27:47 PM E

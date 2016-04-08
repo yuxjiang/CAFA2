@@ -38,8 +38,11 @@ function [oa] = pfp_annotsuboa(oa)
   oa.ontology.term = oa.ontology.term(has_annot);
   oa.ontology.DAG  = oa.ontology.DAG(has_annot, has_annot);
   oa.annotation    = oa.annotation(:, has_annot);
-  oa.eia           = oa.eia(has_annot);
-  oa.date          = datestr(now, 'mm/dd/yyyy HH:MM');
+
+  if isfield(oa, 'eia')
+    oa.eia = oa.eia(has_annot);
+  end
+  oa.date = datestr(now, 'mm/dd/yyyy HH:MM');
   % }}}
 return
 
@@ -47,4 +50,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 06 Mar 2016 07:51:21 PM E
+% Last modified: Mon 04 Apr 2016 04:51:27 PM E

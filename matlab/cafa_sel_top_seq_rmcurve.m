@@ -180,7 +180,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, reg, i
       qld{kept}.color     = (hex2dec(reshape(clr{index}, 3, 2))/255)';
       % }}}
     else
-      % nop: ignore unmatched baselines and disqualified models
+      % nop: ignore unmatched baselines and disqualified/testing models
     end
   end
   qld(kept + 1 : end) = []; % truncate the trailing empty cells
@@ -249,4 +249,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 17 Mar 2016 01:14:08 PM E
+% Last modified: Thu 07 Apr 2016 04:27:36 PM E
