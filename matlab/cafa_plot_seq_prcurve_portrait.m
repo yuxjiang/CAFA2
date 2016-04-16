@@ -1,8 +1,8 @@
-function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
-%CAFA_PLOT_SEQ_PRCURVE CAFA plot sequence-centric pr-rc curves
+function [] = cafa_plot_seq_prcurve_portrait(pfile, pttl, data, bsl_data, mark_alt)
+%CAFA_PLOT_SEQ_PRCURVE_PORTRAIT CAFA plot sequence-centric pr-rc curves (portrait)
 % {{{
 %
-% [] = CAFA_PLOT_SEQ_PRCURVE(pttl, data, bsl_data, mark_alt);
+% [] = CAFA_PLOT_SEQ_PRCURVE_PORTRAIT(pttl, data, bsl_data, mark_alt);
 %
 %   Plots precision-recall curves from given data (including baseline data).
 %
@@ -53,7 +53,7 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
 
   % check inputs {{{
   if nargin < 4 || nargin > 5
-    error('cafa_plot_seq_prcurve:InputCount', 'Expected 4 or 5 inputs.');
+    error('cafa_plot_seq_prcurve_portrait:InputCount', 'Expected 4 or 5 inputs.');
   end
 
   if nargin == 4
@@ -90,7 +90,7 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
   % check the 5th input 'mark_alt' {{{
   validateattributes(mark_alt, {'logical'}, {'nonempty'}, '', 'mark_alt', 5);
   if mark_alt && ~isfield(data{1}, 'alt_point')
-    error('cafa_plot_seq_prcurve:NoAlt', 'No ''alt_point'' field from ''data''.');
+    error('cafa_plot_seq_prcurve_portrait:NoAlt', 'No ''alt_point'' field from ''data''.');
   end
   % }}}
   % }}}
@@ -171,18 +171,18 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
   hold on;
 
   % default position by MATLAB: [0.1300 0.1100 0.7750 0.8150]
-  set(gca, 'Position', [0.10 0.10 0.50 0.80]);
-
-  xlim([0, 1]);
-  ylim([0, 1]);
-
-  xlabel('Recall');
-  ylabel('Precision');
-  title(pttl);
+  ax = gca;
+  ax.Position      = [0.15 0.30 0.80 0.60];
+  ax.XLim          = [0, 1];
+  ax.YLim          = [0, 1];
+  ax.XLabel.String = 'Recall';
+  ax.YLabel.String = 'Precision';
+  ax.Title.String  = pttl;
 
   % plot prcurves of selected models {{{
+  ph = zeros(N, 1);
   for i = 1 : N
-    plot(rc{i}, pr{i}, ls{i}, 'Color', clr(i, :), 'LineWidth', lw(i, :));
+    ph(i) = plot(rc{i}, pr{i}, ls{i}, 'Color', clr(i, :), 'LineWidth', lw(i, :));
   end
   % }}}
 
@@ -204,12 +204,28 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
   y = 0 : 0.05 : 1.0;
   [X, Y] = meshgrid(x, y);
   Z = 2 .* X .* Y ./ (X + Y);
-
-  legend(tag, 'Fontsize', 10, 'Interpreter', 'none', 'Position', [0.65, 0.25, 0.30, 0.50]);
   contour(X, Y, Z, 'ShowText', 'on', 'LineColor', [1, 1, 1] * 0.5, 'LineStyle', ':', 'LabelSpacing', 288);
   % }}}
 
-  embed_canvas(h, 8, 5);
+  % suppress (F=xx, C=xx) in legend
+  tag = regexprep(tag, ' \(.*\)', '');
+
+  % add legend
+  halfN = round(N/2);
+  l1 = legend(ph(1:halfN), tag(1:halfN));
+  l1.FontSize    = 10;
+  l1.Interpreter = 'none';
+  l1.Box         = 'off';
+  l1.Position    = [0.15, 0.00, 0.40, 0.25];
+
+  ax2 = axes('Position', ax.Position, 'Visible', 'off');
+  l2 = legend(ax2, ph(halfN+1:N), tag(halfN+1:N));
+  l2.FontSize    = 10;
+  l2.Interpreter = 'none';
+  l2.Box         = 'off';
+  l2.Position    = [0.55, 0.00, 0.40, 0.25];
+
+  embed_canvas(h, 5, 6);
   print(h, pfile, device_op, '-r300');
   close;
   % }}}
@@ -219,4 +235,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 14 Apr 2016 05:13:04 PM E
+% Last modified: Thu 14 Apr 2016 05:11:48 PM E
