@@ -1,8 +1,7 @@
-function [subont] = pfp_subont(ont, term_lst)
+function [subont] = pfp_subont(ont, list)
 %PFP_SUBONT sub-ontology
-% {{{
 %
-% [subont] = PFP_SUBONT(ont, term_lst);
+% [subont] = PFP_SUBONT(ont, list);
 %
 %   Makes a sub-ontology using given terms from the given ontology.
 %
@@ -24,17 +23,17 @@ function [subont] = pfp_subont(ont, term_lst)
 % Input
 % -----
 % [struct]
-% ont:      The ontology structure.
-%           see pfp_ontbuild.m
+% ont:  The ontology structure.
+%       see pfp_ontbuild.m
 %
 % [cell or struct]
-% term_lst: [cell]    - An array of term IDs.
-%           [struct]  - An array of term structures.
+% list: cell    - An array of term IDs.
+%       struct  - An array of term structures.
 %
 % Output
 % ------
 % [struct]
-% subont:   The resulting sub-ontology structure.
+% subont: The resulting sub-ontology structure.
 %
 % Dependency
 % ----------
@@ -43,28 +42,25 @@ function [subont] = pfp_subont(ont, term_lst)
 % See Also
 % --------
 %[>]pfp_ontbuild.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 2
     error('pfp_subont:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st argument 'ont' {{{
+  % ont
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % }}}
 
-  % check the 2nd argument 'term_lst' {{{
-  validateattributes(term_lst, {'cell', 'struct'}, {'nonempty'}, '', 'term_lst', 2);
+  % list
+  validateattributes(list, {'cell', 'struct'}, {'nonempty'}, '', 'list', 2);
 
-  if isstruct(term_lst)
-    term_lst = {term_lst.id};
+  if isstruct(list)
+    list = {list.id};
   end
-  % }}}
   % }}}
 
   % find valid terms {{{
-  [found, index] = ismember(term_lst, {ont.term.id});
+  [found, index] = ismember(list, {ont.term.id});
 
   if ~all(found)
     warning('pfp_subont:InvalidID', 'Some IDs are invalid.');
@@ -108,4 +104,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 06 Mar 2016 07:49:55 PM E
+% Last modified: Mon 23 May 2016 06:52:22 PM E

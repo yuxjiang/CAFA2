@@ -1,6 +1,5 @@
 function [bm] = cafa_bm_build_type1(ont, raw_oa0, raw_oa1)
 %CAFA_BM_BUILD_TYPE1 CAFA benchmark build type1
-% {{{
 %
 % [bm] = CAFA_BM_BUILD_TYPE1(ont, raw_oa0, raw_oa1);
 %
@@ -9,12 +8,12 @@ function [bm] = cafa_bm_build_type1(ont, raw_oa0, raw_oa1)
 % Note
 % ----
 % Type1: no-knowledge benchmarks.
+% This scripts is typically used by constructing HPO benchmarks.
 %
 % Input
 % -----
 % [struct]
-% ont:      The ontology structure.
-%           See pfp_ontbuild.m
+% ont:      The ontology structure. See pfp_ontbuild.m
 %
 % [char]
 % raw_oa0:  Raw annotation file for T0 annotations. Format:
@@ -30,26 +29,25 @@ function [bm] = cafa_bm_build_type1(ont, raw_oa0, raw_oa1)
 %
 % Dependency
 % ----------
-%[>]pfp_ontbuild.m
 %[>]pfp_oabuild.m
-% }}}
+%
+% See Also
+% --------
+%[>]pfp_ontbuild.m
 
   % check inputs {{{
   if nargin ~= 3
     error('cafa_bm_build_type1:InputCount', 'Expected 3 inputs.');
   end
 
-  % check the 1st input 'ont' {{{
+  % ont
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % }}}
 
-  % check the 2nd input 'raw_oa0' {{{
+  % raw_oa0
   validateattributes(raw_oa0, {'char'}, {'nonempty'}, '', 'raw_oa0', 2);
-  % }}}
 
-  % check the 3rd input 'raw_oa1' {{{
+  % raw_oa1
   validateattributes(raw_oa1, {'char'}, {'nonempty'}, '', 'raw_oa1', 3);
-  % }}}
   % }}}
 
   % build benchmark {{{
@@ -66,4 +64,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:02:49 AM E
+% Last modified: Mon 23 May 2016 06:43:03 PM E

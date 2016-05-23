@@ -1,6 +1,5 @@
 function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
 %CAFA_PLOT_SEQ_PRCURVE CAFA plot sequence-centric pr-rc curves
-% {{{
 %
 % [] = CAFA_PLOT_SEQ_PRCURVE(pttl, data, bsl_data, mark_alt);
 %
@@ -24,7 +23,6 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
 %           .opt_point  [double]  1 x 2, the optimal point (corresp. to Fmax)
 %           .alt_point  [double]  1 x 2, the alternative optimal point (corresp. to Smin)
 %           .tag        [char]    for the legend of the plot
-%
 %           See cafa_sel_top_seq_prcurve.m
 %
 % [cell]
@@ -49,10 +47,9 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
 % See Also
 % --------
 %[>]cafa_sel_top_seq_prcurve.m
-% }}}
 
   % check inputs {{{
-  if nargin < 4 || nargin > 5
+  if nargin ~= 4 && nargin ~= 5
     error('cafa_plot_seq_prcurve:InputCount', 'Expected 4 or 5 inputs.');
   end
 
@@ -60,7 +57,7 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
     mark_alt = false;
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -72,27 +69,22 @@ function [] = cafa_plot_seq_prcurve(pfile, pttl, data, bsl_data, mark_alt)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'data' {{{
+  % data
   validateattributes(data, {'cell'}, {'nonempty'}, '', 'data', 3);
   n = numel(data);
-  % }}}
 
-  % check the 4th input 'bsl_data' {{{
+  % bsl_data
   validateattributes(bsl_data, {'cell'}, {'numel', 2}, '', 'bsl_data', 4);
-  % }}}
 
-  % check the 5th input 'mark_alt' {{{
+  % mark_alt
   validateattributes(mark_alt, {'logical'}, {'nonempty'}, '', 'mark_alt', 5);
   if mark_alt && ~isfield(data{1}, 'alt_point')
     error('cafa_plot_seq_prcurve:NoAlt', 'No ''alt_point'' field from ''data''.');
   end
-  % }}}
   % }}}
 
   % collect data {{{
@@ -219,4 +211,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 14 Apr 2016 05:13:04 PM E
+% Last modified: Mon 23 May 2016 05:21:55 PM E

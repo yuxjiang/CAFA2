@@ -1,13 +1,13 @@
 function [] = cafa_plot_pred_cluster(pfile, pttl, ps, reg, mid)
 %CAFA_PLOT_PRED_CLUSTER CAFA plot prediction cluster
-% {{{
 %
 % [] = CAFA_PLOT_PRED_CLUSTER(pfile, pttl, ps, reg);
 % [] = CAFA_PLOT_PRED_CLUSTER(pfile, pttl, ps, reg, mid);
 %
 %   Plots prediction clustering as a color-matrix (using PCC).
 %
-% Note:
+% Note
+% ----
 % 'Distance' between prediction pi, pj is computed as 1 - PCC(pi, pj).
 %
 % Input
@@ -22,8 +22,7 @@ function [] = cafa_plot_pred_cluster(pfile, pttl, ps, reg, mid)
 % pttl:   The plot title.
 %
 % [struct]
-% ps:     The precomputed PCC structure.
-%         See cafa_get_pred_pcc.m
+% ps:     The precomputed PCC structure. See cafa_get_pred_pcc.m
 %
 % [char]
 % reg:    The register file.
@@ -32,9 +31,9 @@ function [] = cafa_plot_pred_cluster(pfile, pttl, ps, reg, mid)
 % [cell or char]
 % mid:    A list of team names to disclose.
 %         default: {} (anonymize all methods, only display internal IDs.)
-%         Note: available bundle options:
+%         Available bundle options:
 %         'all'   - all methods
-%         'topK' - top 10 methods, 'K' could be any positive integers.
+%         'topK'  - top 10 methods, 'K' could be any positive integers.
 %
 % Output
 % ------
@@ -43,15 +42,14 @@ function [] = cafa_plot_pred_cluster(pfile, pttl, ps, reg, mid)
 % Dependency
 % ----------
 %[>]cafa_team_register.m
+%[>]cafa_collect.m
+%[>]cafa_sel_top_seq_fmax.m
 %[>]pfp_rgby.m
 %[>]embed_canvas.m
 %
 % See Also
 % --------
 %[>]cafa_get_pred_pcc.m
-%[>]cafa_collect.m
-%[>]cafa_sel_top_seq_fmax.
-% }}}
 
   % check inputs {{{
   if nargin ~= 4 && nargin ~= 5
@@ -62,7 +60,7 @@ function [] = cafa_plot_pred_cluster(pfile, pttl, ps, reg, mid)
     mid = {};
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -74,24 +72,19 @@ function [] = cafa_plot_pred_cluster(pfile, pttl, ps, reg, mid)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'ps' {{{
+  % ps
   validateattributes(ps, {'struct'}, {'nonempty'}, '', 'ps', 3);
-  % }}}
 
-  % check the 4th input 'reg' {{{
+  % reg
   validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 4);
   [model.id, ~, model.nm] = cafa_team_register(reg);
-  % }}}
 
-  % check the 5th input 'mid' {{{
+  % mid
   validateattributes(mid, {'cell', 'char'}, {}, '', 'mid', 5);
-  % }}}
   % }}}
 
   % create labels to display accordingly {{{
@@ -209,4 +202,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 07 Apr 2016 09:42:42 PM E
+% Last modified: Mon 23 May 2016 05:11:48 PM E

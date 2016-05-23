@@ -1,6 +1,5 @@
 function [model] = cafa_train_ensemble(bm, k, scheme, learner)
 %CAFA_TRAIN_ENSEMBLE CAFA train ensemble
-% {{{
 %
 % [model] = CAFA_TRAIN_ENSEMBLE(bm, k, scheme, learner);
 %
@@ -10,9 +9,7 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
 % -----
 % [char]
 % bm:       The benchmark, which is encoded as: <ontology>_<category>_<type>_<mode>
-%
 %           For example: mfo_HUMAN_type1_mode1
-%
 %           Also, the specified benchmark should have been evaluated, i.e. there
 %           must be an existing subfolder (having the same name) under
 %           [CAFA_DIR]/evaluation/
@@ -34,19 +31,19 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
 % Output
 % ------
 % [struct]
-% model:    The learned ensemble model, which contains the following:
-%           .scheme     one of {'lasso', 'sfs'}
-%           .learner    one of {'ols', 'lr', 'nn'}
-%           .iid        1-by-p cell array of model internal IDs.
-%           .dname      1-by-p cell array of model display names.
-%           .selected   1-by-k index
-%           .theta      model parameter
-%                       if learner = ['ols'] or ['lr']
-%                       1-by-p double array, at most k of which are non-zero.
-%                       if learner = ['nn']
-%                       the trained neural network model.
-%           .perf       1-by-p double array of performance (fmax).
-%           .perf_comb  double, performance of the combined model.
+% model:  The learned ensemble model, which contains the following:
+%         .scheme     one of {'lasso', 'sfs'}
+%         .learner    one of {'ols', 'lr', 'nn'}
+%         .iid        1-by-p cell array of model internal IDs.
+%         .dname      1-by-p cell array of model display names.
+%         .selected   1-by-k index
+%         .theta      model parameter
+%                     if learner = ['ols'] or ['lr']
+%                     1-by-p double array, at most k of which are non-zero.
+%                     if learner = ['nn']
+%                     the trained neural network model.
+%         .perf       1-by-p double array of performance (fmax).
+%         .perf_comb  double, performance of the combined model.
 %
 % Dependency
 % ----------
@@ -59,7 +56,6 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
 %[>]pfp_seqmetric.m
 %[>]cafa_pick_models.m
 %[>]cafa_team_iid2dname.m
-% }}}
 
   % basic setting {{{
   param.CAFA_DIR = '~/cafa';
@@ -70,21 +66,21 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
     error('cafa_train_ensemble:InputCount', 'Expected 4 inputs.');
   end
 
-  % check the 1st input 'bm'
+  % bm
   validateattributes(bm, {'char'}, {'nonempty'}, '', 'bm', 1);
   tokens = strsplit(bm, '_');
   if ~exist(fullfile(param.CAFA_DIR, 'prediction', tokens{1}), 'dir')
     error('cafa_pick_models:InputErr', 'Prediction folder does not exist.');
   end
 
-  % check the 2nd input 'k'
+  % k
   validateattributes(k, {'double'}, {'>', 0}, '', 'k', 2);
   param.k = k;
 
-  % check the 3th input 'scheme'
+  % scheme
   param.scheme = validatestring(scheme, {'lasso', 'sfs'}, '', 'scheme', 3);
 
-  % check the 4th input 'learner'
+  % learner
   param.learner = validatestring(learner, {'ols', 'lr', 'nn'}, '', 'learner', 4);
   % }}}
 
@@ -119,19 +115,19 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
   tv = randsample(n, floor(0.90*n)); % training + validation set
   ts = setdiff(1:n, tv); % test set
 
-  [tv_x, tv_y, ts_x, ts_y] = split_ds(x, param.oa.annotation, tv, ts);
+  [tv_x, tv_y, ts_x, ts_y] = loc_split_ds(x, param.oa.annotation, tv, ts);
   param.tv_benchmark = benchmark(tv);
   % }}}
 
   % learn an ensemble with k models {{{
   fprintf('learning an ensemble ...\n');
   param.nfolds = 5; % do 5-fold cross-validation when needed
-  model = learn_model(tv_x, tv_y, param);
+  model = loc_learn_model(tv_x, tv_y, param);
   % }}}
 
   % test performance {{{
   fprintf('evaluating performance ...\n');
-  pred_ts = apply_model(model, benchmark(ts), param.preds, param.oa);
+  pred_ts = loc_apply_model(model, benchmark(ts), param.preds, param.oa);
 
   model.perf_comb = pfp_seqmetric(benchmark(ts), pred_ts, param.oa, 'fmax');
   model.perf      = zeros(1, param.p);
@@ -141,8 +137,8 @@ function [model] = cafa_train_ensemble(bm, k, scheme, learner)
   % }}}
 return
 
-% function: split_ds(x, y, id1, id2) {{{
-function [x1, y1, x2, y2] = split_ds(x, y, id1, id2)
+% function: loc_split_ds(x, y, id1, id2) {{{
+function [x1, y1, x2, y2] = loc_split_ds(x, y, id1, id2)
   p = numel(x);
   x1 = cell(1, p);
   x2 = cell(1, p);
@@ -155,8 +151,8 @@ function [x1, y1, x2, y2] = split_ds(x, y, id1, id2)
 return
 % }}}
 
-% function: preprocess_xy(x, y) {{{
-function [px, py] = preprocess_xy(x, y)
+% function: loc_preprocess_xy(x, y) {{{
+function [px, py] = loc_preprocess_xy(x, y)
 % {{{
 % Input
 % -----
@@ -188,8 +184,8 @@ function [px, py] = preprocess_xy(x, y)
 return
 % }}}
 
-% function: learn_model(x, y, param) {{{
-function [model] = learn_model(x, y, param)
+% function: loc_learn_model(x, y, param) {{{
+function [model] = loc_learn_model(x, y, param)
 % {{{
 % Input
 % -----
@@ -228,8 +224,8 @@ function [model] = learn_model(x, y, param)
     index = crossvalind('Kfold', n, param.nfolds);
     tr = (index ~= v);
     va = (index == v);
-    [tr_x, tr_y, va_x, va_y] = split_ds(x, y, tr, va);
-    [tr_x, tr_y] = preprocess_xy(tr_x, tr_y);
+    [tr_x, tr_y, va_x, va_y] = loc_split_ds(x, y, tr, va);
+    [tr_x, tr_y] = loc_preprocess_xy(tr_x, tr_y);
     % }}}
 
     % make predictions on the small annotated sub-ontology
@@ -252,7 +248,7 @@ function [model] = learn_model(x, y, param)
       criterion.theta    = B;
 
       % evaluate on the validation set
-      pred_va = apply_model(criterion, param.tv_benchmark, param.preds, param.oa);
+      pred_va = loc_apply_model(criterion, param.tv_benchmark, param.preds, param.oa);
       weight  = pfp_seqmetric(param.tv_benchmark, pred_va, param.oa, 'fmax');
       % }}}
     case 'sfs'
@@ -268,7 +264,7 @@ function [model] = learn_model(x, y, param)
           end
           candidates = [selected, j];
           candid_x   = tr_x(:, candidates);
-          candid_param = learn_ols(candid_x, tr_y);
+          candid_param = loc_learn_ols(candid_x, tr_y);
 
           % update criterion
           criterion.selected          = candidates;
@@ -276,9 +272,9 @@ function [model] = learn_model(x, y, param)
           criterion.theta(candidates) = candid_param;
 
           % evaluate on the validation set
-          % pred_va = apply_model(criterion, param.tv_benchmark, param.preds, param.oa);
+          % pred_va = loc_apply_model(criterion, param.tv_benchmark, param.preds, param.oa);
           % perf    = pfp_seqmetric(param.tv_benchmark, pred_va, param.oa, 'fmax');
-          pred_va = apply_model(criterion, param.tv_benchmark, small_preds, param.small_oa);
+          pred_va = loc_apply_model(criterion, param.tv_benchmark, small_preds, param.small_oa);
           perf    = pfp_seqmetric(param.tv_benchmark, pred_va, param.small_oa, 'fmax');
 
           if perf > best_round % found a better candidate
@@ -308,21 +304,21 @@ function [model] = learn_model(x, y, param)
 
   x = x(model.selected); % keep only the selected k models
 
-  [x, y] = preprocess_xy(x, y);
+  [x, y] = loc_preprocess_xy(x, y);
   if strcmp(param.learner, 'ols')
     model.theta = zeros(1, param.p);
-    model.theta(model.selected) = learn_ols(x, y); % linear regression
+    model.theta(model.selected) = loc_learn_ols(x, y); % linear regression
   elseif strcmp(param.learner, 'lr') % TODO
     model.theta = zeros(1, param.p);
-    model.theta(model.selected) = learn_lr(x, y); % logistic regression
+    model.theta(model.selected) = loc_learn_lr(x, y); % logistic regression
   elseif strcmp(param.learner, 'nn')
-    model.theta = learn_nn(x, y); % neural network
+    model.theta = loc_learn_nn(x, y); % neural network
   end
 return
 % }}}
 
-% function: apply_model(model, bm, preds, oa) {{{
-function [pred] = apply_model(model, bm, preds, oa)
+% function: loc_apply_model(model, bm, preds, oa) {{{
+function [pred] = loc_apply_model(model, bm, preds, oa)
 % {{{
 % Input
 % -----
@@ -385,20 +381,20 @@ function [pred] = apply_model(model, bm, preds, oa)
 return
 % }}}
 
-% function: learn_ols(x, y) {{{
-function [beta] = learn_ols(x, y)
+% function: loc_learn_ols(x, y) {{{
+function [beta] = loc_learn_ols(x, y)
   beta = (x' * x) \ (x' * y);
 return
 % }}}
 
-% function: learn_lr(x, y) {{{
-function [beta] = learn_lr(x, y)
+% function: loc_learn_lr(x, y) {{{
+function [beta] = loc_learn_lr(x, y)
   beta = mnrfit(x, y+1);
 return
 % }}}
 
-% function: learn_nn(x, y) {{{
-function [net, perf] = learn_nn(x, y)
+% function: loc_learn_nn(x, y) {{{
+function [net, perf] = loc_learn_nn(x, y)
   % sub-sampling {{{
   if size(x, 1) > 100000
     index = randsample(size(x, 1), 100000);
@@ -435,4 +431,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 01 Mar 2016 01:50:46 PM E
+% Last modified: Mon 23 May 2016 03:45:33 PM E

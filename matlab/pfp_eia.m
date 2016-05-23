@@ -1,6 +1,5 @@
 function [eia] = pfp_eia(DAG, A)
 %PFP_EIA Estimated information accretion
-% {{{
 %
 % [eia] = PFP_EIA(DAG, A);
 %
@@ -13,6 +12,11 @@ function [eia] = pfp_eia(DAG, A)
 % Definition
 % ----------
 % Information accretion:
+% The negative logarithm of the conditional probability of a term being
+% annotated given that all of its parents are annotated:
+% ia(t) = -log P(t=1 | Pa(t)=1),
+% where Pa(t) is the parents of term t.
+%
 % See the [Reference] below for details.
 %
 % Reference
@@ -23,32 +27,29 @@ function [eia] = pfp_eia(DAG, A)
 % Input
 % -----
 % [double]
-% DAG:  m x m, the adjacency matrix (for a directed acyclic graph)
-%       DAG(i, j) ~= 0 means term[i] has some relation to term[j].
+% DAG:  The m-by-m adjacency matrix.
+%       DAG(i, j) ~= 0 means term i has a relationship to term j.
 %
 % [logical]
-% A:    n x m, the ontology annotation matrix.
-%       A(i, j) = 1 means obj[i] is annotated to have term[j].
+% A:    An n-by-m, the ontology annotation matrix.
+%       A(i, j) = true indicates object i is annotated to have term j.
 %
 % Output
 % ------
 % [double]
-% eia:  1 x m, an array of estimated information accretion.
-% }}}
+% eia:  An 1-by-m array of estimated information accretion.
 
   % check inputs {{{
   if nargin ~= 2
     error('pfp_eia:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st input 'DAG' {{{
+  % DAG
   validateattributes(DAG, {'double'}, {'square'}, '', 'DAG', 1);
   m = size(DAG, 1);
-  % }}}
 
-  % check the 2nd input 'A' {{{
+  % A
   validateattributes(A, {'logical'}, {'ncols', m}, '', 'A', 2);
-  % }}}
   % }}}
 
   % find annotated "sub-ontology" {{{
@@ -83,4 +84,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 29 Feb 2016 01:17:46 PM E
+% Last modified: Thu 12 May 2016 04:29:43 PM E

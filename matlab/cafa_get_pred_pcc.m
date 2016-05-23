@@ -1,46 +1,36 @@
-function [res] = cafa_get_pred_pcc(config_info)
+function [res] = cafa_get_pred_pcc(cfg)
 %CAFA_GET_PRED_PCORR CAFA get prediction Pearson's correlation
-% {{{
 %
-% [res] = CAFA_GET_PRED_PCORR(config_info);
+% [res] = CAFA_GET_PRED_PCORR(cfg);
 %
 %   Computes Pearson's correlation coefficient between predictions over a set of
 %   benchmark proteins.
 %
 % Input
 % -----
-% config_info:  The configuration file (job descriptor) or a parsed config
-%               structure.
-%
-%               See cafa_parse_config.m
+% cfg:  The configuration file (job descriptor) or a parsed config structure.
+%       See cafa_parse_config.m
 %
 % Output
 % ------
 % [struct]
 % res:  The result structure, which has the following fields:
-%       .mid    [cell]    An n-by-1 cell array of internal ID.
-%       .pcc    [double]  An n-by-n matrix of Pearson's correlation.
+%       .mid  [cell]    An n-by-1 cell array of internal ID.
+%       .pcc  [double]  An n-by-n matrix of Pearson's correlation coefficient.
 %
 % Dependency
 % ----------
 %[>]cafa_parse_config.m
 %[>]cafa_team_register.m
 %[>]pfp_predproj.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 1
     error('cafa_get_pred_pcc:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'config_info' {{{
-  validateattributes(config_info, {'char', 'struct'}, {'nonempty'}, '', 'config_info', 1);
-  if ischar(config_info)
-    config = cafa_parse_config(config_info);
-  else
-    config = config_info;
-  end
-  % }}}
+  % cfg
+  config = cafa_parse_config(cfg);
   % }}}
 
   % get team names to display {{{
@@ -102,4 +92,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 07 Apr 2016 10:12:28 PM E
+% Last modified: Mon 23 May 2016 02:35:36 PM E

@@ -1,6 +1,5 @@
 function [] = cafa_driver_import(idir, odir, ont)
 %CAFA_DRIVER_IMPORT CAFA driver import
-% {{{
 %
 % [] = CAFA_DRIVER_IMPORT(idir, odir, ont);
 %
@@ -33,24 +32,20 @@ function [] = cafa_driver_import(idir, odir, ont)
 % --------
 %[>]cafa_driver_filter.m
 %[>]pfp_ontbuild.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 3
     error('cafa_driver_import:InputCount', 'Expected 3 inputs.');
   end
 
-  % check the 1st input 'idir' {{{
+  % idir
   validateattributes(idir, {'char'}, {'nonempty'}, '', 'idir', 1);
-  % }}}
 
-  % check the 2nd input 'odir' {{{
+  % odir
   validateattributes(odir, {'char'}, {'nonempty'}, '', 'odir', 2);
-  % }}}
 
-  % check the 3rd input 'ont' {{{
+  % ont
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 3);
-  % }}}
   % }}}
 
   % make sure <odir> exist {{{
@@ -76,4 +71,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sun 06 Mar 2016 11:48:38 PM E
+% Last modified: Sun 22 May 2016 06:27:47 PM E

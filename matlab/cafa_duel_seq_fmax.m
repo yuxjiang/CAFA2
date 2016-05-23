@@ -1,6 +1,5 @@
 function [result] = cafa_duel_seq_fmax(group1, group2)
 %CAFA_DUEL_SEQ_FMAX CAFA duel sequence-centric Fmax
-% {{{
 %
 % [result] = CAFA_DUEL_SEQ_FMAX(group1, group2);
 %
@@ -18,25 +17,15 @@ function [result] = cafa_duel_seq_fmax(group1, group2)
 % -----
 % [cell]
 % group1:   A 1-by-n cell of 'seq_fmax_bst' result structures.
-%
-%           [char]
-%           .id           The model name, used for naming files.
-%
-%           [double]
-%           .fmax_bst     B-by-1, bootstrapped F1-max.
-%
-%           [double]
-%           .point_bst    B-by-2, the corresponding (precision, recall) point
-%                         for each bootstrap.
-%
-%           [double]
-%           .tau_bst      B-by-1, the corresponding threshold for each
-%                         bootstrap.
-%
-%           [double]
-%           .coverage_bst B-by-1, coverage of the model for each bootstrap.
-%
-%           See cafa_eval_seq_fmax_bst.m for details.
+%           .id           [char]    The model name, used for naming files.
+%           .fmax_bst     [double]  B-by-1, bootstrapped F1-max.
+%           .point_bst    [double]  B-by-2, the corresponding (precision, recall)
+%                                   point for each bootstrap.
+%           .tau_bst      [double]  B-by-1, the corresponding threshold for each
+%                                   bootstrap.
+%           .ncovered_bst [double]  B-by-1, number of covered proteins in 'bm'.
+%           .coverage_bst [double]  B-by-1, coverage of the model for each bootstrap.
+%           See cafa_eval_seq_fmax_bst.m
 %
 % [cell]
 % group2:   A 1-by-m cell of 'seq_fmax_bst' result structures.
@@ -45,43 +34,30 @@ function [result] = cafa_duel_seq_fmax(group1, group2)
 % ------
 % [struct]
 % result:   The duel result:
+%           .group1 [cell]    1-by-n tags (will not be show in the plot for now)
+%           .group2 [cell]    1-by-m tags (will not be show in the plot for now)
+%           .winner [double]  n-by-m (usually n = m = 5), indicates which model
+%                             wins, winner(i, j) shows the results of group1(i)
+%                             v.s. group2(j). Possible value: 1 or 2 .
+%           .margin [double]  n-by-m, winning margin.
+%           .nwins  [double]  n-by-m, how many time the winner wins.
 %
-%           [cell]
-%           .group1   1-by-n tags (will not be show in the plot for now)
-%
-%           [cell]
-%           .group2   1-by-m tags (will not be show in the plot for now)
-%
-%           [double]
-%           .winner   n-by-m (usually n = m = 5), indicates which model wins.
-%                     possible value: 1 or 2
-%                     winner(i, j) shows the results of group1(i) v.s. group2(j)
-%
-%           [double]
-%           .margin   n-by-m, winning margin.
-%
-%           [double]
-%           .nwins    n-by-m, how many time the winner wins.
-%
-% Dependency
-% ----------
+% See Also
+% --------
 %[>]cafa_eval_seq_fmax_bst.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 2
     error('cafa_duel_seq_fmax:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st input 'group1' {{{
+  % group1
   validateattributes(group1, {'cell'}, {'nonempty'}, '', 'group1', 1);
   n = numel(group1);
-  % }}}
 
-  % check the 2nd input 'group2' {{{
+  % group2
   validateattributes(group2, {'cell'}, {'nonempty'}, '', 'group2', 2);
   m = numel(group2);
-  % }}}
   % }}}
 
   % duel {{{
@@ -121,4 +97,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 01:29:56 PM E
+% Last modified: Mon 23 May 2016 05:04:18 PM E

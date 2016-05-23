@@ -1,6 +1,5 @@
 function [ev] = cafa_eval_seq_smin_bst(id, bm, rm, ev_mode, BI)
 %CAFA_EVAL_SEQ_SMIN_BST CAFA evaluation sequence-centric smin_bst
-% {{{
 %
 % [ev] = CAFA_EVAL_SEQ_SMIN_BST(id, bm, rm, ev_mode, BI);
 %
@@ -18,21 +17,16 @@ function [ev] = cafa_eval_seq_smin_bst(id, bm, rm, ev_mode, BI)
 %
 % [struct]
 % rm:       The pre-computed RU-MI per sequence.
-%           [cell of char]
-%           .object     - n-by-1 sequence ID
-%
-%           [cell of double]
-%           .metric     - 1-by-k RU-MI pair sets, where 'k'
-%                         is the number of distinct thresholds. In most
-%                         cases, k = 101, corresponding to 101 thresholds:
-%                         tau = 0.00 : 0.01 : 1.00
-%                         Each cell contains a n-by-2 double array, which
-%                         is the (RU, MI) pair of n sequences
-%                         at a specific threshold.
-%
-%           [logical]
-%           .covered    - n-by-1 indicator of if sequence i is predicted
-%                           by this model.
+%           .object   [cell]    n-by-1 sequence ID
+%           .metric   [cell]    1-by-k RU-MI pair sets, where 'k' is the number
+%                               of distinct thresholds. In most cases, k = 101,
+%                               corresponding to 101 thresholds: tau =
+%                               0.00:0.01:1.00 Each cell contains a n-by-2
+%                               double array, which is the (RU, MI) pair of n
+%                               sequences at a specific threshold.
+%           .covered  [logical] n-by-1 indicator of if sequence i is predicted
+%                               by this model.
+%           See pfp_convcmstruct.m
 %
 % [char]
 % ev_mode:  The mode of evaluation.
@@ -51,65 +45,49 @@ function [ev] = cafa_eval_seq_smin_bst(id, bm, rm, ev_mode, BI)
 % ------
 % [struct]
 % ev: The RU-MI curve structure for each model:
+%     .id           [char]    The model name, used for naming files.
+%     .smin_bst     [double]  B-by-1, bootstrapped S-min
+%     .point_bst    [double]  B-by-2, the corresponding (RU, MI) point for each
+%                             bootstrap.
+%     .tau_bst      [double]  B-by-1, the corresponding threshold for each bootstrap.
+%     .ncovered_bst [double]  B-by-1, number of covered proteins in 'bm'.
+%     .coverage_bst [double]  B-by-1, coverage of the model for each bootstrap.
 %
-%     [char]
-%     .id             The model name, used for naming files.
-%
-%     [double]
-%     .smin_bst       B-by-1, bootstrapped S-min
-%
-%     [double]
-%     .point_bst      B-by-2, the corresponding (RU, MI) point for each
-%                     bootstrap.
-%
-%     [double]
-%     .tau_bst        B-by-1, the corresponding threshold for each bootstrap.
-%
-%     [double]
-%     .ncovered_bst   B-by-1, number of covered proteins in 'bm'.
-%
-%     [double]
-%     .coverage_bst   B-by-1, coverage of the model for each bootstrap.
-%
-%                     Note that 'coverge' always refers to the one in 'full'
-%                     evaluation mode. ('partial' mode has a trivial 100%
-%                     coverage)
+%     Note that 'coverge' always refers to the one in 'full' evaluation mode.
+%     ('partial' mode has a trivial 100% coverage)
 %
 % Dependency
 % ----------
 %[>]pfp_loaditem.m
 %[>]pfp_sminc.m
-%[>]pfp_seqcm.m
-% }}}
+%
+% See Also
+% --------
+%[>]pfp_convcmstruct.m
 
   % check inputs {{{
   if nargin ~= 5
     error('cafa_eval_seq_smin_bst:InputCount', 'Expected 5 inputs.');
   end
 
-  % check the 1st input 'id' {{{
+  % id
   validateattributes(id, {'char'}, {'nonempty'}, '', 'id', 1);
-  % }}}
 
-  % check the 2nd input 'bm' {{{
+  % bm
   validateattributes(bm, {'char', 'cell'}, {'nonempty'}, '', 'bm', 2);
   if ischar(bm) % load the benchmark if a file name is given
     bm = pfp_loaditem(bm, 'char');
   end
   m = numel(bm);
-  % }}}
 
-  % check the 3rd input 'rm' {{{
+  % rm
   validateattributes(rm, {'struct'}, {'nonempty'}, '', 'rm', 3);
-  % }}}
 
-  % check the 4th input 'ev_mode' {{{
+  % ev_mode
   ev_mode = validatestring(ev_mode, {'1', 'full', '2', 'partial'}, '', 'ev_mode', 4);
-  % }}}
 
-  % check the 5th input 'BI' {{{
+  % BI
   validateattributes(BI, {'double'}, {'>', 0, 'ncols', m}, '', 'BI', 5);
-  % }}}
   % }}}
 
   % evaluation {{{
@@ -154,4 +132,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 01:31:36 PM E
+% Last modified: Mon 23 May 2016 06:31:48 PM E

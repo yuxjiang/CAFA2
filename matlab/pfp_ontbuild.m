@@ -1,6 +1,5 @@
 function [onts] = pfp_ontbuild(obofile, rel)
 %PFP_ONTBUILD Ontology build
-% {{{
 %
 % [onts] = PFP_ONTBUILD(obofile);
 % [onts] = PFP_ONTBUILD(obofile, rel);
@@ -12,7 +11,7 @@ function [onts] = pfp_ontbuild(obofile, rel)
 % This "parser" is NOT meant to fully support OBO format 1.2. It considers the
 % OBO file format to be the following, which is suffice to build a DAG.
 %
-% OBO syntax (without "trailing modifiers"): {{{
+% OBO syntax (without "trailing modifiers"):
 % <obo file>        -> <header>\n<stanzas>
 % <header>          -> <tag-value pairs>
 % <stanzas>         -> <stanza>|<stanzas>\n<stanza>
@@ -30,7 +29,6 @@ function [onts] = pfp_ontbuild(obofile, rel)
 %    "default-namespace" which indicates the default namespace for all
 %    <stanza>s.
 % 2. Required <tag> for each <stanza>: "id", "name"
-% }}}
 %
 % This "parser" also makes the following STRONG assumptions:
 % 1. [Term] is the only stanza to extract.
@@ -95,7 +93,6 @@ function [onts] = pfp_ontbuild(obofile, rel)
 %           [char]
 %           .date       The date tag of this OBO file if "date" is presented in
 %                       <header>; Otherwise, it stores the current date.
-% }}}
 
   % check inputs {{{
   if nargin ~= 1 && nargin ~= 2
@@ -106,17 +103,15 @@ function [onts] = pfp_ontbuild(obofile, rel)
     rel = {'part_of'};
   end
 
-  % check the 1st input 'obofile' {{{
+  % obofile
   validateattributes(obofile, {'char'}, {'nonempty'}, '', 'obofile', 1);
   fid = fopen(obofile, 'r');
   if fid == -1
     error('pfp_ontbuild:FileErr', 'Cannot open OBO file.');
   end
-  % }}}
 
-  % check the 2nd input 'rel' {{{
+  % rel
   validateattributes(rel, {'cell'}, {}, '', 'rel', 2);
-  % }}}
   % }}}
 
   % read the OBO file as a whole {{{
@@ -165,8 +160,8 @@ function [onts] = pfp_ontbuild(obofile, rel)
   % }}}
 
   % hash the first 6 character of each line to make a list of tags {{{
-  % Note: these hash keys must match with those in hashkeywords
-  hk = hashkeywords;
+  % Note: these hash keys must match with those in loc_hashkeywords
+  hk = loc_hashkeywords;
 
   HK_ID     = 1;
   HK_NAME   = 2;
@@ -189,7 +184,7 @@ function [onts] = pfp_ontbuild(obofile, rel)
     key = [key, zeros(size(key,1), 6-size(key,2))];
   end
   % 'key' is then a n-by-6 non-negative double matrix.
-  % must be the same powers as in function: hashkeywords
+  % must be the same powers as in function: loc_hashkeywords
   powers = [27^5;27^4;27^3;27^2;27;1];
   tags   = full(hk(key*powers+1));
 
@@ -251,7 +246,7 @@ function [onts] = pfp_ontbuild(obofile, rel)
   ont_types = unique(ns);
   if numel(ont_types) == 1
     term = cell2struct([id, name], {'id', 'name'}, 2);
-    onts = make_ont(term, alt_list, is_a_list, rel, rel_list);
+    onts = loc_make_ont(term, alt_list, is_a_list, rel, rel_list);
 
     onts.ont_type = ont_types{1};
     onts.date     = dt;
@@ -260,7 +255,7 @@ function [onts] = pfp_ontbuild(obofile, rel)
     for i = 1 : numel(ont_types)
       this_ont = strcmpi(ns, ont_types{i});
       term = cell2struct([id(this_ont), name(this_ont)], {'id', 'name'}, 2);
-      onts{i} = make_ont(term, alt_list, is_a_list, rel, rel_list);
+      onts{i} = loc_make_ont(term, alt_list, is_a_list, rel, rel_list);
 
       onts{i}.ont_type = ont_types{i};
       onts{i}.date = dt;
@@ -270,8 +265,8 @@ function [onts] = pfp_ontbuild(obofile, rel)
   % }}}
 return
 
-% function: hashkeywords {{{
-function [hk] = hashkeywords
+% function: loc_hashkeywords {{{
+function [hk] = loc_hashkeywords
   powers = [27^5;27^4;27^3;27^2;27;1];
   hk = sparse(27^6, 1);
   hk(max(0,'id    '-'`')*powers+1) = 1;
@@ -284,8 +279,8 @@ function [hk] = hashkeywords
 return
 % }}}
 
-% function: construct ont {{{
-function ont = make_ont(term, alt_list, is_a_list, rel, rel_list)
+% function: loc_make_ont {{{
+function ont = loc_make_ont(term, alt_list, is_a_list, rel, rel_list)
   [~, order] = sort({term.id}); % sort by id
   ont.term = term(order);
   n = numel(term);
@@ -333,4 +328,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sat 05 Mar 2016 01:29:11 PM E
+% Last modified: Mon 23 May 2016 06:45:23 PM E

@@ -1,42 +1,38 @@
-function [items] = pfp_loaditem(filename, data_type)
+function [items] = pfp_loaditem(ifile, dtype)
 %PFP_LOADITEM Load item
-% {{{
 %
-% [items] = PFP_LOADITEM(filename, data_type);
+% [items] = PFP_LOADITEM(ifile, dtype);
 %
 %   Loads data from a file (one data item per line).
 %
 % Input
 % -----
 % [char]
-% filename:   The data file name.
+% ifile:  The data file name.
 %
 % [char]
-% data_type:  The type of the data, could be 'char' or 'numeric'.
+% dtype:  The type of the data, could be 'char' or 'numeric'.
 %
 % Output
 % ------
 % [cell or double]
-% items:      The resuling data holder, types depends on 'data_type'.
-% }}}
+% items:  The resuling data holder, types depends on 'dtype'.
 
   % check inputs {{{
   if nargin ~= 2
     error('pfp_loaditem:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st input 'filename' {{{
-  validateattributes(filename, {'char'}, {'nonempty'}, '', 'filename', 1);
-  fid = fopen(filename, 'r');
+  % ifile
+  validateattributes(ifile, {'char'}, {'nonempty'}, '', 'ifile', 1);
+  fid = fopen(ifile, 'r');
   if fid == -1
-    error('pfp_loaditem:FileErr', 'Cannot open [%s].', filename);
+    error('pfp_loaditem:FileErr', 'Cannot open [%s].', ifile);
   end
-  % }}}
 
-  % check the 2nd input 'data_type' {{{
-  validateattributes(data_type, {'char'}, {'nonempty'}, '', 'data_type', 2);
-  dtype = validatestring(data_type, {'char', 'numeric'});
-  % }}}
+  % dtype
+  validateattributes(dtype, {'char'}, {'nonempty'}, '', 'dtype', 2);
+  dtype = validatestring(dtype, {'char', 'numeric'});
   % }}}
 
   % load data {{{
@@ -59,4 +55,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 26 Feb 2016 02:42:03 AM E
+% Last modified: Thu 12 May 2016 05:32:46 PM E

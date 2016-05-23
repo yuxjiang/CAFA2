@@ -1,6 +1,5 @@
 function [] = cafa_filter(seq_list, ifile, ofile)
 %CAFA_FILTER CAFA filter
-% {{{
 %
 % [] = CAFA_FILTER(seq_list, ifile, ofile);
 %
@@ -26,7 +25,6 @@ function [] = cafa_filter(seq_list, ifile, ofile)
 %           Prediction
 %           ----------
 %           <target id> <term id> <score: x.xx>
-%
 %           The file must end with: END
 %
 % [char]
@@ -36,32 +34,28 @@ function [] = cafa_filter(seq_list, ifile, ofile)
 % Output
 % ------
 % None.
-% }}}
 
   % check inputs {{{
   if nargin ~= 3
     error('cafa_filter:InputCount', 'Expected 3 inputs.');
   end
 
-  % check the 1st input 'seq_list' {{{
+  % seq_list
   validateattributes(seq_list, {'cell'}, {'nonempty'}, '', 'seq_list', 1);
-  % }}}
 
-  % check the 2nd input 'ifile' {{{
+  % ifile
   validateattributes(ifile, {'char'}, {'nonempty'}, '', 'ifile', 2);
   fin = fopen(ifile, 'r');
   if fin == -1
     error('cafa_filter:InputErr', 'Cannot open input file [%s].', ifile);
   end
-  % }}}
 
-  % check the 3rd input 'ofile' {{{
+  % ofile
   validateattributes(ofile, {'char'}, {'nonempty'}, '', 'ofile', 3);
   fout = fopen(ofile, 'w');
   if fout == -1
     error('cafa_filter:InputErr', 'Cannot open output file [%s].', ofile);
   end
-  % }}}
   % }}}
 
   % parse header if presented {{{
@@ -114,4 +108,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:06:07 AM E
+% Last modified: Mon 23 May 2016 06:08:19 PM E

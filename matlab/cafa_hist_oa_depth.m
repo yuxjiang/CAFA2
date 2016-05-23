@@ -1,6 +1,5 @@
 function [] = cafa_hist_oa_depth(pfile, pttl, bm, oa)
 %CAFA_HIST_OA_DEPTH CAFA histogram ontology annotation depth
-% {{{
 %
 % [] = CAFA_HIST_OA_DEPTH(pfile, pttl, bm, oa);
 %
@@ -19,7 +18,7 @@ function [] = cafa_hist_oa_depth(pfile, pttl, bm, oa)
 % bm:         A benchmark filename or a list of benchmark target IDs.
 %
 % [struct]
-% oa:         The ontology annotation structure.
+% oa:         The ontology annotation structure. See pfp_oabuild.m.
 %
 % Output
 % ------
@@ -30,17 +29,20 @@ function [] = cafa_hist_oa_depth(pfile, pttl, bm, oa)
 %[>]pfp_loaditem.m
 %[>]pfp_oaproj.m
 %[>]pfp_leafannot.m
-%[>]pfp_oabuild.m
+%[>]pfp_depth.m
 %[>]embed_canvas.m
 %[>]adapt_yaxis.m
-% }}}
+%
+% See Also
+% --------
+%[>]pfp_oabuild.m
 
   % check inputs {{{
   if nargin ~= 4
     error('cafa_hist_oa_depth:InputCount', 'Expected 4 inputs.');
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -52,22 +54,18 @@ function [] = cafa_hist_oa_depth(pfile, pttl, bm, oa)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'bm' {{{
+  % bm
   validateattributes(bm, {'char', 'cell'}, {'nonempty'}, '', 'bm', 3);
   if ischar(bm) % load the benchmark if a file name is given
     bm = pfp_loaditem(bm, 'char');
   end
-  % }}}
 
-  % check the 4th input 'oa' {{{
+  % oa
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 4);
-  % }}}
   % }}}
 
   % get plot data {{{
@@ -125,4 +123,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 29 Feb 2016 04:24:31 PM E
+% Last modified: Mon 23 May 2016 05:51:08 PM E

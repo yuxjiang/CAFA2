@@ -1,6 +1,5 @@
 function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
 %CAFA_PLOT_TERM_AVGAUC CAFA plot term-centric averaged AUC
-% {{{
 %
 % [] = CAFA_PLOT_TERM_AVGAUC(pfile, pttl, aucs, ont, yaxis);
 %
@@ -12,6 +11,7 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
 %
 % Input
 % -----
+% (required)
 % [char]
 % pfile:    The filename of the plot.
 %           Note that the file extension must be ont of 'eps', or 'png'.
@@ -21,24 +21,17 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
 % pttl:     The plot title.
 %
 % [cell]
-% aucs:     The collected 'term_auc' structures
-%           Each cell has the following fields.
-%
-%           [char]
-%           .id     (Internel) model of the model
-%
-%           [cell]
-%           .term   1-by-m, term ID list
-%
-%           [double]
-%           .auc    1-by-m, AUC per term
-%
-%           See cafa_collect.m
+% aucs:     The collected 'term_auc' structures. Each cell has
+%           .id   [char]    The model name, used for naming files.
+%           .term [cell]    1-by-m, term names. ('m': the number of terms)
+%           .auc  [double]  1-by-m, AUC estimates.
+%           .mode [double]  The evaluation mode, passed through from input.
+%           .npos [double]  The number of positive annotations cutoff, passed
+%                           through from input.
+%           See cafa_eval_term_auc.m, cafa_collect.m
 %
 % [struct]
-% ont:      The ontology structure.
-%
-%           See pfp_ontbuild.m
+% ont:      The ontology structure. See pfp_ontbuild.m
 %
 % (optional)
 % [double]
@@ -52,13 +45,16 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
 %
 % Dependency
 % ----------
-%[>]cafa_collect.m
-%[>]pfp_ontbuild.m
 %[>]pfp_gettermidx.m
 %[>]pfp_ancestortermidx.m
 %[>]pfp_offspringtermidx.m
 %[>]embed_canvas.m
-% }}}
+%
+% See Also
+% --------
+%[>]cafa_eval_term_auc.m
+%[>]cafa_collect.m
+%[>]pfp_ontbuild.m
 
   % check inputs {{{
   if nargin < 4 || nargin > 5
@@ -69,7 +65,7 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
     yaxis = [];
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -85,32 +81,27 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
   plot_filename_all = strcat(p, '/', f, '_all', ext);
   plot_filename_top = strcat(p, '/', f, '_top', ext);
   plot_filename_bot = strcat(p, '/', f, '_bot', ext);
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'aucs' {{{
+  % aucs
   validateattributes(aucs, {'cell'}, {'nonempty'}, '', 'aucs', 3);
   n = numel(aucs);
   m = numel(aucs{1}.term);
-  % }}}
 
-  % check the 4th input 'ont' {{{
+  % ont
   validateattributes(ont, {'struct'}, {}, '', 'ont', 4);
   tids   = aucs{1}.term;
   tnames = {ont.term(pfp_gettermidx(ont, aucs{1}.term)).name};
-  % }}}
 
-  % check the 5th input 'yaxis' {{{
+  % yaxis
   validateattributes(yaxis, {'double'}, {}, '', 'yaxis', 5);
   if isempty(yaxis)
     is_adaptive = true;
   else
     is_adaptive = false;
   end
-  % }}}
   % }}}
 
   % collect AUCs and compute the average {{{
@@ -191,14 +182,14 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
     % sel = order(1:10);
 
     % select independent top 10
-    index = pick_top_terms(ont, pfp_gettermidx(ont, tids(order)), 10);
+    index = loc_pick_top_terms(ont, pfp_gettermidx(ont, tids(order)), 10);
     [~, sel] = ismember({ont.term(index).id}, tids);
 
     h = figure('Visible', 'off');
     b = boxplot(auc_mat(:, sel), 'Colors', fcolor);
 
     ax = gca;
-    ax.XTickLabel = make_label(aucs{1}.term(sel), tnames(sel));
+    ax.XTickLabel = loc_make_label(aucs{1}.term(sel), tnames(sel));
     ax.XTickLabelRotation = 45;
     ax.FontSize = base_fs;
     if ~is_adaptive
@@ -219,7 +210,7 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
     b = boxplot(auc_mat(:, sel), 'Colors', fcolor);
 
     ax = gca;
-    ax.XTickLabel = make_label(aucs{1}.term(sel), tnames(sel));
+    ax.XTickLabel = loc_make_label(aucs{1}.term(sel), tnames(sel));
     ax.XTickLabelRotation = 45;
     if ~is_adaptive
       ax.YLim  = [yaxis(1), yaxis(2)];
@@ -239,7 +230,7 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
     b = boxplot(auc_mat(:, sel), 'Colors', fcolor);
 
     ax = gca;
-    ax.XTickLabel = make_label(aucs{1}.term(sel), tnames(sel));
+    ax.XTickLabel = loc_make_label(aucs{1}.term(sel), tnames(sel));
     ax.XTickLabelRotation = 45;
     if ~is_adaptive
       ax.YLim  = [yaxis(1), yaxis(2)];
@@ -256,8 +247,8 @@ function [] = cafa_plot_term_avgauc(pfile, pttl, aucs, ont, yaxis)
   % }}}
 return
 
-% function: make_label {{{
-function [labels] = make_label(tacc, tname)
+% function: loc_make_label {{{
+function [labels] = loc_make_label(tacc, tname)
   n = numel(tacc);
   labels = cell(1, n);
   for i = 1 : numel(tname)
@@ -270,8 +261,8 @@ function [labels] = make_label(tacc, tname)
 return
 % }}}
 
-% function: pick_top_terms {{{
-function [sel] = pick_top_terms(ont, order, n)
+% function: loc_pick_top_terms {{{
+function [sel] = loc_pick_top_terms(ont, order, n)
   % pick top n independent terms, by "independent", we mean,
   % for each pair of picked terms, their ancestors have only one intersection
   % term: the root term.
@@ -319,4 +310,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 13 Jul 2015 02:43:35 PM E
+% Last modified: Mon 23 May 2016 05:17:24 PM E

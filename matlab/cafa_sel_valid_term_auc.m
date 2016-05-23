@@ -1,6 +1,5 @@
 function [aucs] = cafa_sel_valid_term_auc(aucs)
 %CAFA_SEL_VALID_TERM_AUC CAFA select valid term AUC
-% {{{
 %
 % [aucs] = CAFA_SEL_VALID_TERM_AUC(aucs);
 %
@@ -9,39 +8,30 @@ function [aucs] = cafa_sel_valid_term_auc(aucs)
 % Input
 % -----
 % [cell]
-% aucs:     The collected 'term_auc' structures
-%           Each cell has the following fields.
-%
-%           [char]
-%           .id     (Internel) model of the model
-%
-%           [cell]
-%           .term   1-by-m, term ID list
-%
-%           [double]
-%           .auc    1-by-m, AUC per term
-%
-%           See cafa_collect.m
+% aucs:   The collected 'term_auc' structures, which has the following fields
+%         [char]    .id     (Internel) model of the model
+%         [cell]    .term   1-by-m, term ID list
+%         [double]  .auc    1-by-m, AUC per term
+%         See cafa_eval_term_auc.m, cafa_collect.m
 %
 % Output
 % ------
 % [cell]
-% aucs:     The filtered cell 'aucs'.
+% aucs: The filtered cell 'aucs'.
 %
 % Dependency
 % ----------
 %[>]cafa_collect.m
-% }}}
+%[>]cafa_eval_term_auc.m
 
   % check inputs {{{
   if nargin ~= 1
     error('cafa_sel_valid_term_auc:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'aucs' {{{
+  % aucs
   validateattributes(aucs, {'cell'}, {'nonempty'}, '', 'aucs', 1);
   n = numel(aucs);
-  % }}}
   % }}}
 
   %filtering {{{
@@ -63,4 +53,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Fri 17 Jul 2015 11:43:39 AM E
+% Last modified: Mon 23 May 2016 04:44:55 PM E

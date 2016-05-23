@@ -1,35 +1,36 @@
-function [oa] = pfp_oaproj(oa, lst, option)
+function [oa] = pfp_oaproj(oa, list, op)
 %PFP_OAPROJ Ontology annotation projection
-% {{{
 %
-% [oa] = PFP_OAPROJ(oa, lst, 'object');
+% [oa] = PFP_OAPROJ(oa, list);
+% [oa] = PFP_OAPROJ(oa, list, 'object');
 %
 %   Projects the ontology annotations to a list of objects.
 %
-% [oa] = PFP_OAPROJ(oa, lst, 'term');
+% [oa] = PFP_OAPROJ(oa, list, 'term');
 %
 %   Projects the ontology annotations to a subset of terms.
 %
 % Note
 % ----
-% In the case of option being 'term', 'lst' must be a subset of terms in the
+% In the case of 'op' = 'term', 'list' must be a subset of terms in the
 % given ontology (oa.ontology), otherwise an error message will be prompted.
 %
 % In the case of projecting to another ontology which have different structures,
 % e.g., allowing different sets of relationships, see pfp_oaconv.m.
 %
-% 'eia' of the given oa will be removed due to the change of ontology structure.
-%
 % Input
 % -----
+% (required)
 % [struct]
-% oa:     The ontology annotation structure.
+% oa:   The ontology annotation structure. See pfp_oabuild.m
 %
 % [cell]
-% lst:    A cell array of (char) object IDs or terms.
+% list: A cell array of (char) object IDs or terms.
 %
+% (optional)
 % [char]
-% option: Must be either 'object' or 'term'.
+% op:   Must be either 'object' or 'term'.
+%       default: 'object'
 %
 % Output
 % ------
@@ -37,61 +38,58 @@ function [oa] = pfp_oaproj(oa, lst, option)
 %
 % Dependency
 % ----------
-%[>]pfp_oabuild.m
 %[>]pfp_subont.m
 %
 % See Also
 % --------
+%[>]pfp_oabuild.m
 %[>]pfp_oaconv.m
-% }}}
 
   % check inputs {{{
-  if nargin ~= 3
-    error('pfp_oaproj:InputCount', 'Expected 3 inputs.');
+  if nargin ~= 2 && nargin ~= 3
+    error('pfp_oaproj:InputCount', 'Expected 2 or 3 inputs.');
   end
 
-  % check the 1st argument 'oa' {{{
+  if nargin == 2
+    op = 'object';
+  end
+
+  % oa
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 1);
-  % }}}
 
-  % check the 2nd argument 'lst' {{{
-  validateattributes(lst, {'cell'}, {'nonempty'}, '', 'lst', 2);
-  % }}}
+  % list
+  validateattributes(list, {'cell'}, {'nonempty'}, '', 'list', 2);
 
-  % check the 3rd argument 'option' {{{
-  option = validatestring(option, {'object', 'term'}, '', 'option', 3);
-  % }}}
+  % op
+  op = validatestring(op, {'object', 'term'}, '', 'op', 3);
   % }}}
 
   % project oa {{{
-  switch option
+  switch op
   case 'object'
-    [found, index] = ismember(lst, oa.object);
+    [found, index] = ismember(list, oa.object);
     if ~all(found)
       warning('pfp_oaproj:NoAnnot', 'Some objects do not have annotations.');
     end
 
-    annotation           = logical(sparse(numel(lst), numel(oa.ontology.term)));
+    annotation           = logical(sparse(numel(list), numel(oa.ontology.term)));
     annotation(found, :) = oa.annotation(index(found), :);
 
     % set up output
-    oa.object = reshape(lst, [], 1);
+    oa.object = reshape(list, [], 1);
   case 'term'
-    if isstruct(lst)
-      lst = {lst.id};
+    if isstruct(list)
+      list = {list.id};
     end
-    [found, index] = ismember(lst, {oa.ontology.term.id});
+    [found, index] = ismember(list, {oa.ontology.term.id});
     annotation     = oa.annotation(:, index(found));
 
     if ~all(found)
-      error('pfp_oaproj:NotSubset', '''lst'' must be contained in the ontology of ''oa''.');
+      error('pfp_oaproj:NotSubset', '''list'' must be contained in the ontology of ''oa''.');
     end
 
     % set up output
-    oa.ontology = pfp_subont(oa.ontology, lst);
-    if isfield(oa, 'eia')
-      oa = rmfield(oa, 'eia');
-    end
+    oa.ontology = pfp_subont(oa.ontology, list);
   otherwise
     % nop
   end
@@ -99,7 +97,7 @@ function [oa] = pfp_oaproj(oa, lst, option)
 
   % update oa {{{
   oa.annotation = annotation;
-  oa.date = datestr(now, 'mm/dd/yyyy HH:MM');
+  oa.date       = datestr(now, 'mm/dd/yyyy HH:MM');
   % }}}
 return
 
@@ -107,4 +105,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 06 Mar 2016 07:46:59 PM E
+% Last modified: Sun 22 May 2016 04:08:47 PM E

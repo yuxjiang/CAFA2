@@ -1,6 +1,5 @@
 function [] = cafa_scatterplot_methods(pfile, task)
 % CAFA_SCATTERPLOT_METHODS CAFA scatterplot for methods
-% {{{
 %
 % [] = CAFA_SCATTERPLOT_METHODS(pfile, task);
 %
@@ -9,17 +8,17 @@ function [] = cafa_scatterplot_methods(pfile, task)
 % Input
 % -----
 % [char]
-% pfile:    The filename of the plot.
-%           Note that the file extension must be either 'eps' or 'png'.
-%           default: 'png'
+% pfile:  The filename of the plot.
+%         Note that the file extension must be either 'eps' or 'png'.
+%         default: 'png'
 %
 % [char]
-% task:     The comparison task, possible tasks:
-%           'EH'  easy vs. hard
-%           'EP'  eukarya vs. prokarya
-%           'FNS' Fmax vs normalized Smin
-%           'FS'  Fmax vs Smin
-%           'FP'  Full mode vs. partial mode
+% task:   The comparison task, possible tasks:
+%         'EH'  - easy vs. hard
+%         'EP'  - eukarya vs. prokarya
+%         'FNS' - Fmax vs normalized Smin
+%         'FS'  - Fmax vs Smin
+%         'FP'  - Full mode vs. partial mode
 %
 % Output
 % ------
@@ -28,14 +27,13 @@ function [] = cafa_scatterplot_methods(pfile, task)
 % Dependency
 % ----------
 %[>]embed_canvas.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 2
     error('cafa_scatterplot_methods:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -47,9 +45,8 @@ function [] = cafa_scatterplot_methods(pfile, task)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'task' {{{
+  % task
   valid_tasks = {'EH', 'EP', 'FNS', 'FS', 'FP'};
   task = validatestring(task, valid_tasks, '', 'task', 2);
   if strcmp(task, 'EH')
@@ -76,63 +73,62 @@ function [] = cafa_scatterplot_methods(pfile, task)
     % do nothing
   end
   % }}}
-  % }}}
 
   % collect data {{{
   evdir = '~/cafa/evaluation/';
   if strcmp(task, 'EH')
-    mfo_data_x = extract_field_from_collection(cafa_collect([evdir, 'mfo_easy_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    mfo_data_y = extract_field_from_collection(cafa_collect([evdir, 'mfo_hard_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    bpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'bpo_easy_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    bpo_data_y = extract_field_from_collection(cafa_collect([evdir, 'bpo_hard_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    cco_data_x = extract_field_from_collection(cafa_collect([evdir, 'cco_easy_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    cco_data_y = extract_field_from_collection(cafa_collect([evdir, 'cco_hard_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    % hpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
+    mfo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_easy_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    mfo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_hard_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    bpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_easy_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    bpo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_hard_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    cco_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_easy_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    cco_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_hard_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    % hpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
     % hpo_data_y = hpo_data_x;
   elseif strcmp(task, 'EP')
-    mfo_data_x = extract_field_from_collection(cafa_collect([evdir, 'mfo_eukarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    mfo_data_y = extract_field_from_collection(cafa_collect([evdir, 'mfo_prokarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    bpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'bpo_eukarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    bpo_data_y = extract_field_from_collection(cafa_collect([evdir, 'bpo_prokarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    cco_data_x = extract_field_from_collection(cafa_collect([evdir, 'cco_eukarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    cco_data_y = extract_field_from_collection(cafa_collect([evdir, 'cco_prokarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    % hpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
+    mfo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_eukarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    mfo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_prokarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    bpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_eukarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    bpo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_prokarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    cco_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_eukarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    cco_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_prokarya_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    % hpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
   elseif strcmp(task, 'FNS')
-    mfo_data_x = extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    mfo_data_y = extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
-    bpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    bpo_data_y = extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
-    cco_data_x = extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    cco_data_y = extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
-    hpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
-    hpo_data_y = extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4H', 'BB4H');
+    mfo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    mfo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
+    bpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    bpo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
+    cco_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    cco_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
+    hpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
+    hpo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4H', 'BB4H');
   elseif strcmp(task, 'FS')
-    mfo_data_x = extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    mfo_data_y = extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_smin'), 'smin', 'BN4S', 'BB4S');
-    % bpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    % bpo_data_y = extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
-    % cco_data_x = extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    % cco_data_y = extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
-    % hpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
-    % hpo_data_y = extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4H', 'BB4H');
+    mfo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    mfo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_smin'), 'smin', 'BN4S', 'BB4S');
+    % bpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    % bpo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
+    % cco_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    % cco_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4S', 'BB4S');
+    % hpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
+    % hpo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_nsmin'), 'smin', 'BN4H', 'BB4H');
   elseif strcmp(task, 'FP')
-    mfo_data_x = extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    mfo_data_y = extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode2'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    bpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    bpo_data_y = extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode2'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    cco_data_x = extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    cco_data_y = extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode2'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
-    hpo_data_x = extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
-    hpo_data_y = extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode2'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
+    mfo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    mfo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'mfo_all_type1_mode2'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    bpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    bpo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'bpo_all_type1_mode2'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    cco_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    cco_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'cco_all_type1_mode2'], 'seq_fmax'), 'fmax', 'BN4S', 'BB4S');
+    hpo_data_x = loc_extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode1'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
+    hpo_data_y = loc_extract_field_from_collection(cafa_collect([evdir, 'hpo_HUMAN_type1_mode2'], 'seq_fmax'), 'fmax', 'BN4H', 'BB4H');
   else
     % do nothing
   end
 
-  mfo_data = pair_data_xy(mfo_data_x, mfo_data_y);
-  % bpo_data = pair_data_xy(bpo_data_x, bpo_data_y);
-  % cco_data = pair_data_xy(cco_data_x, cco_data_y);
+  mfo_data = loc_pair_data_xy(mfo_data_x, mfo_data_y);
+  % bpo_data = loc_pair_data_xy(bpo_data_x, bpo_data_y);
+  % cco_data = loc_pair_data_xy(cco_data_x, cco_data_y);
   % if ismember(task, {'FNS', 'FS', 'FP'})
-  %   hpo_data = pair_data_xy(hpo_data_x, hpo_data_y);
+  %   hpo_data = loc_pair_data_xy(hpo_data_x, hpo_data_y);
   % end
   % }}}
 
@@ -199,7 +195,8 @@ function [] = cafa_scatterplot_methods(pfile, task)
   % }}}
 return
 
-function [res] = extract_field_from_collection(data, field, naive, blast)
+% function: loc_extract_field_from_collection {{{
+function [res] = loc_extract_field_from_collection(data, field, naive, blast)
   n = numel(data);
   res.id  = cell(1, n);
   res.val = zeros(1, n);
@@ -212,8 +209,10 @@ function [res] = extract_field_from_collection(data, field, naive, blast)
   res.id(other_baseline)  = [];
   res.val(other_baseline) = [];
 return
+% }}}
 
-function [res] = pair_data_xy(data_x, data_y)
+% function: loc_pair_data_xy {{{
+function [res] = loc_pair_data_xy(data_x, data_y)
   id = union(data_x.id, data_y.id);
   [~, index_x] = ismember(data_x.id, id);
   [~, index_y] = ismember(data_y.id, id);
@@ -224,9 +223,10 @@ function [res] = pair_data_xy(data_x, data_y)
   res.naive = find(cellfun(@(x) x(2) == 'N', id));
   res.blast = find(cellfun(@(x) x(2) == 'B', id));
 return
+% }}}
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 14 Jan 2016 04:28:12 PM E
+% Last modified: Mon 23 May 2016 04:48:50 PM E

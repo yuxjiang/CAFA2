@@ -1,8 +1,7 @@
-function [] = cafa_driver_eval(config_info)
+function [] = cafa_driver_eval(cfg)
 %CAFA_DRIVER_EVAL CAFA driver evaluation
-% {{{
 %
-% [] = CAFA_DRIVER_EVAL(config_info);
+% [] = CAFA_DRIVER_EVAL(cfg);
 %
 %   Evaluates CAFA models (based on pre-evaluation).
 %
@@ -38,10 +37,8 @@ function [] = cafa_driver_eval(config_info)
 % Input
 % -----
 % [char or struct]
-% config_info:  The configuration file (job descriptor) or a parsed config
-%               structure.
-%
-%               See cafa_parse_config.m
+% cfg:  The configuration file (job descriptor) or a parsed config structure.
+%       See cafa_parse_config.m
 %
 % Dependency
 % ----------
@@ -55,26 +52,14 @@ function [] = cafa_driver_eval(config_info)
 % See Also
 % --------
 %[>]cafa_driver_preeval.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 1
     error('cafa_driver_eval:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'config_info' {{{
-  validateattributes(config_info, {'char', 'struct'}, {'nonempty'}, '', 'config_info', 1);
-
-  if ischar(config_info)
-    config = cafa_parse_config(config_info);
-    % save the configuration file for future reference
-    copyfile(config_info, fullfile(config.eval_dir, 'eval_config.job'));
-  elseif isstruct(config_info)
-    config = config_info;
-  else
-    error('cafa_driver_eval:InputErr', 'Unknown data type of ''config_info''');
-  end
-  % }}}
+  % cfg
+  config = cafa_parse_config(cfg);
   % }}}
 
   % evaluation {{{
@@ -94,7 +79,7 @@ function [] = cafa_driver_eval(config_info)
       pred_file = fullfile(local_cfg.pred_dir, strcat(mid, '.mat'));
       eval_file = fullfile(local_cfg.eval_dir, strcat(mid, '.mat'));
 
-      eval_single(local_cfg, mid, prev_file, pred_file, eval_file);
+      loc_eval_single(local_cfg, mid, prev_file, pred_file, eval_file);
     end
   else
     % serial evaluation for small jobs
@@ -105,14 +90,14 @@ function [] = cafa_driver_eval(config_info)
       pred_file = fullfile(config.pred_dir, strcat(mid, '.mat'));
       eval_file = fullfile(config.eval_dir, strcat(mid, '.mat'));
 
-      eval_single(config, mid, prev_file, pred_file, eval_file);
+      loc_eval_single(config, mid, prev_file, pred_file, eval_file);
     end
   end
   % }}}
 return
 
-% function: eval_single {{{
-function [] = eval_single(config, mid, prev_file, pred_file, eval_file)
+% function: loc_eval_single {{{
+function [] = loc_eval_single(config, mid, prev_file, pred_file, eval_file)
   fprintf('Evaluating [%s]\n', mid);
 
   % NOTE: pre-evaluated structure: {{{
@@ -231,4 +216,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 17 Mar 2016 01:36:32 PM E
+% Last modified: Mon 23 May 2016 12:10:37 PM E

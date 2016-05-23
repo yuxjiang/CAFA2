@@ -1,6 +1,5 @@
 function [idx] = pfp_roottermidx(ont)
 %PFP_ROOTTERMIDX Root term index
-% {{{
 %
 % [idx] = PFP_ROOTTERMIDX(ont);
 %
@@ -9,8 +8,7 @@ function [idx] = pfp_roottermidx(ont)
 % Input
 % -----
 % [struct]
-% ont:  The ontology structure.
-%       See pfp_ontbuild.m
+% ont:  The ontology structure. See pfp_ontbuild.m
 %
 % Output
 % ------
@@ -20,16 +18,14 @@ function [idx] = pfp_roottermidx(ont)
 % See Also
 % --------
 %[>]pfp_ontbuild.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 1
     error('pfp_roottermidx:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'ont' {{{
+  % ont
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % }}}
   % }}}
 
   % root term index {{{
@@ -41,4 +37,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sat 09 Jan 2016 10:05:14 AM C
+% Last modified: Mon 23 May 2016 06:50:42 PM E

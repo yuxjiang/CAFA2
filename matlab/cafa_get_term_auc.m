@@ -1,6 +1,5 @@
 function [aucs] = cafa_get_term_auc(aucs, mids)
 %CAFA_GET_TERM_AUC CAFA get term AUC
-% {{{
 %
 % [aucs] = CAFA_GET_TERM_AUC(aucs, mids);
 %
@@ -9,43 +8,42 @@ function [aucs] = cafa_get_term_auc(aucs, mids)
 % Input
 % -----
 % [cell]
-% aucs:     The collected 'term_auc' structures, which has the following fields
-%
-%           [char]    .id     (Internel) model of the model
-%           [cell]    .term   1-by-m, term ID list
-%           [double]  .auc    1-by-m, AUC per term
-%
-%           See cafa_collect.m
+% aucs: The collected 'term_auc' structures, which has the following fields
+%       .id   [char]    The model name, used for naming files.
+%       .term [cell]    1-by-m, term names. ('m': the number of terms)
+%       .auc  [double]  1-by-m, AUC estimates.
+%       .mode [double]  The evaluation mode, passed through from input.
+%       .npos [double]  The number of positive annotations cutoff, passed
+%                       through from input.
+%       See cafa_eval_term_auc.m, cafa_collect.m
 %
 % [cell]
-% mids:     1-by-k method name.
+% mids: 1-by-k method name.
 %
 % Output
 % ------
 % [cell]
-% aucs:     The filtered cell 'aucs'.
+% aucs: The filtered cell 'aucs'.
 %
 % Dependency
 % ----------
+%[>]cafa_eval_term_auc.m
 %[>]cafa_collect.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 2
     error('cafa_get_term_auc:InputCount', 'Expected 2 input.');
   end
 
-  % check the 1st input 'aucs' {{{
+  % aucs
   validateattributes(aucs, {'cell'}, {'nonempty'}, '', 'aucs', 1);
   n = numel(aucs);
-  % }}}
 
-  % check the 2nd input 'mids' {{{
+  % mids
   validateattributes(mids, {'cell'}, {'nonempty'}, '', 'mids', 2);
   % }}}
-  % }}}
 
-  %filtering {{{
+  % filtering {{{
   ids = cell(1, n);
   for i = 1 : n
     ids{i} = aucs{i}.id;
@@ -62,4 +60,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 15 Sep 2015 01:44:43 PM E
+% Last modified: Mon 23 May 2016 06:05:50 PM E

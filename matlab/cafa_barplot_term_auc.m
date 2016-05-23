@@ -1,6 +1,5 @@
 function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 %CAFA_BARPLOT_TERM_AUC CAFA barplot term-centric AUC
-% {{{
 %
 % [] = CAFA_BARPLOT_TERM_AUC(pfile, pttl, data, bsl_data, yaxis);
 %
@@ -20,25 +19,12 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 % [cell]
 % data:     The data containing AUCs and other information to plot
 %           Each cell has the thing needed for plotting a single curve.
-%
-%           [double]
-%           .auc_mean scalar, "bar height".
-%
-%           [double]
-%           .auc_q05  scalar, 5% quantiles.
-%
-%           [double]
-%           .auc_q95  scalar, 95% quantiles.
-%
-%           [double]
-%           .auc_std    scalar, standard deviation
-%
-%           [double]
-%           .auc_ste    scalar, standard error (std / sqrt(N))
-%
-%           [char]
-%           .tag      tag of the model.
-%
+%           .auc_mean [double]  scalar, "bar height".
+%           .auc_q05  [double]  scalar, 5% quantiles.
+%           .auc_q95  [double]  scalar, 95% quantiles.
+%           .auc_std  [double]  scalar, standard deviation
+%           .auc_ste  [double]  scalar, standard error (std / sqrt(N))
+%           .tag      [char]    tag of the model.
 %           See cafa_sel_top_term_auc.m
 %
 % [cell]
@@ -60,7 +46,6 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 %[>]cafa_sel_top_term_auc.m
 %[>]embed_canvas.m
 %[>]adapt_yaxis.m
-% }}}
 
   % check inputs {{{
   if nargin < 4 || nargin > 5
@@ -71,7 +56,7 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
     yaxis = [];
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -83,30 +68,25 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'data' {{{
+  % data
   validateattributes(data, {'cell'}, {'nonempty'}, '', 'data', 3);
   n = numel(data);
-  % }}}
 
-  % check the 4th input 'bsl_data' {{{
+  % bsl_data
   validateattributes(bsl_data, {'cell'}, {'numel', 2}, '', 'bsl_data', 4);
   m = numel(bsl_data);
-  % }}}
 
-  % check the 5th input 'yaxis' {{{
+  % yaxis
   validateattributes(yaxis, {'double'}, {}, '', 'yaxis', 5);
   if isempty(yaxis)
     is_adaptive = true;
   else
     is_adaptive = false;
   end
-  % }}}
   % }}}
 
   % preparation, find ylim {{{
@@ -260,4 +240,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 29 Feb 2016 04:19:09 PM E
+% Last modified: Mon 23 May 2016 12:07:25 PM E

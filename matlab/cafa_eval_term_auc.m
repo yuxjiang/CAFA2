@@ -1,6 +1,5 @@
 function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 %CAFA_EVAL_TERM_AUC CAFA evaluation term-centric AUC
-% {{{
 %
 % [ev] = CAFA_EVAL_TERM_AUC(id, bm, pred, oa, ev_mode, varargin);
 %
@@ -18,8 +17,7 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 % pred:     The prediction structure.
 %
 % [struct]
-% oa:       The reference structure.
-%           See pfp_oabuild.m
+% oa:       The reference structure. See pfp_oabuild.m.
 %
 % [char]
 % ev_mode:  The mode of evaluation.
@@ -30,7 +28,7 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 % (optional) Name-Value pairs
 % [double]
 % 'tau'     An array of thresholds.
-%           default: 0.00 : 0.01 : 1.00 (i.e. 0.00, 0.01, ..., 0.99, 1.00)
+%           default: 0.00:0.01:1.00 (i.e. 0.00, 0.01, ..., 0.99, 1.00)
 %
 % [double]
 % 'npos'    The number of positive annotations for a term to be evaluated
@@ -41,21 +39,12 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 % ------
 % [struct]
 % ev: The AUC results per term:
-%
-%     [char]
-%     .id     The model name, used for naming files.
-%
-%     [cell of char]
-%     .term   1-by-m, term names. ('m': the number of terms)
-%
-%     [double]
-%     .auc    1-by-m, AUC estimates.
-%
-%     [double]
-%     .mode   The evaluation mode, passed through from input.
-%
-%     [double]
-%     .npos   The number of positive annotations cutoff, passed through from input.
+%     .id   [char]    The model name, used for naming files.
+%     .term [cell]    1-by-m, term names. ('m': the number of terms)
+%     .auc  [double]  1-by-m, AUC estimates.
+%     .mode [double]  The evaluation mode, passed through from input.
+%     .npos [double]  The number of positive annotations cutoff, passed through
+%                     from input.
 %
 % Dependency
 % ----------
@@ -63,39 +52,36 @@ function [ev] = cafa_eval_term_auc(id, bm, pred, oa, ev_mode, varargin)
 %[>]pfp_predproj.m
 %[>]pfp_oaproj.m
 %[>]get_auc.m
+%
+% See Also
+% --------
 %[>]pfp_oabuild.m
-% }}}
 
   % check inputs {{{
   if nargin < 5
     error('cafa_eval_term_auc:InputCount', 'Expected >= 5 inputs.');
   end
 
-  % check the 1st input 'id' {{{
+  % id
   validateattributes(id, {'char'}, {'nonempty'}, '', 'id', 1);
-  % }}}
 
-  % check the 2nd input 'bm' {{{
+  % bm
   validateattributes(bm, {'cell', 'char'}, {'nonempty'}, '', 'bm', 2);
   if ischar(bm) % load the benchmark if a file name is given
     bm = pfp_loaditem(bm, 'char');
   end
-  % }}}
 
-  % check the 3rd input 'pred' {{{
+  % pred
   validateattributes(pred, {'struct'}, {'nonempty'}, '', 'pred', 3);
-  % }}}
 
-  % check the 4th input 'oa' {{{
+  % oa
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 4);
   if numel(pred.ontology.term) ~= numel(oa.ontology.term) || ~all(strcmp({pred.ontology.term.id}, {oa.ontology.term.id}))
     error('cafa_eval_term_auc:InputErr', 'Ontology mismatch.');
   end
-  % }}}
 
-  % check the 5th input 'ev_mode' {{{
+  % ev_mode
   ev_mode = validatestring(ev_mode, {'1', 'full', '2', 'partial'}, '', 'ev_mode', 5);
-  % }}}
   % }}}
 
   % parse and check extra inputs {{{
@@ -160,4 +146,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 02:06:00 PM E
+% Last modified: Mon 23 May 2016 06:07:19 PM E

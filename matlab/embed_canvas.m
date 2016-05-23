@@ -1,10 +1,9 @@
 function [h] = embed_canvas(h, width, height)
 %EMBED_CANVAS Embed canvas
-% {{{
 %
 % [h] = EMBED_CANVAS(h, width, height);
 %
-%   Embed a figure (thru handle) into the center of a canvas.
+%   Embeds a figure (thru handle) into the center of a canvas with given size.
 %
 % Input
 % -----
@@ -21,24 +20,20 @@ function [h] = embed_canvas(h, width, height)
 % ------
 % [handle]
 % h:      The modified handle of the figure.
-% }}}
 
   % check inputs {{{
   if nargin ~= 3
     error('embed_canvas:InputCount', 'Expected 3 inputs.');
   end
 
-  % check the 1st input 'h' {{{
+  % h
   validateattributes(h, {'handle'}, {'nonempty'}, '', 'h', 1);
-  % }}}
 
-  % check the 2nd input 'width' {{{
+  % width
   validateattributes(width, {'double'}, {'positive'}, '', 'width', 2);
-  % }}}
 
-  % check the 3rd input 'height' {{{
+  % height
   validateattributes(height, {'double'}, {'positive'}, '', 'height', 3);
-  % }}}
   % }}}
 
   % change settings {{{
@@ -54,4 +49,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 07 Jul 2015 02:59:22 PM E
+% Last modified: Sun 22 May 2016 02:31:25 PM E

@@ -1,6 +1,5 @@
 function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
 %CAFA_PLOT_SEQ_RMCURVE CAFA plot sequence-centric RU-MI curves
-% {{{
 %
 % [] = CAFA_PLOT_SEQ_RMCURVE(pttl, data, bsl_data);
 %
@@ -24,17 +23,12 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
 %
 % [cell]
 % data:     The data containing curves and other information to plot.
-%           Each cell has the thing needed for plotting a single curve.
-%
-%           [double]
-%           .curve      n x 2, points on the curve
-%
-%           [double]
-%           .opt_point  1 x 2, the optimal point (corresp. to Smin)
-%
-%           [char]
-%           .tag        for the legend of the plot
-%
+%           Each cell has these fields needed for plotting a single curve.
+%           .curve      [double]  n x 2, points on the curve.
+%           .opt_point  [double]  1 x 2, the optimal point (corresp. to Smin).
+%           .tag        [char]    the legend of the plot.
+%           .pi_name    [char]    name of the PI.
+%           .color      [double]  assigned color (1-by-3 RGB tuple).
 %           See cafa_sel_top_seq_rmcurve.m
 %
 % [cell]
@@ -47,16 +41,18 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
 %
 % Dependency
 % ----------
-%[>]cafa_sel_top_seq_rmcurve.m
 %[>]embed_canvas.m
-% }}}
+%
+% See Also
+% --------
+%[>]cafa_sel_top_seq_rmcurve.m
 
   % check inputs {{{
   if nargin ~= 4
     error('cafa_plot_seq_rmcurve:InputCount', 'Expected 4 inputs.');
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -68,20 +64,16 @@ function [] = cafa_plot_seq_rmcurve(pfile, pttl, data, bsl_data)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'data' {{{
+  % data
   validateattributes(data, {'cell'}, {'nonempty'}, '', 'data', 3);
   n = numel(data);
-  % }}}
 
-  % check the 4th input 'bsl_data' {{{
+  % bsl_data
   validateattributes(bsl_data, {'cell'}, {'numel', 2}, '', 'bsl_data', 4);
-  % }}}
   % }}}
 
   % collect data {{{
@@ -210,4 +202,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 01 Sep 2015 04:05:58 PM E
+% Last modified: Mon 23 May 2016 05:19:44 PM E

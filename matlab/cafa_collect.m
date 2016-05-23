@@ -1,12 +1,11 @@
 function [result] = cafa_collect(res_dir, varname, models)
 %CAFA_COLLECT CAFA collect
-% {{{
 %
 % [result] = CAFA_COLLECT(res_dir, varname);
 %
 %   Collects variables from each .mat file under the given folder.
 %
-% [result] = CAFA_COLLECT(res_dir, varname);
+% [result] = CAFA_COLLECT(res_dir, varname, models);
 %
 %   Collects variables from specified .mat files under the given folder.
 %
@@ -28,11 +27,10 @@ function [result] = cafa_collect(res_dir, varname, models)
 % Output
 % ------
 % [cell]
-% result:   A cell array of result.
-% }}}
+% result: A cell array of result.
 
   % check inputs {{{
-  if nargin < 2 || nargin > 3
+  if nargin ~= 2 && nargin ~= 3
     error('cafa_collect:InputCount', 'Expected 2 or 3 inputs.');
   end
 
@@ -40,21 +38,18 @@ function [result] = cafa_collect(res_dir, varname, models)
     models = {};
   end
 
-  % check the 1st input 'res_dir' {{{
+  % res_dir
   validateattributes(res_dir, {'char'}, {'nonempty'}, '', 'res_dir', 1);
   if ~exist(res_dir, 'dir')
     error('cafa_collect:NoDir', 'Result folder doesn''t exist.');
   end
   res_dir = regexprep([res_dir, '/'], '//', '/');
-  % }}}
 
-  % check the 2nd input 'varname' {{{
+  % varname
   validateattributes(varname, {'char'}, {'nonempty'}, '', 'varname', 2);
-  % }}}
 
-  % check the 3rd input 'models' {{{
+  % models
   validateattributes(models, {'cell'}, {}, '', 'models', 3);
-  % }}}
   % }}}
 
   % collect data {{{
@@ -88,4 +83,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 11 Jun 2015 03:55:14 PM E
+% Last modified: Mon 23 May 2016 06:34:41 PM E

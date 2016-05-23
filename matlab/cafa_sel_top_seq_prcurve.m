@@ -1,6 +1,5 @@
 function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, isdump, rmcurves)
 %CAFA_SEL_TOP_SEQ_FMAX CAFA select top sequence-centric Fmax
-% {{{
 %
 % [sel, bsl] = CAFA_SEL_TOP0_SEQ_FMAX(K, prcurves, naive, blast, reg, isdump);
 %
@@ -24,8 +23,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, i
 %           [double]    [1-by-k]    .tau
 %           [double]    [1-by-1]    .ncovered
 %           [double]    [1-by-1]    .coverage
-%
-%           See cafa_eval_seq_prcurve.m
+%           See cafa_eval_seq_curve.m, cafa_collect.m
 %
 % [char]
 % naive:    The model id of the naive baseline. E.g. BN4S
@@ -66,8 +64,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, i
 %           [double]    [1-by-k]    .tau
 %           [double]    [1-by-1]    .ncovered
 %           [double]    [1-by-1]    .coverage
-%
-%           See cafa_eval_seq_rmcurve.m
+%           See cafa_eval_seq_curve.m
 %
 % Output
 % ------
@@ -90,10 +87,12 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, i
 % ----------
 %[>]pfp_fmaxc.m
 %[>]pfp_sminc.m
-%[>]cafa_collect.m
 %[>]cafa_team_register.m
+%
+% See Also
+% --------
+%[>]cafa_collect.m
 %[>]cafa_eval_seq_curve.m
-% }}}
 
   % check inputs {{{
   if nargin < 6 || nargin > 7
@@ -104,42 +103,35 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, i
     rmcurves = {};
   end
 
-  % check the 1st input 'K' {{{
+  % K
   validateattributes(K, {'double'}, {'nonnegative', 'integer'}, '', 'K', 1);
-  % }}}
 
-  % check the 2nd input 'prcurves' {{{
+  % prcurves
   validateattributes(prcurves, {'cell'}, {'nonempty'}, '', 'prcurves', 2);
-  % }}}
 
-  % check the 3rd input 'naive' {{{
+  % naive
   validateattributes(naive, {'char'}, {}, '', 'naive', 3);
-  % }}}
 
-  % check the 4rd input 'blast' {{{
+  % blast
   validateattributes(blast, {'char'}, {}, '', 'blast', 4);
-  % }}}
 
-  % check the 5th input 'reg' {{{
+  % reg
   validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 5);
   [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_register(reg);
-  % }}}
 
-  % check the 6th input 'isdump' {{{
+  % isdump
   validateattributes(isdump, {'logical'}, {'nonempty'}, '', 'isdump', 6);
   if isdump
     disp_name = dump_name;
   end
-  % }}}
 
-  % check the 7th input 'rmcurves' {{{
+  % rmcurves
   validateattributes(rmcurves, {'cell'}, {}, '', 'rmcurves', 7);
   if isempty(rmcurves)
     do_alt = false;
   else
     do_alt = true;
   end
-  % }}}
   % }}}
 
   % clean up, and calculate Fmax {{{
@@ -165,14 +157,14 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, i
   for i = 1 : n
     index = find(strcmp(team_id, prcurves{i}.id));
 
-    % remove points that are strickly less that another one {{{
-    % (pr(i), rc(i)) is strickly less than (pr(j), rc(j)), if
-    % pr(i) < pr(j) and rc(i) < rc(j).
-    prcurves{i} = remove_points(prcurves{i});
+    % remove points that are strickly worse that another one {{{
+    % (rc(i), pr(i)) is strickly less than (rc(j), pr(j)), if
+    % rc(i) < rc(j) and pr(i) < pr(j).
+    prcurves{i} = loc_remove_points(prcurves{i});
     % }}}
 
     % remove the point on the curve that corresp. to tau = 0.00
-    prcurves{i} = remove_tau0_point(prcurves{i});
+    prcurves{i} = loc_remove_tau0_point(prcurves{i});
 
     if strcmp(prcurves{i}.id, naive)
       bsl{1}.curve     = prcurves{i}.curve;
@@ -180,7 +172,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, i
       bsl{1}.opt_point = pt;
 
       if do_alt
-        bsl{1}.alt_point = find_alt_point(prcurves{i}, rmcurves{i});
+        bsl{1}.alt_point = loc_find_alt_point(prcurves{i}, rmcurves{i});
       end
 
       bsl{1}.tag     = sprintf('%s (F=%.2f,C=%.2f)', disp_name{index}, fmax, prcurves{i}.coverage);
@@ -192,7 +184,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, i
       bsl{2}.opt_point = pt;
 
       if do_alt
-        bsl{2}.alt_point = find_alt_point(prcurves{i}, rmcurves{i});
+        bsl{2}.alt_point = loc_find_alt_point(prcurves{i}, rmcurves{i});
       end
 
       bsl{2}.tag     = sprintf('%s (F=%.2f,C=%.2f)', disp_name{index}, fmax, prcurves{i}.coverage);
@@ -225,7 +217,7 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, i
       qld{kept}.opt_point = pt;
 
       if do_alt
-        qld{kept}.alt_point = find_alt_point(prcurves{i}, rmcurves{i});
+        qld{kept}.alt_point = loc_find_alt_point(prcurves{i}, rmcurves{i});
       end
 
       qld{kept}.disp_name = disp_name{index};
@@ -269,8 +261,8 @@ function [sel, bsl] = cafa_sel_top_seq_prcurve(K, prcurves, naive, blast, reg, i
   % }}}
 return
 
-% function: remove_points {{{
-function [pr] = remove_points(pr)
+% function: loc_remove_points {{{
+function [pr] = loc_remove_points(pr)
   precision = pr.curve(:, 1);
   recall    = pr.curve(:, 2);
 
@@ -291,8 +283,8 @@ function [pr] = remove_points(pr)
 return
 % }}}
 
-% function: remove_tau0_point {{{
-function [pr] = remove_tau0_point(pr)
+% function: loc_remove_tau0_point {{{
+function [pr] = loc_remove_tau0_point(pr)
   index = find(pr.tau == 0.00);
   if ~isempty(index)
     pr.curve(index, :) = [];
@@ -301,8 +293,8 @@ function [pr] = remove_tau0_point(pr)
 return
 % }}}
 
-% function: find_alt_point {{{
-function [point] = find_alt_point(prcurve, rmcurve)
+% function: loc_find_alt_point {{{
+function [point] = loc_find_alt_point(prcurve, rmcurve)
   [~, ~, tau] = pfp_sminc(rmcurve.curve, rmcurve.tau);
   [~, index]  = min(abs(prcurve.tau - tau));
   point = prcurve.curve(index, :);
@@ -313,4 +305,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 07 Apr 2016 04:27:27 PM E
+% Last modified: Mon 23 May 2016 04:37:32 PM E

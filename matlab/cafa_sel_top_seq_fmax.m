@@ -1,6 +1,5 @@
 function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, reg, isdump)
 %CAFA_SEL_TOP_SEQ_FMAX CAFA select top sequence-centric Fmax
-% {{{
 %
 % [sel, bsl, info] = CAFA_SEL_TOP_SEQ_FMAX(fmaxs, naive, blast, reg, isdump);
 %
@@ -22,8 +21,7 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, reg, i
 %         [double]    [B-by-1]    .tau_bst
 %         [double]    [B-by-1]    .ncovered_bst
 %         [double]    [B-by-1]    .coverage_bst
-%
-%         See cafa_eval_seq_fmax_bst.m
+%         See cafa_eval_seq_fmax_bst.m, cafa_collect.m
 %
 % [char]
 % naive:  The method id of the naive baseline. E.g. BN4S
@@ -78,42 +76,39 @@ function [sel, bsl, info] = cafa_sel_top_seq_fmax(K, fmaxs, naive, blast, reg, i
 %
 % Dependency
 % ----------
-%[>]cafa_eval_seq_fmax_bst.m
 %[>]cafa_team_register.m
-% }}}
+%
+% See Also
+% --------
+%[>]cafa_collect.m
+%[>]cafa_eval_seq_fmax_bst.m
 
   % check inputs {{{
   if nargin ~= 6
     error('cafa_sel_top_seq_fmax:InputCount', 'Expected 6 inputs.');
   end
 
-  % check the 1st input 'K' {{{
+  % K
   validateattributes(K, {'double'}, {'nonnegative'}, '', 'K', 1);
-  % }}}
 
-  % check the 2nd input 'fmaxs' {{{
+  % fmaxs
   validateattributes(fmaxs, {'cell'}, {'nonempty'}, '', 'fmaxs', 2);
-  % }}}
 
-  % check the 3rd input 'naive' {{{
+  % naive
   validateattributes(naive, {'char'}, {}, '', 'naive', 3);
-  % }}}
 
-  % check the 4rd input 'blast' {{{
+  % blast
   validateattributes(blast, {'char'}, {}, '', 'blast', 4);
-  % }}}
 
-  % check the 5th input 'reg' {{{
+  % reg
   validateattributes(reg, {'char'}, {}, '', 'reg', 5);
   [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_register(reg);
-  % }}}
 
-  % check the 6th input 'isdump' {{{
+  % isdump
   validateattributes(isdump, {'logical'}, {'nonempty'}, '', 'isdump', 6);
   if isdump
     disp_name = dump_name;
   end
-  % }}}
   % }}}
 
   % clean up and filter models {{{
@@ -258,4 +253,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 07 Apr 2016 04:27:03 PM E
+% Last modified: Mon 23 May 2016 04:45:28 PM E

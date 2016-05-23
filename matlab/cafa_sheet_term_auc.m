@@ -1,6 +1,5 @@
 function [] = cafa_sheet_term_auc(sfile, aucs, reg, isdump, anonymous, sort_mid)
 %CAFA_SHEET_TERM_AUC CAFA sheet term-centric AUC
-% {{{
 %
 % [] = CAFA_SHEET_TERM_AUC(sfile, aucs, reg, anonymous, sort_mid);
 %
@@ -21,7 +20,6 @@ function [] = cafa_sheet_term_auc(sfile, aucs, reg, isdump, anonymous, sort_mid)
 %             [char]      [1-by-k]    .id
 %             [cell]      [1-by-m]    .term
 %             [double]    [1-by-m]    .auc
-%
 %             See cafa_eval_term_auc.m
 %
 % [char]
@@ -62,8 +60,10 @@ function [] = cafa_sheet_term_auc(sfile, aucs, reg, isdump, anonymous, sort_mid)
 % Dependency
 % ----------
 %[>]cafa_team_register.m
+%
+% See Also
+% --------
 %[>]cafa_eval_term_auc.m
-% }}}
 
   % check inputs {{{
   if nargin < 5 || nargin > 6
@@ -74,37 +74,31 @@ function [] = cafa_sheet_term_auc(sfile, aucs, reg, isdump, anonymous, sort_mid)
     sort_mid = 'BB4S'; % BLAST trained on SwissProt 2014
   end
 
-  % check the 1st input 'sfile' {{{
+  % sfile
   validateattributes(sfile, {'char'}, {'nonempty'}, '', 'sfile', 1);
   fout = fopen(sfile, 'w');
   if fout == -1
     error('cafa_sheet_term_auc:FileErr', 'Cannot open file.');
   end
-  % }}}
 
-  % check the 2nd input 'aucs' {{{
+  % aucs
   validateattributes(aucs, {'cell'}, {'nonempty'}, '', 'aucs', 2);
-  % }}}
 
-  % check the 3rd input 'reg' {{{
+  % reg
   validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 3);
   [team_id, ext_id, ~, team_type, disp_name, dump_name] = cafa_team_register(reg);
-  % }}}
 
-  % check the 4th input 'isdump' {{{
+  % isdump
   validateattributes(isdump, {'logical'}, {'nonempty'}, '', 'isdump', 4);
   if isdump
     disp_name = dump_name;
   end
-  % }}}
 
-  % check the 5th input 'anonymous' {{{
+  % anonymous
   validateattributes(anonymous, {'logical'}, {'nonempty'}, '', 'anonymous', 5);
-  % }}}
 
-  % check the 6th input 'sort_mid' {{{
+  % sort_mid
   validateattributes(sort_mid, {'char'}, {'nonempty'}, '', 'sort_mid', 6);
-  % }}}
   % }}}
 
   % prepare output {{{
@@ -117,11 +111,10 @@ function [] = cafa_sheet_term_auc(sfile, aucs, reg, isdump, anonymous, sort_mid)
     aucs{i}.eid  = ext_id{index};
     aucs{i}.team = disp_name{index};
 
-    % record the index of blast method for sorting {{{
+    % record the index of blast method for sorting
     if strcmp(aucs{i}.id, sort_mid) % before: if strcmpi('blast', aucs{i}.team)
       blast_index = i;
     end
-    % }}}
   end
   % }}}
 
@@ -190,4 +183,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 17 Mar 2016 01:19:37 PM E
+% Last modified: Mon 23 May 2016 03:54:33 PM E

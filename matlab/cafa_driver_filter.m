@@ -1,6 +1,5 @@
 function [] = cafa_driver_filter(idir, odir, bm)
 %CAFA_DRIVER_FILTER CAFA driver filter
-% {{{
 %
 % [] = CAFA_DRIVER_FILTER(idir, odir, bm);
 %
@@ -25,27 +24,23 @@ function [] = cafa_driver_filter(idir, odir, bm)
 % ----------
 %[>]pfp_loaditem.m
 %[>]cafa_filter.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 3
     error('cafa_driver_filter:InputCount', 'Expected 3 inputs.');
   end
 
-  % check the 1st input 'idir' {{{
+  % idir
   validateattributes(idir, {'char'}, {'nonempty'}, '', 'idir', 1);
-  % }}}
 
-  % check the 2nd input 'odir' {{{
+  % odir
   validateattributes(odir, {'char'}, {'nonempty'}, '', 'odir', 2);
-  % }}}
 
-  % check the 3rd input 'bm' {{{
+  % bm
   validateattributes(bm, {'char', 'cell'}, {'nonempty'}, '', 'bm', 3);
   if ischar(bm) % load the benchmark if a file name is given
     bm = pfp_loaditem(bm, 'char');
   end
-  % }}}
   % }}}
 
   % make sure <odir> exist {{{
@@ -69,4 +64,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 07 Mar 2016 11:00:42 AM E
+% Last modified: Sun 22 May 2016 06:28:16 PM E

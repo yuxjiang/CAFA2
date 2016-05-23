@@ -1,13 +1,12 @@
 function [pred] = pfp_naive(qseqid, oa)
 %PFP_NAIVE Naive function prediction
-% {{{
 %
 % [pred] = PFP_NAIVE(qseqid, oa);
 %
 %   Returns the naive function prediction.
 %
 %   The naive function prediction simply predicts a term (for all query
-%   sequences) as the frequency in the annotation database.
+%   sequences) with the frequency in an annotation database.
 %
 % Note
 % ----
@@ -26,36 +25,26 @@ function [pred] = pfp_naive(qseqid, oa)
 % Output
 % ------
 % [struct]
-% pred: The naive prediction structure, having the following fields:
-%       [cell]
-%       .object     A cell of (char) query ID list.
-%
-%       [struct]
-%       .ontology   the ontology structure
-%
-%       [double and sparse]
-%       .score      The scoring matrix.
-%
-%       [char]
-%       .date
+% pred: The naive prediction structure.
+%       .object   [cell]    query ID list
+%       .ontology [struct]  the ontology structure
+%       .score    [double]  predicted association scores
+%       .date     [char]
 %
 % See Also
 % --------
 %[>]pfp_oabuild.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 2
     error('pfp_naive:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st input 'qseqid' {{{
+  % qseqid
   validateattributes(qseqid, {'cell'}, {'nonempty'}, '', 'qseqid', 1);
-  % }}}
 
-  % check the 2nd input 'oa' {{{
+  % oa
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 2);
-  % }}}
   % }}}
 
   % prepare for the output {{{
@@ -74,4 +63,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 06 Mar 2016 05:55:17 PM E
+% Last modified: Sun 22 May 2016 04:15:16 PM E

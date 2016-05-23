@@ -1,6 +1,5 @@
 function [] = cafa_save(pred, ofile, limit)
 %CAFA_SAVE CAFA save
-% {{{
 %
 % [] = CAFA_SAVE(pred, ofile);
 %
@@ -14,31 +13,18 @@ function [] = cafa_save(pred, ofile, limit)
 % Input
 % -----
 % [struct]
-% pred:   The prediction structure
+% pred:   The prediction structure.
 %         (required)
-%         [cell]
-%         .object     target id list
-%
-%         [struct]
-%         .ontology   the ontology structure
-%
-%         [double]
-%         .score      predicted score matrix
-%
+%         .object   [cell]    target id list
+%         .ontology [struct]  the ontology structure
+%         .score    [double]  predicted score matrix
 %         (optional)
-%         [char]
-%         .author     string, author/team name
-%
-%         [double]
-%         .model      double, model ID, e.g. 1, 2, etc.
-%
-%         [cell]
-%         .keywords   cell, an cell array of keywords
+%         .author   [char]    string, author/team name
+%         .model    [double]  double, model ID, e.g. 1, 2, etc.
+%         .keywords [cell]    cell, an cell array of keywords
 %
 % [char]
-% ofile:  The output file name.
-%
-%         Format:
+% ofile:  The output file name. Format:
 %         <target id> <term id> <score>
 %
 % (optional)
@@ -49,10 +35,9 @@ function [] = cafa_save(pred, ofile, limit)
 % Output
 % ------
 % None.
-% }}}
 
   % check inputs {{{
-  if nargin < 2 || nargin > 3
+  if nargin ~= 2 && nargin ~= 3
     error('cafa_save:InputCount', 'Expected 2 or 3 inputs.');
   end
 
@@ -60,27 +45,24 @@ function [] = cafa_save(pred, ofile, limit)
     limit = 1500;
   end
 
-  % check the 1st input 'pred' {{{
+  % pred
   validateattributes(pred, {'struct'}, {'nonempty'}, '', 'pred', 1);
-  % check the 1st input 'pred' }}}
 
-  % check the 2nd input 'ofile' {{{
+  % ofile
   validateattributes(ofile, {'char'}, {'nonempty'}, '', 'ofile', 2);
   fid = fopen(ofile, 'w');
   if fid == -1
     error('cafa_save:InputErr', 'cannot open file [%s].', ofile);
   end
-  % check the 2nd input 'ofile' }}}
 
-  % check the 3rd input 'limit' {{{
+  % limit
   validateattributes(limit, {'double'}, {'>', 0}, '', 'limit', 3);
-  % check the 3rd input 'limit' }}}
-  % check inputs }}}
+  % }}}
 
   % normalize prediction {{{
   max_score = max(max(pred.score));
   pred.score = pred.score ./ max_score;
-  % normalize prediction }}}
+  % }}}
 
   % output header {{{
   has_header = false;
@@ -105,7 +87,7 @@ function [] = cafa_save(pred, ofile, limit)
     fprintf(fid, '\n');
     has_header = true;
   end
-  % output header }}}
+  % }}}
 
   % optional accuracy {{{
   if isfield(pred, 'accuracy')
@@ -113,7 +95,7 @@ function [] = cafa_save(pred, ofile, limit)
       fprintf(fid, 'ACCURACY %d PR=%.2f; RC=%.2f\n', i, pred.accuracy(i, 1), pred.accuracy(i, 2));
     end
   end
-  % optional accuracy }}}
+  % }}}
 
   % save prediction scores {{{
   for i = 1 : numel(pred.object)
@@ -139,11 +121,11 @@ function [] = cafa_save(pred, ofile, limit)
   end
 
   fclose(fid);
-  % save prediction scores }}}
+  % }}}
 return
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:03:13 AM E
+% Last modified: Mon 23 May 2016 02:30:14 PM E

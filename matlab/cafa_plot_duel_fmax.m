@@ -1,6 +1,5 @@
 function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
 %CAFA_PLOT_DUEL_FMAX CAFA plot duel Fmax
-% {{{
 %
 % [] = CAFA_PLOT_DUEL_FMAX(pttl, data, bsl_data);
 %
@@ -15,20 +14,13 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
 %
 % [struct]
 % data:     The data structure containing information for plot.
-%           [cell]
-%           .group1   1-by-n tags (will not be show in the plot for now)
-%
-%           [cell]
-%           .group2   1-by-m tags (will not be show in the plot for now)
-%
-%           [double]
-%           .winner   n-by-m (usually n = m = 5), indicates which model wins.
-%                     possible value: 1 or 2
-%                     winner(i, j) shows the results of group1(i) v.s. group2(j)
-%
-%           [double]
-%           .pvalue   n-by-m, contains the P-value
-%
+%           .group1 [cell]    1-by-n tags (will not be show in the plot for now)
+%           .group2 [cell]    1-by-m tags (will not be show in the plot for now)
+%           .winner [double]  n-by-m (usually n = m = 5), indicates which model
+%                             wins, winner(i, j) shows the results of group1(i)
+%                             v.s. group2(j). Possible value: 1 or 2 .
+%           .margin [double]  n-by-m, winning margin.
+%           .nwins  [double]  n-by-m, how many time the winner wins.
 %           See cafa_duel_seq_fmax.m
 %
 % [cell]
@@ -43,7 +35,6 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
 %
 % [double]
 % yrange:   [ymin, ymax] of the bar plot of baselines.
-%           --------
 %           recommended for mfo: [0.2, 0.7]
 %           recommended for bpo: [0.0, 0.5]
 %
@@ -55,14 +46,13 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
 % --------
 %[>]cafa_duel_seq_fmax.m
 %[>]cafa_eval_seq_fmax_bst.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 4
     error('cafa_plot_duel_fmax:InputCount', 'Expected 4 inputs.');
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -74,21 +64,17 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'data' {{{
+  % data
   validateattributes(data, {'struct'}, {'nonempty'}, '', 'data', 2);
   n = numel(data.group1);
   m = numel(data.group2);
-  % }}}
 
-  % check the 3rd input 'bsl_data' {{{
+  % bsl_data
   validateattributes(bsl_data, {'cell'}, {'numel', 4}, '', 'bsl_data', 3);
-  % }}}
 
-  % check the 4th input 'yrange' {{{
+  % yrange
   validateattributes(yrange, {'double'}, {'numel', 2}, '', 'yrange', 4);
-  % }}}
   % }}}
 
   % setting {{{
@@ -155,7 +141,7 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
       else
         col = [1, 1, 1] - ratio * ([1, 1, 1] - color2);
       end
-      draw_rect([ll_y(j), ll_x(n+1-i), bs_main-padding, bs_main-padding], col, value);
+      loc_draw_rect([ll_y(j), ll_x(n+1-i), bs_main-padding, bs_main-padding], col, value);
     end
   end
   % }}}
@@ -166,7 +152,7 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   ax_cbox.YLim    = [0, 1];
   ax_cbox.Visible = 'off';
 
-  draw_colorbox([0, 0, 1, .7], color1, color2);
+  loc_draw_colorbox([0, 0, 1, .7], color1, color2);
   text(0.0, 1.0, sprintf('%.1f', -margin_max), ...
   'FontSize', 12, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
   text(0.5, 1.0, sprintf('%.1f', 0), ...
@@ -177,40 +163,40 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
 
   % plot Naive comparison {{{
   ax_naive = axes('Position', [0.55, 0.55, 0.4, 0.35]);
-  res = bsl_info(bsl_data{1}, bsl_data{2}, margin_max, color1, color2);
+  res = loc_bsl_info(bsl_data{1}, bsl_data{2}, margin_max, color1, color2);
 
-  draw_bracket([1.5, bar_ymax-0.5*bs_bsl/xyratio], 0.5, 0.05);
-  draw_rect([0.75, 0, 0.5, mean(bsl_data{1}.fmax_bst)], color1, '');
-  draw_rect([1.75, 0, 0.5, mean(bsl_data{2}.fmax_bst)], color2, '');
-  draw_rect([ll_bsl(1), ll_bsl(2), bs_bsl, bs_bsl/2], res.col, res.value);
+  loc_draw_bracket([1.5, bar_ymax-0.5*bs_bsl/xyratio], 0.5, 0.05);
+  loc_draw_rect([0.75, 0, 0.5, mean(bsl_data{1}.fmax_bst)], color1, '');
+  loc_draw_rect([1.75, 0, 0.5, mean(bsl_data{2}.fmax_bst)], color2, '');
+  loc_draw_rect([ll_bsl(1), ll_bsl(2), bs_bsl, bs_bsl/2], res.col, res.value);
 
   text(bar_xmin-.1*bar_xrange, bar_ymax+.2*bar_yrange, 'B.', 'FontSize', 14, 'FontWeight', 'bold');
   text(2, bar_ymax, 'Naive', 'FontSize', 12, 'FontWeight', 'bold');
 
-  ax_naive.XLim         = [bar_xmin, bar_xmax];
-  ax_naive.YLim         = [bar_ymin, bar_ymax];
-  ax_naive.Box          = 'off';
-  ax_naive.XTick        = [1, 2];
-  ax_naive.XTickLabel   = {'2011', '2014'};
+  ax_naive.XLim       = [bar_xmin, bar_xmax];
+  ax_naive.YLim       = [bar_ymin, bar_ymax];
+  ax_naive.Box        = 'off';
+  ax_naive.XTick      = [1, 2];
+  ax_naive.XTickLabel = {'2011', '2014'};
   % }}}
 
   % plot BLAST comparison {{{
   ax_blast = axes('Position', [0.55, 0.05, 0.4, 0.35]);
-  res = bsl_info(bsl_data{3}, bsl_data{4}, margin_max, color1, color2);
+  res = loc_bsl_info(bsl_data{3}, bsl_data{4}, margin_max, color1, color2);
 
-  draw_bracket([1.5, bar_ymax-0.5*bs_bsl/xyratio], 0.5, 0.05);
-  draw_rect([0.75, 0, 0.5, mean(bsl_data{3}.fmax_bst)], color1, '');
-  draw_rect([1.75, 0, 0.5, mean(bsl_data{4}.fmax_bst)], color2, '');
-  draw_rect([ll_bsl(1), ll_bsl(2), bs_bsl, bs_bsl/xyratio], res.col, res.value);
+  loc_draw_bracket([1.5, bar_ymax-0.5*bs_bsl/xyratio], 0.5, 0.05);
+  loc_draw_rect([0.75, 0, 0.5, mean(bsl_data{3}.fmax_bst)], color1, '');
+  loc_draw_rect([1.75, 0, 0.5, mean(bsl_data{4}.fmax_bst)], color2, '');
+  loc_draw_rect([ll_bsl(1), ll_bsl(2), bs_bsl, bs_bsl/xyratio], res.col, res.value);
 
   text(bar_xmin-.1*bar_xrange, bar_ymax+.2*bar_yrange, 'C.', 'FontSize', 14, 'FontWeight', 'bold');
   text(2, bar_ymax, 'BLAST', 'FontSize', 12, 'FontWeight', 'bold');
 
-  ax_blast.XLim         = [bar_xmin, bar_xmax];
-  ax_blast.YLim         = [bar_ymin, bar_ymax];
-  ax_blast.Box          = 'off';
-  ax_blast.XTick        = [1, 2];
-  ax_blast.XTickLabel   = {'2011', '2014'};
+  ax_blast.XLim       = [bar_xmin, bar_xmax];
+  ax_blast.YLim       = [bar_ymin, bar_ymax];
+  ax_blast.Box        = 'off';
+  ax_blast.XTick      = [1, 2];
+  ax_blast.XTickLabel = {'2011', '2014'};
   % }}}
 
   embed_canvas(h, 8, 5);
@@ -219,8 +205,8 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   % }}}
 return
 
-% function: draw_rect {{{
-function [r] = draw_rect(pos, col, label)
+% function: loc_draw_rect {{{
+function [r] = loc_draw_rect(pos, col, label)
   r = rectangle('Position', pos);
   r.EdgeColor = 'black';
   r.FaceColor = col;
@@ -231,16 +217,16 @@ function [r] = draw_rect(pos, col, label)
 return
 % }}}
 
-% function: draw_bracket {{{
-function [] = draw_bracket(center, width, height)
+% function: loc_draw_bracket {{{
+function [] = loc_draw_bracket(center, width, height)
   line(center(1) + [-width, width], repmat(center(2), 1, 2), 'Color', 'black');
   line(repmat(center(1)-width, 1, 2), center(2) + [-height, 0], 'Color', 'black');
   line(repmat(center(1)+width, 1, 2), center(2) + [-height, 0], 'Color', 'black');
 return
 % }}}
 
-% function: bsl_info {{{
-function [res] = bsl_info(bsl1, bsl2, margin_max, color1, color2)
+% function: loc_bsl_info {{{
+function [res] = loc_bsl_info(bsl1, bsl2, margin_max, color1, color2)
   b1 = mean(bsl1.fmax_bst);
   b2 = mean(bsl2.fmax_bst);
   m  = abs(b1 - b2);
@@ -258,8 +244,8 @@ function [res] = bsl_info(bsl1, bsl2, margin_max, color1, color2)
 return
 % }}}
 
-% function: draw_colorbox {{{
-function [] = draw_colorbox(pos, color1, color2)
+% function: loc_draw_colorbox {{{
+function [] = loc_draw_colorbox(pos, color1, color2)
   ns = 40; % number of scales
   scale1 = [linspace(color1(1), 1, ns); linspace(color1(2), 1, ns); linspace(color1(3), 1, ns)]';
   scale2 = [linspace(color2(1), 1, ns); linspace(color2(2), 1, ns); linspace(color2(3), 1, ns)]';
@@ -282,4 +268,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 01 Mar 2016 04:38:32 PM E
+% Last modified: Mon 23 May 2016 05:07:31 PM E

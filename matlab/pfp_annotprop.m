@@ -1,6 +1,5 @@
 function [A] = pfp_annotprop(DAG, A)
 %PFP_ANNOTPROP annotation propagation
-% {{{
 %
 % [oa] = PFP_ANNOTPROP(oa);
 %
@@ -9,37 +8,33 @@ function [A] = pfp_annotprop(DAG, A)
 % Input
 % -----
 % [double]
-% DAG:  m-by-m, the adjacency matrix (for a directed acyclic graph)
-%       DAG(i, j) ~= 0 means term[i] has some relation to term[j].
+% DAG:  An m-by-m adjacency matrix, (as a [D]irected [A]cyclic [G]raph)
+%       DAG(i, j) ~= 0 means term i has relationship to term j.
 %
 % [logical]
-% A:    n-by-m, the ontology annotation matrix.
-%       A(i, j) = 1 means obj[i] is annotated to have term[j].
+% A:    An n-by-m binary annotation matrix, A(i, j) = true means object i is
+%       annotated to have term j.
 %
 % Output
 % ------
 % [logical]
-% A:    n-by-m, the propagated ontology annotation matrix.
-%       A(i, j) = 1 means obj[i] is annotated to have term[j].
+% A:  The propagated ontology annotation matrix.
 %
 % Dependency
 % ----------
 %[>]Bioinformatics Toolbox:graphtopoorder
-% }}}
 
   % check inputs {{{
   if nargin ~= 2
     error('pfp_annotprop:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st input 'DAG' {{{
+  % DAG
   validateattributes(DAG, {'double'}, {'square'}, '', 'DAG', 1);
   m = size(DAG, 1);
-  % }}}
 
-  % check the 2nd input 'A' {{{
+  % A
   validateattributes(A, {'logical'}, {'ncols', m}, '', 'A', 2);
-  % }}}
   % }}}
 
   % propagation {{{
@@ -47,7 +42,6 @@ function [A] = pfp_annotprop(DAG, A)
 
   % topologically sort terms from leaf to root
   order = graphtopoorder(DAG);
-
   for i = 1 : numel(order)
     p = DAG(order(i), :); % parent term(s)
     A(:, p) = bsxfun(@or, A(:, p), A(:, order(i)));
@@ -59,4 +53,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 May 2015 11:00:13 AM E
+% Last modified: Thu 12 May 2016 04:13:41 PM E

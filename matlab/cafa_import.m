@@ -1,6 +1,5 @@
 function [pred, msg] = cafa_import(ifile, ont, header)
 %CAFA_IMPORT CAFA Import
-% {{{
 %
 % [pred, msg] = CAFA_IMPORT(ifile, ont);
 %
@@ -26,46 +25,29 @@ function [pred, msg] = cafa_import(ifile, ont, header)
 %         Prediction
 %         ----------
 %         <target id> <term id> <score: x.xx>
-%
 %         The file must end with: END
 %
 % [struct]
-% ont:    The ontology structure.
-%         See pfp_ontbuild.m
+% ont:    The ontology structure. See pfp_ontbuild.m
 %
 % (optional)
 % [logical]
 % header: A boolean value, indicates the existance of header.
-%         default: true.
+%         default: true
 %
 % Output
 % ------
 % [struct]
 % pred:   The prediction structure.
-%         [cell]
-%         .object     The target ID list.
-%
-%         [structure]
-%         .ontology   The ontology structure.
-%
-%         [double]
-%         .score      Predicted score matrix
-%
-%         [char]
-%         .author     Author/team name
-%
-%         [double]
-%         .model      Model ID, e.g. 1, 2, etc.
-%
-%         [cell]
-%         .keywords   An cell array of keywords
-%
-%         [char]
-%         .tag        set to the filename
-%
+%         .object   [cell]    The target ID list.
+%         .ontology [struct]  The ontology structure.
+%         .score    [double]  Predicted score matrix
+%         .author   [char]    Author/team name
+%         .model    [double]  Model ID, e.g. 1, 2, etc.
+%         .keywords [cell]    An cell array of keywords
+%         .tag      [char]    set to the filename
 %         (optional)
-%         [double]
-%         .accuracy   k-by-2 precision-recall pairs
+%         .accuracy [double]  k-by-2 precision-recall pairs
 %
 % [cell]
 % msg:    Message for detected errors.
@@ -78,7 +60,6 @@ function [pred, msg] = cafa_import(ifile, ont, header)
 % See Also
 % --------
 %[>]pfp_ontbuild.m
-% }}}
 
   % check inputs {{{
   if nargin < 2 || nargin > 3
@@ -89,22 +70,19 @@ function [pred, msg] = cafa_import(ifile, ont, header)
     header = true;
   end
 
-  % check the 1st input 'ifile' {{{
+  % ifile
   validateattributes(ifile, {'char'}, {'nonempty'}, '', 'ifile', 1);
 
   fid = fopen(ifile, 'r');
   if fid == -1
     error('cafa_import:InputErr', 'Cannot open file [%s].', ifile);
   end
-  % }}}
 
-  % check the 2nd input 'ont' {{{
+  % ont
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 2);
-  % }}}
 
-  % check the 3rd input 'header' {{{
+  % header
   validateattributes(header, {'logical'}, {'nonempty'}, '', 'header', 3);
-  % }}}
   % }}}
 
   % Parse header {{{
@@ -194,7 +172,7 @@ function [pred, msg] = cafa_import(ifile, ont, header)
   % }}}
 
   % remove duplications {{{
-  [oindex, tindex, score, dup_o, dup_t] = remove_duplication(oindex, tindex, score);
+  [oindex, tindex, score, dup_o, dup_t] = loc_remove_duplication(oindex, tindex, score);
   if ~isempty(dup_o)
     msg = cell(1, numel(dup_o));
     for i = 1 : numel(dup_o)
@@ -218,8 +196,8 @@ function [pred, msg] = cafa_import(ifile, ont, header)
   % }}}
 return
 
-% function: remove_duplication {{{
-function [oindex, tindex, score, dup_o, dup_t] = remove_duplication(oindex, tindex, score)
+% function: loc_remove_duplication {{{
+function [oindex, tindex, score, dup_o, dup_t] = loc_remove_duplication(oindex, tindex, score)
 %REMOVE_DUPLICATION Remove duplication (takes average) {{{
 % Input
 % -----
@@ -308,4 +286,4 @@ return % }}}
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 23 Oct 2015 02:12:56 PM E
+% Last modified: Mon 23 May 2016 05:47:10 PM E

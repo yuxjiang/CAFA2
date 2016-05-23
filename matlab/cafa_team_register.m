@@ -1,6 +1,5 @@
 function [iid, eid, tname, ttype, dname, dname2, pname, kw, chex] = cafa_team_register(reg)
 %CAFA_TEAM_REGISTER CAFA team register
-% {{{
 %
 % [iid, eid, tname, ttype, dname, pname, kw, chex, dname2] = CAFA_TEAM_REGISTER(reg);
 %
@@ -60,20 +59,18 @@ function [iid, eid, tname, ttype, dname, dname2, pname, kw, chex] = cafa_team_re
 % [cell]
 % chex:   Assigned color for the method. (a distinct color for each PI) RGB
 %         value in HEX.
-% }}}
 
   % check inputs {{{
   if nargin ~= 1
     error('cafa_team_register:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'reg' {{{
+  % reg
   validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 1);
   fid = fopen(reg, 'r');
   if fid == -1
     error('cafa_team_register:FileErr', 'Cannot open the team file [%s].', reg);
   end
-  % }}}
   % }}}
 
   % read and parse {{{
@@ -97,4 +94,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 07 Apr 2016 04:23:07 PM E
+% Last modified: Mon 23 May 2016 03:46:44 PM E

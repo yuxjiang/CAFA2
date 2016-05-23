@@ -1,6 +1,5 @@
 function [oa] = pfp_annotsuboa(oa)
 %PFP_ANNOTSUBOA Annotated sub-ontology annotation
-% {{{
 %
 % [oa] = PFP_ANNOTSUBOA(oa);
 %
@@ -9,8 +8,7 @@ function [oa] = pfp_annotsuboa(oa)
 % Input
 % -----
 % [struct]
-% oa: The ontology annotation structure.
-%     See pfp_oabuild.m.
+% oa: The ontology annotation structure. See pfp_oabuild.m.
 %
 % Output
 % ------
@@ -20,16 +18,14 @@ function [oa] = pfp_annotsuboa(oa)
 % See Also
 % --------
 %[>]pfp_oabuild.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 1
     error('pfp_annotsuboa:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'oa' {{{
+  % oa
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 1);
-  % }}}
   % }}}
 
   % prepare for the output {{{
@@ -38,11 +34,7 @@ function [oa] = pfp_annotsuboa(oa)
   oa.ontology.term = oa.ontology.term(has_annot);
   oa.ontology.DAG  = oa.ontology.DAG(has_annot, has_annot);
   oa.annotation    = oa.annotation(:, has_annot);
-
-  if isfield(oa, 'eia')
-    oa.eia = oa.eia(has_annot);
-  end
-  oa.date = datestr(now, 'mm/dd/yyyy HH:MM');
+  oa.date          = datestr(now, 'mm/dd/yyyy HH:MM');
   % }}}
 return
 
@@ -50,4 +42,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 04 Apr 2016 04:51:27 PM E
+% Last modified: Thu 12 May 2016 03:28:03 PM E

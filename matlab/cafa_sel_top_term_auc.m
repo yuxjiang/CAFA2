@@ -1,6 +1,5 @@
 function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, reg, isdump)
 %CAFA_SEL_TOP_TERM_AUC CAFA select top term-centric AUC
-% {{{
 %
 % [sel, bsl, info] = CAFA_SEL_TOP_TERM_AUC(K, aucs, naive, blast, reg, isdump);
 %
@@ -13,12 +12,10 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, reg, is
 %
 % [cell]
 % aucs:   The collected 'term_auc' structures, which has the following fields
-%
 %         [char]    .id     (Internel) model of the model
 %         [cell]    .term   1-by-m, term ID list
 %         [double]  .auc    1-by-m, AUC per term
-%
-%         See cafa_collect.m
+%         See cafa_eval_term_auc.m, cafa_collect.m
 %
 % [char]
 % naive:  The model id of the naive baseline. E.g. BN4S
@@ -49,7 +46,7 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, reg, is
 %
 % [logical]
 % isdump: A switch for using dump name instead of display name.
-%         default: false.
+%         default: false
 %
 % Output
 % ------
@@ -75,42 +72,39 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, reg, is
 %
 % Dependency
 % ----------
-%[>]cafa_eval_term_auc.m
 %[>]cafa_team_register.m
-% }}}
+%
+% See Also
+% --------
+%[>]cafa_collect.m
+%[>]cafa_eval_term_auc.m
 
   % check inputs {{{
   if nargin ~= 6
     error('cafa_sel_top_term_auc:InputCount', 'Expected 6 inputs.');
   end
 
-  % check the 1st input 'K' {{{
+  % K
   validateattributes(K, {'double'}, {'nonnegative', 'integer'}, '', 'K', 1);
-  % }}}
 
-  % check the 2nd input 'aucs' {{{
+  % aucs
   validateattributes(aucs, {'cell'}, {'nonempty'}, '', 'aucs', 2);
-  % }}}
 
-  % check the 3rd input 'naive' {{{
+  % naive
   validateattributes(naive, {'char'}, {}, '', 'naive', 3);
-  % }}}
 
-  % check the 4rd input 'blast' {{{
+  % blast
   validateattributes(blast, {'char'}, {}, '', 'blast', 4);
-  % }}}
 
-  % check the 5th input 'reg' {{{
+  % reg
   validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 5);
   [team_id, ext_id, ~, team_type, disp_name, dump_name, pi_name, ~, clr] = cafa_team_register(reg);
-  % }}}
 
-  % check the 6th input 'isdump' {{{
+  % isdump
   validateattributes(isdump, {'logical'}, {'nonempty'}, '', 'isdump', 6);
   if isdump
     disp_name = dump_name;
   end
-  % }}}
   % }}}
 
   % clean up and filter models {{{
@@ -242,4 +236,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 07 Apr 2016 04:27:59 PM E
+% Last modified: Mon 23 May 2016 04:42:53 PM E

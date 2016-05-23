@@ -1,8 +1,7 @@
-function [] = cafa_driver_preeval(config_info)
+function [] = cafa_driver_preeval(cfg)
 %CAFA_DRIVER_PREEVAL CAFA driver pre-evaluation (sequence-centric)
-% {{{
 %
-% [] = CAFA_DRIVER_PREEVAL(config_info);
+% [] = CAFA_DRIVER_PREEVAL(cfg);
 %
 %   Generates pre-evaluated sequence-centric metrics for each model.
 %
@@ -64,10 +63,8 @@ function [] = cafa_driver_preeval(config_info)
 % Input
 % -----
 % [char or struct]
-% config_info:  The configuration file (job descriptor) or a parsed config
-%               structure.
-%
-%               See cafa_parse_config.m
+% cfg:  The configuration file (job descriptor) or a parsed config structure.
+%       See cafa_parse_config.m
 %
 % Dependency
 % ----------
@@ -83,30 +80,17 @@ function [] = cafa_driver_preeval(config_info)
 %[>]pfp_oabuild.m
 %[>]cafa_driver_filter.m
 %[>]cafa_driver_import.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 1
     error('cafa_driver_preeval:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'config_info' {{{
-  validateattributes(config_info, {'char', 'struct'}, {'nonempty'}, '', 'config_info', 1);
-
-  if ischar(config_info)
-    config = cafa_parse_config(config_info);
-    % make sure subfolders exist
-    if ~exist(config.prev_dir, 'dir')
-      mkdir(config.prev_dir);
-    end
-    % save the configuration file for future reference
-    copyfile(config_info, fullfile(config.prev_dir, 'prev_config.job'));
-  elseif isstruct(config_info)
-    config = config_info;
-  else
-    error('cafa_driver_preeval:InputErr', 'Unknown data type of ''config_info''');
+  % cfg
+  config = cafa_parse_config(cfg);
+  if ischar(cfg)
+    copyfile(cfg, fullfile(config.prev_dir, 'prev_config.job'));
   end
-  % }}}
   % }}}
 
   % pre-evaluation {{{
@@ -153,4 +137,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 17 Mar 2016 01:40:38 PM E
+% Last modified: Mon 23 May 2016 03:37:45 PM E

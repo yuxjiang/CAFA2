@@ -1,6 +1,5 @@
 function [res] = pfp_convcmstruct(cmstruct, metric, varargin)
-%PFP_CONVCMSTRUCT Convert confusion matrix struct
-% {{{
+%PFP_CONVCMSTRUCT Convert confusion matrix structure
 %
 % [res] = PFP_CONVCMSTRUCT(cmstruct, metric);
 %
@@ -11,39 +10,26 @@ function [res] = pfp_convcmstruct(cmstruct, metric, varargin)
 % -----
 % (required)
 % [struct]
-% cmstruct: A confusion matrix struct.
-%           See pfp_seqcm.m
+% cmstruct: A confusion matrix struct. See pfp_seqcm.m
 %
 % [char]
 % metric:   One of the metrics that can be derived from a confusion matrix
 %
 % (optional) Name-Value pairs
-% (varargin will be passed through pfp_cmmetric.m directly, see that file for
-% details.)
+% (varargin will be passed to pfp_cmmetric.m directly)
 %
 % Output
 % ------
 % [struct]
 % res: The structure of results.
-%
-%      [char]
-%      .centric  'sequence'
-%
-%      [cell]
-%      .object   An n-by-1 array of (char) object ID.
-%
-%      [cell]
-%      .metric   A 1-by-k cell of converted metrics.
-%
-%      [double]
-%      .tau      A 1-by-k array of thresholds.
-%
-%      [logical]
-%      .covered  A n-by-1 logical array indicating if the corresponding object is
-%                predicted ("covered") by the model.
-%
-%      [char]
-%      .date     The date when this struct is built.
+%      .centric  [char]     'sequence'
+%      .object   [cell]     An n-by-1 array of (char) object ID.
+%      .metric   [cell]     A 1-by-k cell of converted metrics.
+%      .tau      [double]   A 1-by-k array of thresholds.
+%      .covered  [logical]  A n-by-1 logical array indicating if the
+%                           corresponding object is predicted ("covered") by the
+%                           model.
+%      .date     [char]     The date when this struct is built.
 %
 % Dependency
 % ----------
@@ -52,20 +38,17 @@ function [res] = pfp_convcmstruct(cmstruct, metric, varargin)
 % See Also
 % --------
 %[>]pfp_seqcm.m
-% }}}
 
   % check inputs {{{
   if nargin < 2
     error('pfp_convcmstruct:InputCount', 'Expected >= 2 inputs.');
   end
 
-  % check the 1st input 'cmstruct' {{{
+  % cmstruct
   validateattributes(cmstruct, {'struct'}, {'nonempty'}, '', 'cmstruct', 1);
-  % }}}
 
-  % check the 2nd input 'metric' {{{
+  % metric
   validateattributes(metric, {'char'}, {'nonempty'}, '', 'metric', 2);
-  % }}}
   % }}}
 
   % converting {{{
@@ -90,4 +73,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sun 06 Mar 2016 07:51:44 PM E
+% Last modified: Mon 23 May 2016 04:10:02 PM E

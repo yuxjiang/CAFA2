@@ -1,11 +1,13 @@
-function [blast] = pfp_importblastp(filename, ksh)
+function [blast] = pfp_importblastp(ifile, ksh)
 %PFP_IMPORTBLASTP Read BLAST
-% {{{
 %
-% [blast] = PFP_IMPORTBLASTP(filename);
-% [blast] = PFP_IMPORTBLASTP(filename, ksh);
+% [blast] = PFP_IMPORTBLASTP(ifile);
+% [blast] = PFP_IMPORTBLASTP(ifile, ksh);
 %
-%   Reads "blastp" result in tab-splited format.
+%   Reads "blastp" result in tab-splited format which was reported using the
+%   following format: (version: v2.2.28+)
+%
+%   -outfmt "6 qseqid sseqid evalue length pident nident"
 %
 % Note
 % ----
@@ -16,49 +18,27 @@ function [blast] = pfp_importblastp(filename, ksh)
 % -----
 % (required)
 % [char]
-% filename: BLAST result filename.
-%           Note that the result file contains the following content:
-%
-%           <qseqid> <sseqid> <evalue> <length> <pident> <nident>
-%
-%           Note: use the following option to specify the output format when
-%           running BLAST (v2.2.28+)
-%
-%           -outfmt "6 qseqid sseqid evalue length pident nident"
+% ifile:  BLAST result filename.
 %
 % (optional)
 % [logical]
-% ksh:      A toggle indicates to "keep-self-hits".
-%           default: false.
+% ksh:    A toggle indicates to "keep-self-hits".
+%         default: false.
 %
 % Output
 % ------
 % [struct]
-% blast:    The resulting structure, containing the blast results of n
-%           sequences.
+% blast:  The resulting structure, containing the blast results of n
+%         sequences.
 %
-%           [cell]
-%           .qseqid n-by-1 cell of query IDs.
-%
-%           [cell]
-%           .info   The information of hits, each of which has the following
-%                   fields:
-%
-%             [cell]
-%             .sseqid     k-by-1 subject ID list (hits).
-%
-%             [double]
-%             .evalue     k-by-1 E_VALUE
-%
-%             [double]
-%             .length     k-by-1 matched length
-%
-%             [double]
-%             .pident     k-by-1 percentage of identical matches
-%
-%             [double]
-%             .nident     k-by-1 number of identical matches
-% }}}
+%         .qseqid   [cell]    An n-by-1 cell array of query IDs.
+%         .info     [cell]    The information of hits, with fields:
+%           .sseqid [cell]    A k-by-1 array of subject ID list (hits).
+%           .evalue [double]  A k-by-1 array of E-value.
+%           .length [double]  A k-by-1 array of matched length.
+%           .pident [double]  A k-by-1 array of percentages of identical
+%                             matches.
+%           .nident [double]  A k-by-1 array of numbers of identical matches.
 
   % check inputs {{{
   if nargin < 1 && nargin > 2
@@ -69,17 +49,15 @@ function [blast] = pfp_importblastp(filename, ksh)
     ksh = false;
   end
 
-  % check the 1st input 'filename' {{{
-  validateattributes(filename, {'char'}, {'nonempty'}, '', 'filename', 1);
-  fid = fopen(filename, 'r');
+  % ifile
+  validateattributes(ifile, {'char'}, {'nonempty'}, '', 'ifile', 1);
+  fid = fopen(ifile, 'r');
   if fid == -1
-    error('pfp_importblast:FileErr', 'Cannot open the file [%s].', filename);
+    error('pfp_importblast:FileErr', 'Cannot open the file [%s].', ifile);
   end
-  % }}}
 
-  % check the 2nd input 'ksh' {{{
+  % ksh
   validateattributes(ksh, {'logical'}, {'nonempty'}, '', 'ksh', 2);
-  % }}}
   % }}}
 
   % read blast results {{{
@@ -105,7 +83,7 @@ function [blast] = pfp_importblastp(filename, ksh)
     R = numel(remained{1});
 
     start = 1;
-    pos   = first_chunk_last_pos(remained{1}, 1, R);
+    pos   = loc_first_chunk_last_pos(remained{1}, 1, R);
 
     % Records in 'remained' could contain multiple chunks, this loop parsed each
     % of them. The last chunk is, of course, "remained" for the next block.
@@ -132,7 +110,7 @@ function [blast] = pfp_importblastp(filename, ksh)
 
       % update
       start = pos + 1;
-      pos   = first_chunk_last_pos(remained{1}, start, R);
+      pos   = loc_first_chunk_last_pos(remained{1}, start, R);
     end
 
     % clear processed entries {{{
@@ -163,40 +141,40 @@ function [blast] = pfp_importblastp(filename, ksh)
   % }}}
 return
 
-% function: first_chunk_last_pos {{{
-% this function assumes same labels have been put together in L, that is, labels
-% are organized as "chunks". And it returns the end position of the first chunk.
-function [pos] = first_chunk_last_pos(L, pos_a, pos_b)
-    if strcmp(L(pos_a), L(pos_b))
-      pos = pos_b; return;
-    end
+% function: loc_first_chunk_last_pos {{{
+% This function assumes same labels have been put together in L, that is, labels
+% are organized as "chunks", and it returns the end position of the first chunk.
+function [pos] = loc_first_chunk_last_pos(L, pos_a, pos_b)
+  if strcmp(L(pos_a), L(pos_b))
+    pos = pos_b; return;
+  end
 
-    % find the smallest N such that N = 2^n >= (pos_b - pos_a) {{{
-    n = 0;
-    range = pos_b - pos_a;
-    while 2 ^ n < range
-      n = n + 1;
-    end
-    N = 2 ^ n;
-    % }}}
+  % find the smallest N such that N = 2^n >= (pos_b - pos_a) {{{
+  n = 0;
+  range = pos_b - pos_a;
+  while 2 ^ n < range
+    n = n + 1;
+  end
+  N = 2 ^ n;
+  % }}}
 
-    % binary search {{{
-    pos  = pos_a + N;
-    step = N / 2;
+  % binary search {{{
+  pos  = pos_a + N;
+  step = N / 2;
 
-    while step >= 1
-      if pos > pos_b || ~strcmp(L(pos_a), L(pos))
-        pos = pos - step;
-      else
-        pos = pos + step;
-      end
-      step = step / 2;
+  while step >= 1
+    if pos > pos_b || ~strcmp(L(pos_a), L(pos))
+      pos = pos - step;
+    else
+      pos = pos + step;
     end
-    % }}}
+    step = step / 2;
+  end
+  % }}}
 
-    if ~strcmp(L(pos_a), L(pos))
-      pos = pos - 1;
-    end
+  if ~strcmp(L(pos_a), L(pos))
+    pos = pos - 1;
+  end
 return
 % }}}
 
@@ -204,4 +182,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 06 Mar 2016 05:53:06 PM E
+% Last modified: Sun 22 May 2016 03:13:17 PM E

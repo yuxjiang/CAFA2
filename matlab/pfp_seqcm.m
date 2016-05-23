@@ -1,6 +1,5 @@
 function [cm] = pfp_seqcm(target, pred, oa, varargin)
 %PFP_SEQCM Sequence-centric confusion matrices
-% {{{
 %
 % [cm] = PFP_SEQCM(target, pred, oa, varargin);
 %
@@ -29,53 +28,36 @@ function [cm] = pfp_seqcm(target, pred, oa, varargin)
 % (optional) Name-Value pairs
 % [double]
 % 'tau'   An array of thresholds.
-%         default: 0.00 : 0.01 : 1.00 (i.e. 0.00, 0.01, ..., 0.99, 1.00)
+%         default: 0.00:0.01:1.00 (i.e. 0.00, 0.01, ..., 0.99, 1.00)
 %
 % [logical or char]
 % 'toi'   A binary vector indicating "terms of interest".
 %         Note that the following special short-hand tokens are also allowed.
-%         'all'       - all terms
-%         'noroot'    - exclude root term
+%         'all'     - all terms
+%         'noroot'  - exclude root term
 %         default: 'noroot'
 %
-% [double or char]
-% 'w'     A weight vector over terms.
-%         Note that the following special short-hand tokens are also allowed.
-%         'equal'     - equal weights, regular confusion matrix.
-%         'eia'       - weighted by estimated information content.
-%         default: 'equal'
+% [double]
+% 'w'     A weight vector over terms. Note that an empty vector implies equal
+%         weights.
+%         default: []
 %
 % Output
 % ------
 % [struct]
 % cm: The structure of results.
-%
-%     [char]
-%     .centric  'sequence'
-%
-%     [cell]
-%     .object   An n-by-1 array of (char) object ID.
-%
-%     [struct]
-%     .ontology The ontology structure. (m terms).
-%
-%     [logical]
-%     .toi      A 1-by-m binary vector indicating "term of interest".
-%
-%     [double]
-%     .tau      A 1-by-k array of thresholds.
-%
-%     [struct]
-%     .cm       An n-by-k struct array of confusion matrices.
-%
-%     [double]
-%     .npp      An n-by-1 array of number of positive predictions for each
-%               sequence.
-%
-%               Note: this number might vary according to 'toi'.
-%
-%     [char]
-%     .date     The date when this evaluation is performed.
+%     .centric  [char]    Will be set to 'sequence'.
+%     .object   [cell]    An n-by-1 array of (char) object ID.
+%     .ontology [struct]  The ontology structure. (m terms).
+%     .toi      [logical] A 1-by-m vector indicating "term of interest".
+%     .w        [double]  A 1-by-m vector of term weights. (empty if not
+%                         specified.)
+%     .tau      [double]  A 1-by-k array of thresholds.
+%     .cm       [struct]  An n-by-k struct array of confusion matrices.
+%     .npp      [double]  An n-by-1 array of "# of positive predictions" for
+%                         each sequence.
+%                         Note that it was calculated according to 'toi'.
+%     .date     [char]    The date when this evaluation is performed.
 %
 % Dependency
 % ----------
@@ -84,27 +66,23 @@ function [cm] = pfp_seqcm(target, pred, oa, varargin)
 %[>]pfp_roottermidx.m
 %[>]pfp_confmat.m
 %[>]pfp_confmatw.m
-% }}}
 
-  % check basic inputs {{{
+  % check inputs {{{
   if nargin < 3
-    error('pfp_seqcm:InputCount', 'Expected >= 3 inputs.');
+    error('pfp_seqcm:InputCount', 'Expected at least 3 inputs.');
   end
 
-  % check the 1st input 'target' {{{
+  % target
   validateattributes(target, {'cell'}, {'nonempty'}, '', 'target', 1);
-  % }}}
 
-  % check the 2nd input 'pred' {{{
+  % pred
   validateattributes(pred, {'struct'}, {'nonempty'}, '', 'pred', 2);
-  % }}}
 
-  % check the 3rd input 'oa' {{{
+  % oa
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 3);
   if numel(pred.ontology.term) ~= numel(oa.ontology.term) || ~all(strcmp({pred.ontology.term.id}, {oa.ontology.term.id}))
     error('pfp_seqcm:InputErr', 'Ontology mismatch.');
   end
-  % }}}
   % }}}
 
   % parse and check extra inputs {{{
@@ -112,11 +90,11 @@ function [cm] = pfp_seqcm(target, pred, oa, varargin)
 
   defaultTOI   = 'noroot';
   defaultTAU   = 0.00 : 0.01 : 1.00;
-  defaultW     = 'equal';
+  defaultW     = [];
 
   addParameter(p, 'tau', defaultTAU, @(x) validateattributes(x, {'double'}, {'vector', '>=', 0, '<=', 1}));
   addParameter(p, 'toi', defaultTOI, @(x) validateattributes(x, {'logical', 'char'}, {'nonempty'}));
-  addParameter(p, 'w', defaultW, @(x) validateattributes(x, {'double', 'char'}, {'nonempty'}));
+  addParameter(p, 'w', defaultW, @(x) validateattributes(x, {'double'}, {}));
 
   parse(p, varargin{:});
 
@@ -136,21 +114,12 @@ function [cm] = pfp_seqcm(target, pred, oa, varargin)
   % }}}
 
   % parse the parameter 'w' {{{
-  switch p.Results.w
-  case 'equal'
+  if isempty(p.Results.w)
     method = 'regular';
-  case 'eia'
-    method = 'weighted';
-    w = reshape(oa.eia(toi), [], 1);;
-  otherwise
-    if ischar(p.Results.w)
-      error('pfp_seqcm:BadToken', 'Unknown ''w'' token.');
-    end
-
+  else
     validateattributes(p.Results.w, {'double'}, {'vector', 'numel', numel(oa.ontology.term)});
-
-    method = 'weighted';
     w = reshape(p.Results.w(toi), [], 1);
+    method = 'weighted';
   end
   % }}}
   % }}}
@@ -165,6 +134,7 @@ function [cm] = pfp_seqcm(target, pred, oa, varargin)
   cm.object   = pred.object;
   cm.ontology = pred.ontology;
   cm.toi      = toi;
+  cm.w        = p.Results.w;
   cm.tau      = p.Results.tau;
 
   % construct prediction matrix and reference (ground truth) matrix.
@@ -196,4 +166,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Sun 06 Mar 2016 07:47:38 PM E
+% Last modified: Mon 23 May 2016 04:11:06 PM E

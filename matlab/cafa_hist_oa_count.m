@@ -1,6 +1,5 @@
 function [] = cafa_hist_oa_count(pfile, pttl, bm, oa, propagated)
 %CAFA_HIST_OA_COUNT CAFA histogram ontology annotation count
-% {{{
 %
 % [] = CAFA_HIST_OA_COUNT(pfile, pttl, bm, oa);
 % [] = CAFA_HIST_OA_COUNT(pfile, pttl, bm, oa, propagated);
@@ -20,7 +19,7 @@ function [] = cafa_hist_oa_count(pfile, pttl, bm, oa, propagated)
 % bm:         A benchmark filename or a list of benchmark target IDs.
 %
 % [struct]
-% oa:         The ontology annotation structure.
+% oa:         The ontology annotation structure. See pfp_oabuild.m.
 %
 % (optional)
 % [logical]
@@ -36,12 +35,14 @@ function [] = cafa_hist_oa_count(pfile, pttl, bm, oa, propagated)
 %[>]pfp_loaditem.m
 %[>]pfp_oaproj.m
 %[>]pfp_leafannot.m
-%[>]pfp_oabuild.m
 %[>]embed_canvas.m
-% }}}
+%
+% See Also
+% --------
+%[>]pfp_oabuild.m
 
   % check inputs {{{
-  if nargin < 4 || nargin > 5
+  if nargin ~= 4 && nargin ~= 5
     error('cafa_hist_oa_count:InputCount', 'Expected 4 or 5 inputs.');
   end
 
@@ -49,7 +50,7 @@ function [] = cafa_hist_oa_count(pfile, pttl, bm, oa, propagated)
     propagated = true;
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -61,26 +62,21 @@ function [] = cafa_hist_oa_count(pfile, pttl, bm, oa, propagated)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'bm' {{{
+  % bm
   validateattributes(bm, {'char', 'cell'}, {'nonempty'}, '', 'bm', 3);
   if ischar(bm) % load the benchmark if a file name is given
     bm = pfp_loaditem(bm, 'char');
   end
-  % }}}
 
-  % check the 4th input 'oa' {{{
+  % oa
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 4);
-  % }}}
 
-  % check the 5th input 'propagated' {{{
+  % propagated
   validateattributes(propagated, {'logical'}, {}, '', 'propagated', 5);
-  % }}}
   % }}}
 
   % get statistics {{{
@@ -115,4 +111,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 06 Jul 2015 05:17:28 PM E
+% Last modified: Mon 23 May 2016 05:50:54 PM E

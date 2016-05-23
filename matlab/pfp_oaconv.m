@@ -1,6 +1,5 @@
 function [oa] = pfp_oaconv(oa, ont)
 %PFP_PREDCONV Prediction conversion
-% {{{
 %
 % [oa] = PFP_PREDCONV(oa, ont);
 %
@@ -9,20 +8,18 @@ function [oa] = pfp_oaconv(oa, ont)
 % Note
 % ----
 % This function is used when the structure of an ontology has been changed,
-% e.g., by removing one type of edges ('part_of'). If the conversion is meant to
-% only a subset of the original ontology, use pfp_oaproj.m instead.
+% e.g., by removing one type of edges ("part_of") and consider the "is_a" DAG.
 %
-% 'eia' of the given oa will be removed due to the change of ontology structure.
+% If the resulting ontology is simply a subset terms, use pfp_oaproj.m
+% instead.
 %
 % Input
 % -----
 % [struct]
-% oa:   The ontology annotation structure.
-%       See pfp_oabuild.m
+% oa:   The ontology annotation structure. See pfp_oabuild.m
 %
 % [struct]
-% ont:  The ontology structure.
-%       See pfp_ontbuild.m
+% ont:  The ontology structure. See pfp_ontbuild.m
 %
 % Output
 % ------
@@ -39,20 +36,17 @@ function [oa] = pfp_oaconv(oa, ont)
 %[>]pfp_oabuild.m
 %[>]pfp_ontbuild.m
 %[>]pfp_oaproj.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 2
     error('pfp_oaconv:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st input 'oa' {{{
+  % oa
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 1);
-  % }}}
 
-  % check the 2nd input 'ont' {{{
+  % ont
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 2);
-  % }}}
   % }}}
 
   % conversion {{{
@@ -60,13 +54,7 @@ function [oa] = pfp_oaconv(oa, ont)
   [found, index] = ismember({ont.term.id}, {oa.ontology.term.id});
   A = A(:, index(found)); % re-order columns to match the new ontology
   oa.ontology   = ont;
-  oa.annotation = pfp_annotprop(ont.DAG, A);
-  % }}}
-
-  % remove 'eia' {{{
-  if isfield(oa, 'eia')
-    oa = rmfield(oa, 'eia');
-  end
+  oa.annotation = pfp_annotprop(ont.DAG, A); % replenish
   % }}}
 return
 
@@ -74,4 +62,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sun 06 Mar 2016 05:28:40 PM E
+% Last modified: Thu 12 May 2016 03:37:35 PM E

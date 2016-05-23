@@ -1,6 +1,5 @@
 function [] = cafa_hist_sid(pfile, pttl, bm, sfile)
 %CAFA_HIST_SID Histogram of sid (sequence identity)
-% {{{
 %
 % [] = CAFA_PLOT_SID_HIST(pfile, pttl, bm, sfile);
 %
@@ -30,14 +29,13 @@ function [] = cafa_hist_sid(pfile, pttl, bm, sfile)
 % ----------
 %[>]pfp_loaditem.m
 %[>]embed_canvas.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 4
     error('cafa_hist_sid:InputCount', 'Expected 4 inputs.');
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -49,27 +47,23 @@ function [] = cafa_hist_sid(pfile, pttl, bm, sfile)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'bm' {{{
+  % bm
   validateattributes(bm, {'char', 'cell'}, {'nonempty'}, '', 'bm', 3);
   if ischar(bm) % load the benchmark if a file name is given
     bm = pfp_loaditem(bm, 'char');
   end
-  % }}}
 
-  % check the 4th input 'sfile' {{{
+  % sfile
   validateattributes(sfile, {'char'}, {'nonempty'}, '', 'sfile', 4);
   fin = fopen(sfile, 'r');
   if fin == -1
     error('cafa_hist_sid:FileErr', 'Cannot open the data file.');
     return;
   end
-  % }}}
   % }}}
 
   % read the select sequence identities {{{
@@ -121,4 +115,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 08 Jul 2015 02:29:29 PM E
+% Last modified: Mon 23 May 2016 06:02:11 PM E

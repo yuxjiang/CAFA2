@@ -1,15 +1,16 @@
-function [config] = cafa_parse_config(config_file)
+function [config] = cafa_parse_config(cfg)
 %CAFA_PARSE_CONFIG CAFA parse configuration
-% {{{
 %
-% [config] = CAFA_PARSE_CONFIG(config_file);
+% [config] = CAFA_PARSE_CONFIG(cfg);
 %
 %   Parses a CAFA pre-evalation/evaluation job configuration file.
 %
 % Input
 % -----
-% [char]
-% config_file:  The configuration file (job descriptor)
+% [char or struct]
+% cfg:  The configuration file (job descriptor) or a parsed structure.
+%       (If a structure is given, this script does nothing but passes it to the
+%       output for convenience.)
 %
 % Output
 % ------
@@ -39,29 +40,33 @@ function [config] = cafa_parse_config(config_file)
 %          "cafa_driver_preeval.m"; while those marked in the [E] column are
 %          read/required by "cafa_driver_eval.m".
 %
-% See Also
-% --------
-%[>]cafa_driver_preeval.m
-%[>]cafa_driver_eval.m
-%
 % Dependency
 % ----------
 %[>]pfp_loaditem.m
 %[>]pfp_savevar.m
-% }}}
+%
+% See Also
+% --------
+%[>]cafa_driver_preeval.m
+%[>]cafa_driver_eval.m
 
   % check_inputs {{{
   if nargin ~= 1
     error('cafa_parse_config:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'config_file' {{{
-  validateattributes(config_file, {'char'}, {'nonempty'}, '', 'config_file', 1);
-  fid = fopen(config_file, 'r');
-  if fid == -1
-    error('cafa_parse_config:FileErr', 'Cannot open the configuration file [%s]', config_file);
+  % cfg
+  validateattributes(cfg, {'char', 'struct'}, {'nonempty'}, '', 'cfg', 1);
+
+  if isstruct(cfg)
+    config = cfg;
+    return;
   end
-  % }}}
+
+  fid = fopen(cfg, 'r');
+  if fid == -1
+    error('cafa_parse_config:FileErr', 'Cannot open the configuration file [%s]', cfg);
+  end
   % }}}
 
   % read and parse {{{
@@ -207,4 +212,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 07 Mar 2016 01:08:34 AM E
+% Last modified: Mon 23 May 2016 05:43:52 PM E

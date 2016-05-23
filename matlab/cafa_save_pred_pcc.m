@@ -1,6 +1,5 @@
 function [] = cafa_save_pred_pcc(ofile, ps, cutoff, reg, eval_dir)
 %CAFA_SAVE_PRED_PCC CAFA save prediction's pairwise PCC (as a network)
-% {{{
 %
 % [] = CAFA_SAVE_PRED_PCC(ofile, ps, cutoff, reg, eval_dir);
 %
@@ -20,16 +19,14 @@ function [] = cafa_save_pred_pcc(ofile, ps, cutoff, reg, eval_dir)
 %           edge: /path/to/file_edge.ext
 %
 % [struct]
-% ps:       The precomputed PCC structure.
-%           See cafa_get_pred_pcc.m
+% ps:       The precomputed PCC structure. See cafa_get_pred_pcc.m
 %
 % [double]
 % cutoff:   The cutoff of PCC, below which the edge will be ignored.
 %           Often: 0.75;
 %
 % [char]
-% reg:      The register file.
-%           See cafa_team_register.m
+% reg:      The register file. See cafa_team_register.m
 %
 % [cell]
 % eval_dir: The evaluation directory containing evaluation results.
@@ -41,19 +38,19 @@ function [] = cafa_save_pred_pcc(ofile, ps, cutoff, reg, eval_dir)
 % Dependency
 % ----------
 %[>]cafa_team_register.m
+%[>]cafa_collect.m
 %[>]cafa_sel_top_seq_fmax.m
 %
 % See Also
 % --------
 %[>]cafa_get_pred_pcc.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 5
     error('cafa_save_pred_pcc:InputCount', 'Expected 5 inputs.');
   end
 
-  % check the 1st input 'ofile' {{{
+  % ofile
   validateattributes(ofile, {'char'}, {'nonempty'}, '', 'ofile', 1);
 
   [p, f, e] = fileparts(ofile);
@@ -63,24 +60,19 @@ function [] = cafa_save_pred_pcc(ofile, ps, cutoff, reg, eval_dir)
   if fid_node == -1
     error('cafa_save_pred_pcc:FileErr', 'Cannot open the node file [%s].', ofile_node);
   end
-  % }}}
 
-  % check the 2nd input 'ps' {{{
+  % ps
   validateattributes(ps, {'struct'}, {'nonempty'}, '', 'ps', 2);
-  % }}}
 
-  % check the 3rd input 'cutoff' {{{
+  % cutoff
   validateattributes(cutoff, {'double'}, {'>', -1, '<', 1}, '', 'cutoff', 3);
-  % }}}
 
-  % check the 4th input 'reg' {{{
+  % reg
   validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 4);
   [model.id, ~, model.nm, model.tp, ~, ~, model.pi, ~, model.cl] = cafa_team_register(reg);
-  % }}}
 
-  % check the 5th input 'eval_dir' {{{
+  % eval_dir
   validateattributes(eval_dir, {'char'}, {'nonempty'}, '', 'eval_dir', 5);
-  % }}}
   % }}}
 
   % find participated and top methods {{{
@@ -152,4 +144,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 07 Apr 2016 11:39:19 PM E
+% Last modified: Mon 23 May 2016 04:51:06 PM E

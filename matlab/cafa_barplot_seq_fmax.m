@@ -1,6 +1,5 @@
 function [] = cafa_barplot_seq_fmax(pfile, pttl, data, bsl_data, yaxis)
 %CAFA_BARPLOT_SEQ_FMAX CAFA barplot sequence-centric Fmax
-% {{{
 %
 % [] = CAFA_BARPLOT_SEQ_FMAX(pfile, pttl, data, bsl_data, yaxis);
 %
@@ -18,24 +17,13 @@ function [] = cafa_barplot_seq_fmax(pfile, pttl, data, bsl_data, yaxis)
 % pttl:     The plot title.
 %
 % [cell]
-% data:     The data containing Fmaxs and other information to plot
-%           Each cell has the thing needed for plotting a single curve.
-%
-%           [double]
-%           .fmax_mean      scalar, "bar height".
-%
-%           [double]
-%           .fmax_q05       scalar, 5% quantiles.
-%
-%           [double]
-%           .fmax_q95       scalar, 95% quantiles.
-%
-%           [double]
-%           .coverage       scalar, averaged coverage.
-%
-%           [char]
-%           .tag            tag of the model.
-%
+% data:     The data containing Fmaxs and other information to plot Each cell
+%           has the thing needed for plotting a single curve.
+%           .fmax_mean  [double]  scalar, "bar height".
+%           .fmax_q05   [double]  scalar, 5% quantiles.
+%           .fmax_q95   [double]  scalar, 95% quantiles.
+%           .coverage   [double]  scalar, averaged coverage.
+%           .tag        [char]    tag of the model.
 %           See cafa_sel_top_seq_fmax.m
 %
 % [cell]
@@ -57,7 +45,6 @@ function [] = cafa_barplot_seq_fmax(pfile, pttl, data, bsl_data, yaxis)
 %[>]cafa_sel_top_seq_fmax.m
 %[>]embed_canvas.m
 %[>]adapt_yaxis.m
-% }}}
 
   % check inputs {{{
   if nargin < 4 || nargin > 5
@@ -68,7 +55,7 @@ function [] = cafa_barplot_seq_fmax(pfile, pttl, data, bsl_data, yaxis)
     yaxis = [];
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -80,30 +67,25 @@ function [] = cafa_barplot_seq_fmax(pfile, pttl, data, bsl_data, yaxis)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'data' {{{
+  % data
   validateattributes(data, {'cell'}, {'nonempty'}, '', 'data', 3);
   n = numel(data);
-  % }}}
 
-  % check the 4th input 'bsl_data' {{{
+  % bsl_data
   validateattributes(bsl_data, {'cell'}, {'numel', 2}, '', 'bsl_data', 4);
   m = numel(bsl_data);
-  % }}}
 
-  % check the 5th input 'yaxis' {{{
+  % yaxis
   validateattributes(yaxis, {'double'}, {}, '', 'yaxis', 5);
   if isempty(yaxis)
     is_adaptive = true;
   else
     is_adaptive = false;
   end
-  % }}}
   % }}}
 
   % preparation, find ylim {{{
@@ -233,4 +215,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 29 Feb 2016 04:17:36 PM E
+% Last modified: Mon 23 May 2016 12:04:36 PM E

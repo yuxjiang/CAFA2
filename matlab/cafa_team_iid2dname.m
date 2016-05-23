@@ -1,6 +1,5 @@
 function [dname] = cafa_team_iid2dname(reg, iid)
 %CAFA_TEAM_IID2DNAME CAFA team internal ID to display name
-% {{{
 %
 % [dname] = CAFA_TEAM_IID2DNAME(reg, iid);
 %
@@ -36,24 +35,21 @@ function [dname] = cafa_team_iid2dname(reg, iid)
 % Dependency
 % ----------
 %[>]cafa_team_register.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 2
     error('cafa_team_iid2dname:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st input 'reg' {{{
+  % reg
   validateattributes(reg, {'char'}, {'nonempty'}, '', 'reg', 1);
   fid = fopen(reg, 'r');
   if fid == -1
     error('cafa_team_register:FileErr', 'Cannot open the team file [%s].', reg);
   end
-  % }}}
 
-  % check the 2nd input 'iid' {{{
+  % iid 
   validateattributes(iid, {'cell', 'char'}, {'nonempty'}, '', 'iid', 2);
-  % }}}
   % }}}
 
   % convert id {{{
@@ -75,4 +71,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 17 Mar 2016 01:21:15 PM E
+% Last modified: Mon 23 May 2016 03:46:07 PM E

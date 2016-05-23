@@ -1,6 +1,5 @@
 function [score] = cafa_norm_pred(score)
 %CAFA_NORM_PRED CAFA normalize prediction
-% {{{
 %
 % [score] = CAFA_NORM_PRED(score);
 %
@@ -26,17 +25,15 @@ function [score] = cafa_norm_pred(score)
 % Dependency
 % ----------
 %[>]pfp_minmaxnrm.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 1
     error('cafa_norm_pred:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'score' {{{
+  % score
   validateattributes(score, {'double'}, {'>=', 0}, '', 'score', 1);
   [n, m] = size(score);
-  % }}}
   % }}}
 
   % normalization {{{
@@ -52,4 +49,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 17 Jul 2015 11:05:12 AM E
+% Last modified: Mon 23 May 2016 05:44:43 PM E

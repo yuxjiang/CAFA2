@@ -1,6 +1,5 @@
 function [ev] = cafa_eval_seq_fmax_bst(id, bm, pr, ev_mode, BI, beta)
 %CAFA_EVAL_SEQ_FMAX_BST CAFA evaluation sequence-centric Fmax
-% {{{
 %
 % [ev] = CAFA_EVAL_SEQ_FMAX_BST(id, bm, pr, ev_mode, BI, beta);
 %
@@ -18,20 +17,17 @@ function [ev] = cafa_eval_seq_fmax_bst(id, bm, pr, ev_mode, BI, beta)
 %
 % [struct]
 % pr:       The pre-computed precision-recall per sequence.
-%           [cell of char]
-%           .object   n-by-1 sequence ID.
-%
-%           [cell of double]
-%           .metric   1-by-k precision-recall pair sets, where 'k' is the number
-%                     of distinct thresholds. In most cases, k = 101,
-%                     corresponding to 101 thresholds: tau = 0.00 : 0.01 : 1.00.
-%                     Each cell contains a n-by-2 double array, which is the
-%                     (precision, recall) pair of n sequences at a specific
-%                     threshold.
-%
-%           [logical]
-%           .covered  n-by-1 indicator of if sequence i is predicted by this
-%                     model.
+%           .object   [cell]    n-by-1 sequence ID.
+%           .metric   [cell]    1-by-k precision-recall pair sets, where 'k' is
+%                               the number of distinct thresholds. In most
+%                               cases, k = 101, corresponding to 101 thresholds:
+%                               tau = 0.00:0.01:1.00. Each cell contains a
+%                               n-by-2 double array, which is the (precision,
+%                               recall) pair of n sequences at a specific
+%                               threshold.
+%           .covered  [logical] n-by-1 indicator of if sequence i is predicted
+%                               by this model.
+%           See pfp_convcmstruct.m
 %
 % [char]
 % ev_mode:  The mode of evaluation.
@@ -49,45 +45,35 @@ function [ev] = cafa_eval_seq_fmax_bst(id, bm, pr, ev_mode, BI, beta)
 % (optional)
 % [double]
 % beta:     The beta in F_{beta}-max.
-%           default: 1.
+%           default: 1
 %
 % Output
 % ------
 % [struct]
 % ev: The precision-recall curve structure for each model:
+%     .id           [char]    The model name, used for naming files.
+%     .fmax_bst     [double]  B-by-1, bootstrapped F1-max.
+%     .point_bst    [double]  B-by-2, the corresponding (precision, recall)
+%                             point for each bootstrap.
+%     .tau_bst      [double]  B-by-1, the corresponding threshold for each
+%                             bootstrap.
+%     .ncovered_bst [double]  B-by-1, number of covered proteins in 'bm'.
+%     .coverage_bst [double]  B-by-1, coverage of the model for each bootstrap.
 %
-%     [char]
-%     .id             The model name, used for naming files.
-%
-%     [double]
-%     .fmax_bst       B-by-1, bootstrapped F1-max.
-%
-%     [double]
-%     .point_bst      B-by-2, the corresponding (precision, recall) point for
-%                     each bootstrap.
-%
-%     [double]
-%     .tau_bst        B-by-1, the corresponding threshold for each bootstrap.
-%
-%     [double]
-%     .ncovered_bst   B-by-1, number of covered proteins in 'bm'.
-%
-%     [double]
-%     .coverage_bst   B-by-1, coverage of the model for each bootstrap.
-%
-%                     Note that 'coverge' always refers to the one in 'full'
-%                     evaluation mode. ('partial' mode has a trivial 100%
-%                     coverage)
+%     Note that 'coverge' always refers to the one in 'full' evaluation mode.
+%     ('partial' mode has a trivial 100% coverage)
 %
 % Dependency
 % ----------
 %[>]pfp_loaditem.m
 %[>]pfp_fmaxc.m
-%[>]pfp_seqcm.m
-% }}}
+%
+% See Also
+% --------
+%[>]pfp_convcmstruct.m
 
   % check inputs {{{
-  if nargin < 5 || nargin > 6
+  if nargin ~= 5 && nargin ~= 6
     error('cafa_eval_seq_fmax_bst:InputCount', 'Expected 5 or 6 inputs.');
   end
 
@@ -95,33 +81,27 @@ function [ev] = cafa_eval_seq_fmax_bst(id, bm, pr, ev_mode, BI, beta)
     beta = 1;
   end
 
-  % check the 1st input 'id' {{{
+  % id
   validateattributes(id, {'char'}, {'nonempty'}, '', 'id', 1);
-  % }}}
 
-  % check the 2nd input 'bm' {{{
+  % bm
   validateattributes(bm, {'char', 'cell'}, {'nonempty'}, '', 'bm', 2);
   if ischar(bm) % load the benchmark if a file name is given
     bm = pfp_loaditem(bm, 'char');
   end
   m = numel(bm);
-  % }}}
 
-  % check the 3rd input 'pr' {{{
+  % pr
   validateattributes(pr, {'struct'}, {'nonempty'}, '', 'pr', 3);
-  % }}}
 
-  % check the 4th input 'ev_mode' {{{
+  % ev_mode
   ev_mode = validatestring(ev_mode, {'1', 'full', '2', 'partial'}, '', 'ev_mode', 4);
-  % }}}
 
-  % check the 5th input 'BI' {{{
+  % BI
   validateattributes(BI, {'double'}, {'>', 0, 'ncols', m}, '', 'BI', 5);
-  % }}}
 
-  % check the 6th input 'beta' {{{
+  % beta
   validateattributes(beta, {'double'}, {'positive'}, '', 'beta', 6);
-  % }}}
   % }}}
 
   % evaluation {{{
@@ -156,7 +136,6 @@ function [ev] = cafa_eval_seq_fmax_bst(id, bm, pr, ev_mode, BI, beta)
     for i = 1 : k
       prcurve(i, :) = nanmean(pr.metric{i}(ev_index_bst, :), 1);
     end
-
     [ev.fmax_bst(b), ev.point_bst(b, :), ev.tau_bst(b)] = pfp_fmaxc(prcurve, pr.tau, beta);
   end
   % }}}
@@ -166,4 +145,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 01:31:11 PM E
+% Last modified: Mon 23 May 2016 06:31:25 PM E

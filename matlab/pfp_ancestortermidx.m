@@ -1,21 +1,19 @@
-function [idx] = pfp_ancestortermidx(ont, term_lst)
+function [idx] = pfp_ancestortermidx(ont, list)
 %PFP_ANCESTORTERMIDX Ancestor term index
-% {{{
 %
-% [idx] = PFP_ANCESTORIDX(ont, term_lst);
+% [idx] = PFP_ANCESTORIDX(ont, list);
 %
 %   Returns the indices of the union of all ancestor terms (self-included).
 %
 % Input
 % -----
 % [struct]
-% ont:      The ontology structure.
-%           See pfp_ontbuild.m
+% ont:  The ontology structure. See pfp_ontbuild.m
 %
 % [cell, char or struct]
-% term_lst: [cell]    - A cell of (char) term IDs.
-%           [char]    - A single (char) term ID.
-%           [struct]  - An array of term structures.
+% list: cell    - A cell of (char) term IDs.
+%       char    - A single (char) term ID.
+%       struct  - An array of term structures.
 %
 % Output
 % ------
@@ -29,24 +27,21 @@ function [idx] = pfp_ancestortermidx(ont, term_lst)
 % See Also
 % --------
 %[>]pfp_ontbuild.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 2
     error('pfp_ancestortermidx:InputCount', 'Expected 2 inputs.');
   end
 
-  % check the 1st argument 'ont' {{{
+  % ont
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % }}}
 
-  % check the 2nd arugment 'term_lst' {{{
-  validateattributes(term_lst, {'cell', 'char', 'struct'}, {'nonempty'}, '', 'term_lst', 2);
-  % }}}
+  % list
+  validateattributes(list, {'cell', 'char', 'struct'}, {'nonempty'}, '', 'list', 2);
   % }}}
 
   % find indices {{{
-  index = pfp_gettermidx(ont, term_lst);
+  index = pfp_gettermidx(ont, list);
   index(index == 0) = [];
   % }}}
 
@@ -66,4 +61,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 13 Jan 2016 09:20:37 AM E
+% Last modified: Mon 23 May 2016 07:03:05 PM E

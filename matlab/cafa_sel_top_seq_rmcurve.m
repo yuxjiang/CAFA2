@@ -1,6 +1,5 @@
 function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, reg, isdump)
 %CAFA_SEL_TOP_SEQ_SMIN CAFA curve top sequence-centric Smin
-% {{{
 %
 % [sel, bsl] = CAFA_SEL_TOP_SEQ_SMIN(K, rmcurves, naive, blast, reg, isdump);
 %
@@ -17,8 +16,7 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, reg, i
 %           [double]    [k-by-2]    .curve
 %           [double]    [1-by-k]    .tau
 %           [double]    [1-by-1]    .coverage
-%
-%           See cafa_eval_seq_rmcurve.m
+%           See cafa_eval_seq_curve.m, cafa_collect.m
 %
 % [char]
 % naive:    The model id of the naive baseline. E.g. BN4S
@@ -71,8 +69,11 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, reg, i
 %[>]pfp_sminc.m
 %[>]cafa_collect.m
 %[>]cafa_team_register.m
+%
+% See Also
+% --------
+%[>]cafa_collect.m
 %[>]cafa_eval_seq_curve.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 6
@@ -131,8 +132,14 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, reg, i
   for i = 1 : n
     index = find(strcmp(team_id, rmcurves{i}.id));
 
+    % remove points that are strickly worse that another one {{{
+    % (RU(i), MI(i)) is strickly less than (RU(j), MI(j)), if
+    % RU(i) < RU(j) and MI(i) < MI(j).
+    rmcurves{i} = loc_remove_points(rmcurves{i});
+    % }}}
+
     % remove the point on the curve that corresp. to tau = 0.00
-    rmcurves{i} = remove_tau0_point(rmcurves{i});
+    rmcurves{i} = loc_remove_tau0_point(rmcurves{i});
 
     if strcmp(rmcurves{i}.id, naive)
       bsl{1}.curve     = rmcurves{i}.curve;
@@ -214,12 +221,12 @@ function [sel, bsl] = cafa_sel_top_seq_rmcurve(K, rmcurves, naive, blast, reg, i
   % }}}
 return
 
-% function: remove_points {{{
-function [new_curve] = remove_points(curve)
-  RU = curve(:, 1);
-  MI = curve(:, 2);
+% function: loc_remove_points {{{
+function [rm] = loc_remove_points(rm)
+  RU = rm.curve(:, 1);
+  MI = rm.curve(:, 2);
 
-  n = size(curve, 1);
+  n = length(rm.tau);
   useless = false(n, 1);
 
   for i = 1 : n
@@ -229,14 +236,15 @@ function [new_curve] = remove_points(curve)
       useless(i) = true;
     end
   end
-  RU(useless) = [];
-  MI(useless) = [];
-  new_curve = [RU, MI];
+  if ~isempty(useless)
+    rm.curve(useless, :) = [];
+    rm.tau(useless)      = [];
+  end
 return
 % }}}
 
-% function: remove_tau0_point {{{
-function [rm] = remove_tau0_point(rm)
+% function: loc_remove_tau0_point {{{
+function [rm] = loc_remove_tau0_point(rm)
   index = find(rm.tau == 0.00);
   if ~isempty(index)
     rm.curve(index, :) = [];
@@ -249,4 +257,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 07 Apr 2016 04:27:36 PM E
+% Last modified: Mon 23 May 2016 04:38:05 PM E

@@ -1,6 +1,5 @@
 function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
 %CAFA_DRIVER_RESULT CAFA driver result
-% {{{
 %
 % [] = CAFA_DRIVER_RESULT(eval_dir, reg, naive, blast, scheme);
 %
@@ -71,7 +70,6 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
 %[>]cafa_sel_valid_term_auc.m
 %[>]cafa_get_term_auc.m
 %[>]cafa_team_register.m
-% }}}
 
   % set-up {{{
   plot_ext  = '.png'; % recommend PNG. (EPS may also work)
@@ -356,4 +354,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Thu 17 Mar 2016 01:41:59 PM E
+% Last modified: Sun 22 May 2016 06:27:18 PM E

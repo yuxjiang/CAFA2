@@ -1,10 +1,9 @@
 function [ylim, ts] = adapt_yaxis(olim, tlim, cts)
 %ADAPT_YAXIS Adapt Y-axis
-% {{{
 %
 % [ylim, ts] = ADAPT_YAXIS(olim, tlim, cts);
 %
-%   Makes an adaptive Y-axis ticks (YLim, tick step).
+%   Determines a "proper" y-axis tick labels for plotting.
 %
 % Input
 % -----
@@ -17,33 +16,30 @@ function [ylim, ts] = adapt_yaxis(olim, tlim, cts)
 %
 % [double]
 % cts:  a vector of candidate tick steps
+%       E.g. [0.1 0.2 0.5 1.0 1.5]
 %
 % Output
 % ------
 % [double]
 % ylim: The [lower, upper] bound of y-axis.
-%       'ylim' can be used to set 'axes.YLim'
+%       Note that 'ylim' can be used to set 'axes.YLim'
 %
 % [double]
 % ts:   The tick step.
-% }}}
 
   % check inputs {{{
   if nargin ~= 3
     error('adapt_yaxis:InputCount', 'Expected 3 inputs.');
   end
 
-  % check the 1st input 'olim' {{{
+  % olim
   validateattributes(olim, {'double'}, {'numel', 2}, '', 'olim', 1);
-  % }}}
 
-  % check the 2nd input 'tlim' {{{
+  % tlim
   validateattributes(tlim, {'double'}, {'numel', 2}, '', 'tlim', 2);
-  % }}}
 
-  % check the 3th input 'cts' {{{
+  % cts
   validateattributes(cts, {'double'}, {'nonempty'}, '', 'cts', 3);
-  % }}}
   % }}}
 
   % adaptation {{{
@@ -81,4 +77,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 26 Feb 2016 02:06:48 AM E
+% Last modified: Sun 22 May 2016 02:30:19 PM E

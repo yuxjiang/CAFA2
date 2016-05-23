@@ -1,6 +1,5 @@
 function [oa] = pfp_oabuild(ont, afile, varargin)
 %PFP_OABUILD Ontology annotation build
-% {{{
 %
 % [oa] = PFP_OABUILD(ont, afile[, afile_2, ...]);
 %
@@ -8,88 +7,78 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
 %
 % Note
 % ----
-% Annotations with unmatched term IDs will be ignored.
+% Annotations with invalid terms will be ignored.
 %
 % Input
 % -----
+% (required)
 % [struct]
-% ont:      The ontology structure.
+% ont:      The ontology structure. See pfp_ontbuild.m
 %
 % [char]
-% afile:    An annotation data file. This function assumes that the data
-%           file contains two columns, splitted by TAB
-%           <object id> <term id>
+% afile:    An annotation file, which has two columns splitted by TAB.
+%           <object ID> <term ID>
 %
 % (optional)
 % [cell]
-% varargin: Additional data files.
+% varargin: Additional annotation files.
 %
 % Output
 % ------
 % [struct]
-% oa: The ontology annotation structure, which has
-%     [cell]
-%     .object     (char) object ID array, of char type, ID here could
-%                 be string that identifies an object e.g., HGNC ID
-%                 for genes, UniProt accession for proteins.
-%
-%     [struct]
-%     .ontology   The ontology structure.
-%
-%     [logical and sparse]
-%     .annotation Annotation(i, j) = true means object i and term j
-%                 are associated.
-%
-%     [double]
-%     .eia        The estimated information accretion for each term.
-%
-%     [char]
-%     .date       When it's been built.
+% oa: The ontology annotation structure, which has the following fields:
+%     .object     [cell]    Object ID array, of type "char". ID here could
+%                           typically be strings that identify objects in a
+%                           database: e.g., UniProt protein accessions.
+%     .ontology   [struct]  The ontology structure passed through from the
+%                           inputs.
+%     .annotation [logical] A (sparse) binary matrix where annotation(i, j) =
+%                           true indicates the association between object i
+%                           and term j.
+%     .date       [char]    The date when it's been built.
 %
 % Dependency
 % ----------
-%[>]pfp_ontbuild.m
 %[>]pfp_getterm.m
 %[>]pfp_annotprop.m
-%[>]pfp_eia.m
-% }}}
+%
+% See Also
+% --------
+%[>]pfp_ontbuild.m
 
   % check inputs {{{
-  % check the 1st argument 'ont' {{{
+  % ont
   validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-  % }}}
 
-  % check the 2nd argument 'afile' {{{
+  % afile
   validateattributes(afile, {'char'}, {'nonempty'}, '', 'afile', 2);
   if ~exist(afile, 'file')
     error('pfp_oabuild:FileErr', 'File [%s] doesn''t exist.', afile);
   end
   afiles = cell(1, 1 + numel(varargin));
   afiles{1} = afile;
-  % }}}
 
-  % check additional arguments 'varargin' {{{
+  % varargin
   for i = 1 : numel(varargin)
     validateattributes(varargin{i}, {'char'}, {'nonempty'}, '', 'varargin', 3);
     if ~exist(varargin{i}, 'file')
       error('pfp_oabuild:FileErr', 'File [%s] doesn''t exist.', varargin{i});
     end
-    afiles{i + 1} = varargin{i};
+    afiles{i+1} = varargin{i};
   end
-  % }}}
   % }}}
 
   % read ontology annotation data file(s) {{{
-  plain_oa = oaread(afiles); % See below for definination
-  matched_term = pfp_getterm(ont, plain_oa.term_id);
+  plain_oa   = loc_oaread(afiles); % See below for local function definination
+  valid_term = pfp_getterm(ont, plain_oa.term_id);
 
-  % unmatched terms will have an empty string, '', as its ID (place-holder),
-  dummy = find(cellfun(@length, {matched_term.id}) == 0);
+  % invalid terms will have an empty string, '', as its ID (place-holder),
+  dummy = find(cellfun(@length, {valid_term.id}) == 0);
   if numel(dummy) > 0
     warning('pfp_oabuild:InvalidID', 'Found [%d] invalid term ID(s).', numel(dummy));
 
     % remove those dummy terms.
-    matched_term(dummy) = [];
+    valid_term(dummy) = [];
 
     % update 'plain_oa' accordingly
     plain_oa.term_id(dummy)  = [];
@@ -102,9 +91,9 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
   oa.ontology   = ont;
   oa.annotation = logical(sparse(numel(oa.object), numel(ont.term)));
 
-  % map matched_term.id to the ontology term list
-  % those terms have been mapped already above, so all should be found
-  [~, index] = ismember({matched_term.id}, {ont.term.id});
+  % map valid_term.id to the ontology term list those terms have been mapped
+  % already above, so all should be found
+  [~, index] = ismember({valid_term.id}, {ont.term.id});
 
   % alternative term IDs will share the same index, in which case, we have to
   % take the union of annotations on those terms. Thus, the union will be saved
@@ -127,16 +116,13 @@ function [oa] = pfp_oabuild(ont, afile, varargin)
   oa.object(zero_annot) = [];
 
   oa.annotation = pfp_annotprop(oa.ontology.DAG, oa.annotation);
-  oa.eia        = pfp_eia(oa.ontology.DAG, oa.annotation);
   oa.date       = datestr(now, 'mm/dd/yyyy HH:MM');
   % }}}
 return
 
-% function: oaread {{{
-function [plain_oa] = oaread(afiles)
-%OAREAD Ontology annotation read {{{
-%
-% [plain_oa] = OAREAD(afiles);
+% function: loc_oaread {{{
+function [plain_oa] = loc_oaread(afiles)
+% [plain_oa] = LOC_OAREAD(afiles);
 %
 %   Reads plain ontology annotation file(s) into a plain oa structure
 %
@@ -144,17 +130,15 @@ function [plain_oa] = oaread(afiles)
 % -----
 % [char]
 % afiles:   plain ontology annotation file, in the following format
-%
-%           <object ID> <ontology term ID>
+%           <object ID> <term ID>
 %
 % Output
 % ------
 % [struct]
 % plain_oa: ontology annotation, which has
-%           .obj_id     - gene product ID, having length n.
-%           .term_id    - GO term ID, having length m.
-%           .annot      - a sparse binary matrix, with size n-by-m.
-% }}}
+%           .obj_id   [cell]    gene product ID, having length n.
+%           .term_id  [cell]    GO term ID, having length m.
+%           .annot    [logical] a sparse binary matrix, with size n-by-m.
 
   gp = {};
   tm = {};
@@ -180,4 +164,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 05 Apr 2016 12:30:53 AM E
+% Last modified: Thu 12 May 2016 03:26:35 PM E

@@ -1,6 +1,5 @@
 function [annotation] = pfp_leafannot(oa)
 %PFP_LEAFANNOT Leaf annotation
-% {{{
 %
 % [annotation] = PFP_LEAFANNOT(oa);
 %
@@ -9,7 +8,7 @@ function [annotation] = pfp_leafannot(oa)
 % Input
 % -----
 % [struct]
-% oa:         The ontology annotation structure.
+% oa: The ontology annotation structure. See pfp_oabuild.m
 %
 % Output
 % ------
@@ -18,18 +17,19 @@ function [annotation] = pfp_leafannot(oa)
 %
 % Dependency
 % ----------
-%[>]pfp_oabuild.m
 %[>]Bioinformatics Toolbox:graphtopoorder
-% }}}
+%
+% See Also
+% --------
+%[>]pfp_oabuild.m
 
   % check inputs {{{
   if nargin ~= 1
     error('pfp_leafannot:InputCount', 'Expected 1 input.');
   end
 
-  % check the 1st input 'oa' {{{
+  % oa
   validateattributes(oa, {'struct'}, {'nonempty'}, '', 'oa', 1);
-  % }}}
   % }}}
 
   % calculation {{{
@@ -60,4 +60,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 26 Feb 2016 08:44:27 PM E
+% Last modified: Thu 12 May 2016 04:14:50 PM E

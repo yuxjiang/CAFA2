@@ -1,6 +1,5 @@
 function [ev] = cafa_eval_seq_fmax(id, bm, pr, md, beta)
 %CAFA_EVAL_SEQ_FMAX CAFA evaluation sequence-centric Fmax
-% {{{
 %
 % [ev] = CAFA_EVAL_SEQ_FMAX(id, bm, pr, md, beta);
 %
@@ -20,21 +19,13 @@ function [ev] = cafa_eval_seq_fmax(id, bm, pr, md, beta)
 %
 % [struct]
 % pr:   The pre-computed precision-recall per sequence.
-%       [cell of char]
-%       .object     - n-by-1 sequence ID
-%
-%       [cell of double]
-%       .metric     - 1-by-k precision-recall pair sets, where 'k'
-%                     is the number of distinct thresholds. In most
-%                     cases, k = 101, corresponding to 101 thresholds:
-%                     tau = 0.00 : 0.01 : 1.00
-%                     Each cell contains a n-by-2 double array, which
-%                     is the (precision, recall) pair of n sequences
-%                     at a specific threshold.
-%
-%       [logical]
-%       .covered    - n-by-1 indicator of if sequence i is predicted
-%                     by this model.
+%       .centric  [char]    'sequence'
+%       .object   [cell]    An n-by-1 array of (char) object ID.
+%       .metric   [cell]    A 1-by-k cell of pr-rc metrics.
+%       .tau      [double]  A 1-by-k array of thresholds.
+%       .covered  [logical] A n-by-1 logical array indicating if the correspond.
+%                           object is predicted ("covered") by the model.
+%       See pfp_convcmstruct.m.
 %
 % [char]
 % md:   The mode of evaluation.
@@ -45,51 +36,36 @@ function [ev] = cafa_eval_seq_fmax(id, bm, pr, md, beta)
 % (optional)
 % [double]
 % beta: The beta in F_{beta}-score.
-%       default: 1.
+%       default: 1
 %
 % Output
 % ------
 % [struct]
 % ev: The Fmax structure for each model:
-%
-%     [char]
-%     .id         The model name, used for naming files.
-%
-%     [double]
-%     .fmax       scalar, Fmax.
-%
-%     [double]
-%     .point      1-by-2, the corresponding (precision, recall) point.
-%
-%     [double]
-%     .tau        scalar, the corresponding threshold.
-%
-%     [double]
-%     .ncovered   scalar, number of covered proteins in 'bm'.
-%
-%     [double]
-%     .coverage   scalar, coverage of the model.
-%
-%                 Note that 'coverge' always refers to the one in 'full'
-%                 evaluation mode. ('partial' mode has a trivial 100%
-%                 coverage)
-%
-%     [char]
-%     .mode       evaluation mode. 'full' or 'partial'
-%
-%     [double]
-%     .beta       the beta for F_{beta}-max
+%     .id         [char]    The model name, used for naming files.
+%     .fmax       [double]  scalar, Fmax.
+%     .point      [double]  1-by-2, the corresponding (precision, recall) point.
+%     .tau        [double]  scalar, the corresponding threshold.
+%     .ncovered   [double]  scalar, number of covered proteins in 'bm'.
+%     .coverage   [double]  scalar, coverage of the model.
+%                           Note that 'coverge' always refers to the one in
+%                           'full' evaluation mode. ('partial' mode has a
+%                           trivial 100% coverage)
+%     .mode       [char]    evaluation mode. 'full' or 'partial'
+%     .beta       [double]  the beta for F_{beta}-max.
 %
 % Dependency
 % ----------
 %[>]pfp_loaditem.m
 %[>]pfp_fmaxc.m
-%[>]pfp_seqcm.m
 %[>]cafa_eval_seq_curve.m
-% }}}
+%
+% See Also
+% --------
+%[>]pfp_convcmstruct.m
 
   % check inputs {{{
-  if nargin < 4 || nargin > 5
+  if nargin ~=4 && nargin ~= 5
     error('cafa_eval_seq_fmax:InputCount', 'Expected 4 or 5 inputs.');
   end
 
@@ -97,33 +73,27 @@ function [ev] = cafa_eval_seq_fmax(id, bm, pr, md, beta)
     beta = 1;
   end
 
-  % check the 1st input 'id' {{{
+  % id
   validateattributes(id, {'char'}, {'nonempty'}, '', 'id', 1);
-  % }}}
 
-  % check the 2nd input 'bm' {{{
+  % bm
   validateattributes(bm, {'char', 'cell'}, {'nonempty'}, '', 'bm', 2);
   if ischar(bm) % load the benchmark if a file name is given
     bm = pfp_loaditem(bm, 'char');
   end
-  % }}}
 
-  % check the 3rd input 'pr' {{{
+  % pr
   validateattributes(pr, {'struct'}, {'nonempty'}, '', 'pr', 3);
-  % }}}
 
-  % check the 4th input 'md' {{{
+  % md
   md = validatestring(md, {'1', 'full', '2', 'partial'}, '', 'md', 4);
-  % }}}
 
-  % check the 5th input 'beta' {{{
+  % beta
   validateattributes(beta, {'double'}, {'positive'}, '', 'beta', 5);
-  % }}}
   % }}}
 
   % compute {{{
   ev_prcurve = cafa_eval_seq_curve(id, bm, pr, md);
-
   ev.id                       = ev_prcurve.id;
   [ev.fmax, ev.point, ev.tau] = pfp_fmaxc(ev_prcurve.curve, ev_prcurve.tau, beta);
   ev.ncovered                 = ev_prcurve.ncovered;
@@ -137,4 +107,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 15 Sep 2015 01:31:22 PM E
+% Last modified: Mon 23 May 2016 06:24:43 PM E

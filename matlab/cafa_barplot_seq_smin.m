@@ -1,6 +1,5 @@
 function [] = cafa_barplot_seq_smin(pfile, pttl, data, bsl_data)
 %CAFA_BARPLOT_SEQ_SMIN CAFA barplot sequence-centric S-min
-% {{{
 %
 % [] = CAFA_BARPLOT_SEQ_SMIN(pfile, pttl, data, bsl_data);
 %
@@ -20,22 +19,11 @@ function [] = cafa_barplot_seq_smin(pfile, pttl, data, bsl_data)
 % [cell]
 % data:     The data containing Smins and other information to plot
 %           Each cell has the thing needed for plotting a single curve.
-%
-%           [double]
-%           .smin_mean      scalar, "bar height".
-%
-%           [double]
-%           .smin_q05       scalar, 5% quantiles.
-%
-%           [double]
-%           .smin_q95       scalar, 95% quantiles.
-%
-%           [double]
-%           .coverage       scalar, averaged coverage.
-%
-%           [char]
-%           .tag            tag of the model.
-%
+%           .smin_mean  [double]  scalar, "bar height".
+%           .smin_q05   [double]  scalar, 5% quantiles.
+%           .smin_q95   [double]  scalar, 95% quantiles.
+%           .coverage   [double]  scalar, averaged coverage.
+%           .tag        [char]    tag of the model.
 %           See cafa_sel_top_seq_smin.m
 %
 % [cell]
@@ -50,14 +38,13 @@ function [] = cafa_barplot_seq_smin(pfile, pttl, data, bsl_data)
 % ----------
 %[>]cafa_sel_top_seq_smin.m
 %[>]embed_canvas.m
-% }}}
 
   % check inputs {{{
   if nargin ~= 4
     error('cafa_barplot_seq_smin:InputCount', 'Expected 4 inputs.');
   end
 
-  % check the 1st input 'pfile' {{{
+  % pfile
   validateattributes(pfile, {'char'}, {'nonempty'}, '', 'pfile', 1);
   [p, f, e] = fileparts(pfile);
   if isempty(e)
@@ -69,21 +56,17 @@ function [] = cafa_barplot_seq_smin(pfile, pttl, data, bsl_data)
   elseif strcmp(ext, '.png')
     device_op = '-dpng';
   end
-  % }}}
 
-  % check the 2nd input 'pttl' {{{
+  % pttl
   validateattributes(pttl, {'char'}, {}, '', 'pttl', 2);
-  % }}}
 
-  % check the 3rd input 'data' {{{
+  % data
   validateattributes(data, {'cell'}, {'nonempty'}, '', 'data', 3);
   n = numel(data);
-  % }}}
 
-  % check the 4th input 'bsl_data' {{{
+  % bsl_data
   validateattributes(bsl_data, {'cell'}, {'numel', 2}, '', 'bsl_data', 4);
   m = numel(bsl_data);
-  % }}}
   % }}}
 
   % preparation, find ylim {{{
@@ -206,4 +189,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 07 Mar 2016 10:47:52 AM E
+% Last modified: Mon 23 May 2016 12:05:54 PM E

@@ -1,8 +1,7 @@
-function [] = pfp_savevar(filename, var, varname)
+function [] = pfp_savevar(ofile, vardata, varname)
 %PFP_SAVEVAR Save variable
-% {{{
 %
-% [] = pfp_savevar(filename, var, varname);
+% [] = pfp_savevar(ofile, vardata, varname);
 %
 %   Save (or append if file exists) a variable to a file.
 %
@@ -13,21 +12,20 @@ function [] = pfp_savevar(filename, var, varname)
 % Input
 % -----
 % [char]
-% filename: The file name to which the variable will be saved.
+% ofile:    The file name to which the variable will be saved.
 %
 % [(any)]
-% var:      A matlab variable (data)
+% vardata:  A matlab variable (data)
 %
 % (optional)
 % [char]
 % varname:  Assign a new name to the saved variable if needed.
-%           It resort to inputname(var) if not given or given as empty.
+%           It resort to inputname(vardata) if not given or given as empty.
 %           default: ''
 %
 % Output
 % ------
 % None.
-% }}}
 
   % check inputs {{{
   if nargin < 2 || nargin > 3
@@ -38,32 +36,29 @@ function [] = pfp_savevar(filename, var, varname)
     varname = '';
   end
 
-  % check the 1st input 'filename' {{{
-  validateattributes(filename, {'char'}, {'nonempty'}, '', 'filename', 1);
-  % }}}
+  % ofile
+  validateattributes(ofile, {'char'}, {'nonempty'}, '', 'ofile', 1);
 
-  % check the 2nd input 'var' {{{
-  % the 2nd input 'var' is left without checking, any data is allowed.
-  % }}}
+  % vardata
+  % the 2nd input 'vardata' is left without checking, any data is allowed.
 
-  % check the 3rd input 'varname' {{{
+  % varname
   validateattributes(varname, {'char'}, {}, '', 'varname', 3);
-  % }}}
   % }}}
 
   % prepare varname {{{
   if isempty(varname)
     varname = inputname(2);
   end
-  eval(sprintf('%s = var;', varname));
+  eval(sprintf('%s = vardata;', varname));
   % }}}
 
   % save / append {{{
-  if exist(filename, 'file')
+  if exist(ofile, 'file')
     % if the file already exists, append the variable.
-    save(filename, varname, '-append');
+    save(ofile, varname, '-append');
   else
-    save(filename, varname, '-v7.3');
+    save(ofile, varname, '-v7.3');
   end
   % }}}
 return
@@ -72,4 +67,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 08 Sep 2015 01:33:30 PM E
+% Last modified: Thu 12 May 2016 05:29:45 PM E

@@ -1,8 +1,7 @@
-function [mids] = cafa_pick_models(k, bm, rho)
+function [mids] = cafa_pick_models(k, cfg, rho)
 %CAFA_PICK_MODELS CAFA pick models
-% {{{
 %
-% [mids] = CAFA_PICK_MODELS(k, bm, rho, sch);
+% [mids] = CAFA_PICK_MODELS(k, bm, rho;
 %
 %   Picks k "best" predictors from the pool of submitted predictions.
 %
@@ -11,29 +10,20 @@ function [mids] = cafa_pick_models(k, bm, rho)
 % 1. The selected models should be:
 %    (a) Of high quality in terms of F-measure in general (i.e. does well on the
 %        specific benchmark, 'all' if not specified)
-%
 %    (b) Non-redundant. ("dissimilar" to each other)
-%
-% 2. This function assumes the CAFA assessment directory is
-%    CAFA_DIR = ~/cafa
 %
 % Input
 % -----
 % [double]
-% k:        The number of models to pick.
-%           k = Inf indicates to pick all available models.
+% k:    The number of models to pick.
+%       k = Inf indicates to pick all available models.
 %
-% [char]
-% bm:       The benchmark, which is encoded as: <ontology>_<category>_<type>_<mode>
-%
-%           For example: mfo_HUMAN_type1_mode1
-%
-%           Also, the specified benchmark should have been evaluated, i.e. there
-%           must be an existing subfolder (having the same name) under
-%           [CAFA_DIR]/evaluation/
+% [char or struct]
+% cfg:  The configuration file (job descriptor) or a parsed config structure.
+%       See cafa_parse_config.m
 %
 % [double]
-% rho:      The correlation lower bound used to enforce non-redundancy.
+% rho:  The correlation lower bound used to enforce non-redundancy.
 %
 % Output
 % ------
@@ -42,9 +32,9 @@ function [mids] = cafa_pick_models(k, bm, rho)
 %
 % Dependency
 % ----------
+%[>]cafa_parse_config.m
 %[>]cafa_collect.m
 %[>]cafa_sel_top_seq_fmax.m
-% }}}
 
   % CAFA environment setting {{{
   CAFA_DIR = '~/cafa';
@@ -55,29 +45,20 @@ function [mids] = cafa_pick_models(k, bm, rho)
     error('cafa_pick_models:InputCount', 'Expected 3 inputs');
   end
 
-  % check the 1st input 'k' {{{
+  % k
   validateattributes(k, {'double'}, {'nonnegative'}, '', 'k', 1);
-  % }}}
 
-  % check the 2nd input 'bm' {{{
-  validateattributes(bm, {'char'}, {'nonempty'}, '', 'bm', 2);
-  eval_dir = fullfile(CAFA_DIR, 'evaluation', bm);
+  % cfg
+  config = cafa_parse_config(cfg);
 
-  if ~exist(eval_dir, 'dir')
-    error('cafa_pick_models:InputErr', 'Benchmark has not been evaluated');
-  end
-  tokens = strsplit(bm, '_');
-  % }}}
-
-  % check the 3rd input 'rho' {{{
+  % rho
   validateattributes(rho, {'double'}, {'nonnegative'}, '', 'rho', 3);
-  % }}}
   % }}}
 
   % sort models {{{
-  fmaxs  = cafa_collect(eval_dir, 'seq_fmax_bst');
-  config = fullfile(CAFA_DIR, 'config', 'config.tab');
-  [tops, ~, info] = cafa_sel_top_seq_fmax(Inf, fmaxs, 'BN4S', 'BB4S', config, false);
+  fmaxs = cafa_collect(config.eval_dir, 'seq_fmax_bst');
+  reg = fullfile(CAFA_DIR, 'register', 'register.tab');
+  [tops, ~, info] = cafa_sel_top_seq_fmax(Inf, fmaxs, 'BN4S', 'BB4S', reg, false);
   % }}}
 
   % selection {{{
@@ -90,13 +71,14 @@ function [mids] = cafa_pick_models(k, bm, rho)
   mid_index = [];
   nsel = 0;
 
-  % load the pre-computed Pearson's correlation coefficient matrix
-  % xxo.team: model ID
-  % xxo.sim:  correlation
+  % load the pre-computed Pearson's correlation coefficient structure: 'ps'
+  % ps.xxo has two fields:
+  % xxo.mid [cell]    model ID
+  % xxo.pcc [double]  correlation
   % where xxo could be mfo, bpo, cco, or hpo
-  data  = load(fullfile(CAFA_DIR, 'analysis', 'methods', 'similarity.mat'), tokens{1});
-  pcorr = data.(tokens{1}).sim;
-  [found, index] = ismember(info.top_mid, data.(tokens{1}).team);
+  load(fullfile(CAFA_DIR, 'analysis', 'methods', 'pcc_struct.mat'), 'ps');
+  pcorr = ps.(config.ont).pcc;
+  [found, index] = ismember(info.top_mid, ps.(config.ont).mid);
   if ~all(found)
     error('cafa_pick_models:ModelNotFound', 'Some model(s) are not found.');
   end
@@ -128,4 +110,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 02 Feb 2016 10:20:41 AM E
+% Last modified: Mon 23 May 2016 05:39:07 PM E
