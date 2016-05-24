@@ -1,11 +1,10 @@
 function [curve] = pfp_prcurve(pred, ref, tau)
 %PFP_PRCURVE Precision-Recall curve
-% {{{
 %
 % [curve] = PFP_PRCURVE(pred, ref, tau);
 %
-% Calculates the precision-recall curve for predictors using the given
-% thresholds.
+%   Calculates the precision-recall curve for predictors using the given
+%   thresholds.
 %
 % Input
 % -----
@@ -25,10 +24,7 @@ function [curve] = pfp_prcurve(pred, ref, tau)
 % curve:  A 1-by-m cell array of curves, each of which contains a k-by-2
 %         matrix which specifies a precision-recall curve.
 %
-% Note
-% ----
-% If m = 1, 'curve' will simply be a k-by-2 matrix.
-% }}}
+%         Note: If m = 1, 'curve' will simply be a k-by-2 matrix.
 
   % check inputs {{{
   % check dimensions
@@ -84,4 +80,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 15 Oct 2015 11:20:49 AM E
+% Last modified: Tue 24 May 2016 02:37:55 PM E

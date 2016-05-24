@@ -1,6 +1,5 @@
 function [fmax, point, t] = pfp_fmaxc(curve, tau, beta)
 %PFP_FMAXC F-measure maximum (from) curve
-% {{{
 %
 % [fmax, point, t] = PFP_FMAXC(curve, tau);
 %
@@ -33,7 +32,6 @@ function [fmax, point, t] = pfp_fmaxc(curve, tau, beta)
 %
 % [double]
 % t:      The best corresponding threshold.
-% }}}
 
   % check inputs {{{
   if nargin < 2
@@ -44,18 +42,15 @@ function [fmax, point, t] = pfp_fmaxc(curve, tau, beta)
     beta = 1;
   end
 
-  % check the 1st input 'curve' {{{
+  % curve
   validateattributes(curve, {'double'}, {'ncols', 2}, '', 'curve', 1);
   k = size(curve, 1);
-  % }}}
 
-  % check the 2nd input 'tau' {{{
+  % tau
   validateattributes(tau, {'double'}, {'numel', k, 'increasing'}, '', 'tau', 2);
-  % }}}
 
-  % check the 3rd input 'beta' {{{
+  % beta
   validateattributes(beta, {'double'}, {'real', 'positive'}, '', 'beta', 3);
-  % }}}
   % }}}
 
   % sanity check {{{
@@ -85,4 +80,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 04 Feb 2016 06:24:41 PM E
+% Last modified: Tue 24 May 2016 02:35:53 PM E

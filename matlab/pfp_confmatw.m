@@ -1,6 +1,5 @@
 function [cm, tau] = pfp_confmatw(pred, ref, w, tau)
 %PFP_CONFMATW Confusion matrix (weighted)
-% {{{
 %
 % [cm] = PFP_CONFMAT(pred, ref, w, tau);
 %
@@ -31,17 +30,16 @@ function [cm, tau] = pfp_confmatw(pred, ref, w, tau)
 % ------
 % [struct]
 % cm:   1-by-k struct array. Each structure contains:
-%
-%       [double]
-%       .TN, .FP, .FN, .TP  - The four entries in a confusion matrix.
-%                             (weighted version)
+%       .TN [double]  (weighted) True negative
+%       .FP [double]  (weighted) False positive
+%       .FN [double]  (weighted) False negative
+%       .TP [double]  (weighted) True positive
 %
 % [double]
 % tau:  1-by-k corresponding thresholds.
-% }}}
 
   % check inputs {{{
-  if nargin < 3 || nargin > 4
+  if nargin ~= 3 && nargin ~= 4
     error('pfp_confmat:InputCount', 'Expected 3 or 4 inputs.');
   end
 
@@ -49,23 +47,19 @@ function [cm, tau] = pfp_confmatw(pred, ref, w, tau)
     tau = 0.00 : 0.01 : 1.00;
   end
 
-  % check the 1st input 'pred' {{{
+  % pred
   validateattributes(pred, {'double'}, {'ncols', 1, '>=', 0, '<=', 1}, '', 'pred', 1);
   n = numel(pred);
-  % }}}
 
-  % check the 2nd input 'ref' {{{
+  % ref
   validateattributes(ref, {'logical'}, {'ncols', 1, 'numel', n}, '', 'ref', 2);
-  % }}}
 
-  % check the 3rd input 'w' {{{
+  % w
   validateattributes(w, {'double'}, {'ncols', 1, 'numel', n}, '', 'w', 3);
-  % }}}
 
-  % check the 4th input 'tau' {{{
+  % tau
   validateattributes(tau, {'double'}, {'row', '>=', 0, '<=', 1, 'increasing'}, '', 'tau', 4);
   k = numel(tau);
-  % }}}
   % }}}
 
   % compute confusion matrices at each tau {{{
@@ -90,4 +84,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 04 Feb 2016 06:24:00 PM E
+% Last modified: Tue 24 May 2016 02:25:37 PM E

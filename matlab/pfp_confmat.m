@@ -1,6 +1,5 @@
 function [cm, tau] = pfp_confmat(pred, ref, tau)
 %PFP_CONFMAT Confusion matrix
-% {{{
 %
 % [cm] = PFP_CONFMAT(pred, ref, tau);
 %
@@ -21,22 +20,22 @@ function [cm, tau] = pfp_confmat(pred, ref, tau)
 % (optional)
 % [double]
 % tau:  1-by-k increasing thresholds.
-%       default: 0.00 : 0.01 : 1.00
+%       default: 0.00:0.01:1.00
 %
 % Output
 % ------
 % [struct]
 % cm:   1-by-k struct array. Each structure contains:
-%
-%       [double]
-%       .TN, .FP, .FN, .TP  - The four entries in a confusion matrix.
+%       .TN [double]  True negative
+%       .FP [double]  False positive
+%       .FN [double]  False negative
+%       .TP [double]  True positive
 %
 % [double]
 % tau:  1-by-k corresponding thresholds.
-% }}}
 
   % check inputs {{{
-  if nargin < 2 || nargin > 3
+  if nargin ~= 2 && nargin ~= 3
     error('pfp_confmat:InputCount', 'Expected 2 or 3 inputs.');
   end
 
@@ -44,19 +43,16 @@ function [cm, tau] = pfp_confmat(pred, ref, tau)
     tau = 0.00 : 0.01 : 1.00;
   end
 
-  % check the 1st input 'pred' {{{
+  % pred
   validateattributes(pred, {'double'}, {'ncols', 1, '>=', 0, '<=', 1}, '', 'pred', 1);
   n = numel(pred);
-  % }}}
 
-  % check the 2nd input 'ref' {{{
+  % ref
   validateattributes(ref, {'logical'}, {'ncols', 1, 'numel', n}, '', 'ref', 2);
-  % }}}
 
-  % check the 3rd input 'tau' {{{
+  % tau
   validateattributes(tau, {'double'}, {'row', '>=', 0, '<=', 1, 'increasing'}, '', 'tau', 3);
   k = numel(tau);
-  % }}}
   % }}}
 
   % compute confusion matrices at each tau {{{
@@ -81,4 +77,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Thu 04 Feb 2016 06:25:28 PM E
+% Last modified: Tue 24 May 2016 02:24:23 PM E

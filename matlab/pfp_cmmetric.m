@@ -1,6 +1,5 @@
 function [m] = pfp_cmmetric(cm, metric, varargin)
 %PFP_CMMETRIC Confusion matrix metric
-% {{{
 %
 % [m] = PFP_CMMETRIC(cm, metric, p);
 %
@@ -48,25 +47,22 @@ function [m] = pfp_cmmetric(cm, metric, varargin)
 % See Also
 % --------
 %[>]pfp_seqcm.m
-% }}}
 
   % check inputs {{{
   if nargin < 2
     error('pfp_cmmetric:InputCount', 'Expected >= 2 inputs.');
   end
 
-  % check the 1st input 'cm' {{{
+  % cm
   validateattributes(cm, {'double'}, {'ncols', 4}, '', 'cm', 1);
   TN = full(cm(:, 1));
   FP = full(cm(:, 2));
   FN = full(cm(:, 3));
   TP = full(cm(:, 4));
-  % }}}
 
-  % check the 2nd input 'metric' {{{
+  % metric
   metric_opt = {'pr', 'wpr', 'rm', 'nrm', 'f', 'wf', 'sd', 'nsd', 'ss', 'acc'};
   validatestring(metric, metric_opt, '', 'metric', 2);
-  % }}}
   % }}}
 
   % parse additional inputs {{{
@@ -137,4 +133,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Fri 23 Oct 2015 02:29:33 PM E
+% Last modified: Tue 24 May 2016 02:34:44 PM E
