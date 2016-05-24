@@ -21,6 +21,7 @@ function [config] = cafa_parse_config(cfg)
 %          +   +  prev_dir:     where pre-evaluation structures are
 %              +  eval_dir:     where evaluation result structures are
 %          +   +  oa:           the ontology annotation structure (groundtruth)
+%          +   +  eia:          the estimated information accretion
 %          +   +  bm:           benchmark of this evaluation category
 %          +   +  ont:          which ontology {'mfo', 'bpo', 'cco', 'hpo'}
 %              +  cat:          benchmark category
@@ -110,7 +111,8 @@ function [config] = cafa_parse_config(cfg)
         config.bm = pfp_loaditem(parsed{2}, 'char');
       elseif strcmp(parsed{1}, 'annotation')
         data = load(parsed{2});
-        config.oa = data.oa;
+        config.oa  = data.oa;
+        config.eia = data.eia;
         clear data;
       elseif strcmp(parsed{1}, 'bootstrap')
         save_for_later.bootstrap_file = parsed{2};
@@ -212,4 +214,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 23 May 2016 05:43:52 PM E
+% Last modified: Tue 24 May 2016 12:20:53 PM E

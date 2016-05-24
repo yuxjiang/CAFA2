@@ -22,7 +22,7 @@ function [] = cafa_driver_preeval(cfg)
 % |     |   |-- cco_all_typex.txt   ..................... cco benchmarks
 % |     |   `-- hpo_HUMAN_typex.txt ..................... hpo benchmarks
 % |     `-- ! groundtruth/  (pre-computed annotations, see pfp_oabuild.m)
-% |           |-- mfoa.mat (containing 'oa' struct. See pfp_oabuild.m)
+% |           |-- mfoa.mat (containing 'oa' and 'eia'. See pfp_oabuild.m)
 % |           |-- bpoa.mat
 % |           |-- ccoa.mat
 % |           `-- hpoa.mat
@@ -111,7 +111,7 @@ function [] = cafa_driver_preeval(cfg)
     end
 
     if config.do_seq_wfmax || config.do_seq_smin || config.do_seq_nsmin
-      cm_seq_ia = pfp_seqcm(config.bm, pred, config.oa, 'toi', 'noroot', 'w', 'eia');
+      cm_seq_ia = pfp_seqcm(config.bm, pred, config.oa, 'toi', 'noroot', 'w', config.eia);
 
       if config.do_seq_wfmax
         wpr = pfp_convcmstruct(cm_seq_ia, 'wpr', 'beta', config.beta);
@@ -137,4 +137,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 23 May 2016 03:37:45 PM E
+% Last modified: Tue 24 May 2016 12:25:43 PM E
