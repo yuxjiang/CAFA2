@@ -1,7 +1,7 @@
-function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
+function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, ont)
 %CAFA_PLOT_DUEL_FMAX CAFA plot duel Fmax
 %
-% [] = CAFA_PLOT_DUEL_FMAX(pttl, data, bsl_data);
+% [] = CAFA_PLOT_DUEL_FMAX(pttl, data, bsl_data, ont);
 %
 %   Plots duel results.
 %
@@ -34,9 +34,11 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
 %           See cafa_eval_seq_fmax_bst.m
 %
 % [double]
-% yrange:   [ymin, ymax] of the bar plot of baselines.
-%           recommended for mfo: [0.2, 0.7]
-%           recommended for bpo: [0.0, 0.5]
+% ont:      The ontology, must be either 'mfo' or 'bpo'.
+%           Note that yrange, ie. [ymin, ymax] of the bar plot of baselines will
+%           change accordingly based on the ontology for visualization purpose:
+%           mfo: [0.2, 0.7]
+%           bpo: [0.0, 0.5]
 %
 % Output
 % ------
@@ -73,11 +75,32 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   % bsl_data
   validateattributes(bsl_data, {'cell'}, {'numel', 4}, '', 'bsl_data', 3);
 
-  % yrange
-  validateattributes(yrange, {'double'}, {'numel', 2}, '', 'yrange', 4);
+  % ont
+  ont = validatestring(ont, {'mfo', 'bpo'}, '', 'ont', 4);
+  switch ont
+    case 'mfo'
+      yrange  = [0.2, 0.7];
+      ontname = 'Molecular Function';
+    case 'bpo'
+      yrange  = [0.0, 0.5];
+      ontname = 'Biological Process';
+    otherwise
+      % nop
+  end
   % }}}
 
   % setting {{{
+  aspect_ratio = 4/3;
+  plot_width   = 8;
+  plot_height  = plot_width / aspect_ratio;
+
+  hm_width  = 0.4; % heatmap width
+  hm_height = hm_width * aspect_ratio;
+
+  ba_width  = 0.4; % bar width
+  ba_height = 0.3; % bar height
+  baar      = ba_width / ba_height; % bar plot aspect_ratio
+
   % color1 = [196,  48,  43] / 255; % color for group1, red
   % color2 = [ 32, 128,  80] / 255; % color for group2, green
   color1 = [250, 149,   0] / 255; % color for group1, yellow
@@ -93,14 +116,14 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   % --------
   bar_xrange = bar_xmax - bar_xmin;
   bar_yrange = bar_ymax - bar_ymin;
-  xyratio  = 2;
 
-  bs_bsl  = 0.3;
   bs_main = 0.2;
+  bw_bsl  = 0.3; % 0.3 unit in x-axis
+  bh_bsl  = bw_bsl / bar_xrange * bar_yrange * baar * aspect_ratio;
 
   ll_x = linspace(0, 1, m+1); ll_x(end) = [];
   ll_y = linspace(0, 1, n+1); ll_y(end) = [];
-  ll_bsl = [mean([bar_xmax; bar_xmin]) - 0.5*bs_bsl, bar_ymax - 0.5*bs_bsl];
+  ll_bsl = [mean([bar_xmax; bar_xmin]) - 0.5*bw_bsl, bar_ymax - bh_bsl];
   % }}}
 
   % plotting {{{
@@ -110,10 +133,12 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   hold on;
 
   % default position by MATLAB: [0.1300 0.1100 0.7750 0.8150]
+  ax = gca;
+  ax.Visible = 'off';
+  text(0.5, 1, ontname, 'FontSize', 16, 'FontWeight', 'bold', 'Units', 'normalized', 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom');
 
   % plot heatmap {{{
-  ax_main = gca;
-  ax_main.Position = [0.05, 0.05, 0.4, 0.6];
+  ax_main = axes('Position', [0.05, 0.05, hm_width, hm_height]);
   ax_main.XLim = [0, 1];
   ax_main.YLim = [0, 1];
   ax_main.XTick = {};
@@ -124,8 +149,7 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   ax_main.Visible = 'off';
 
   text(-0.1, 1.15, 'A.', 'FontSize', 14, 'FontWeight', 'bold');
-  text(-0.05, 1-padding, 'CAFA1 top models \rightarrow', ...
-  'Rotation', -90, 'FontSize', 12, 'FontWeight', 'bold');
+  text(-0.05, 1-padding, 'CAFA1 top models \rightarrow', 'Rotation', -90, 'FontSize', 12, 'FontWeight', 'bold');
   text(0, 1.05, 'CAFA2 top models \rightarrow', 'FontSize', 12, 'FontWeight', 'bold');
 
   for i = 1 : n
@@ -147,28 +171,25 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   % }}}
 
   % plot colorbox {{{
-  ax_cbox         = axes('Position', [0.15-padding, 0.8, 0.3, 0.1]);
+  ax_cbox         = axes('Position', [0.15-padding, hm_height+0.2, 0.3, 0.1]);
   ax_cbox.XLim    = [0, 1];
   ax_cbox.YLim    = [0, 1];
   ax_cbox.Visible = 'off';
 
   loc_draw_colorbox([0, 0, 1, .7], color1, color2);
-  text(0.0, 1.0, sprintf('%.1f', -margin_max), ...
-  'FontSize', 12, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
-  text(0.5, 1.0, sprintf('%.1f', 0), ...
-  'FontSize', 12, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
-  text(1.0, 1.0, sprintf('%.1f', +margin_max), ...
-  'FontSize', 12, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
+  text(0.0, 1.0, sprintf('%.1f', -margin_max), 'FontSize', 12, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
+  text(0.5, 1.0, sprintf('%.1f', 0), 'FontSize', 12, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
+  text(1.0, 1.0, sprintf('%.1f', +margin_max), 'FontSize', 12, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
   % }}}
 
   % plot Naive comparison {{{
-  ax_naive = axes('Position', [0.55, 0.55, 0.4, 0.35]);
+  ax_naive = axes('Position', [0.55, 0.5, ba_width, ba_height]);
   res = loc_bsl_info(bsl_data{1}, bsl_data{2}, margin_max, color1, color2);
 
-  loc_draw_bracket([1.5, bar_ymax-0.5*bs_bsl/xyratio], 0.5, 0.05);
+  loc_draw_bracket([1.5, bar_ymax-0.5*bh_bsl], 0.5, 0.05);
   loc_draw_rect([0.75, 0, 0.5, mean(bsl_data{1}.fmax_bst)], color1, '');
   loc_draw_rect([1.75, 0, 0.5, mean(bsl_data{2}.fmax_bst)], color2, '');
-  loc_draw_rect([ll_bsl(1), ll_bsl(2), bs_bsl, bs_bsl/2], res.col, res.value);
+  loc_draw_rect([ll_bsl(1), ll_bsl(2), bw_bsl, bh_bsl], res.col, res.value);
 
   text(bar_xmin-.1*bar_xrange, bar_ymax+.2*bar_yrange, 'B.', 'FontSize', 14, 'FontWeight', 'bold');
   text(2, bar_ymax, 'Naive', 'FontSize', 12, 'FontWeight', 'bold');
@@ -181,13 +202,13 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   % }}}
 
   % plot BLAST comparison {{{
-  ax_blast = axes('Position', [0.55, 0.05, 0.4, 0.35]);
+  ax_blast = axes('Position', [0.55, 0.05, ba_width, ba_height]);
   res = loc_bsl_info(bsl_data{3}, bsl_data{4}, margin_max, color1, color2);
 
-  loc_draw_bracket([1.5, bar_ymax-0.5*bs_bsl/xyratio], 0.5, 0.05);
+  loc_draw_bracket([1.5, bar_ymax-0.5*bh_bsl], 0.5, 0.05);
   loc_draw_rect([0.75, 0, 0.5, mean(bsl_data{3}.fmax_bst)], color1, '');
   loc_draw_rect([1.75, 0, 0.5, mean(bsl_data{4}.fmax_bst)], color2, '');
-  loc_draw_rect([ll_bsl(1), ll_bsl(2), bs_bsl, bs_bsl/xyratio], res.col, res.value);
+  loc_draw_rect([ll_bsl(1), ll_bsl(2), bw_bsl, bh_bsl], res.col, res.value);
 
   text(bar_xmin-.1*bar_xrange, bar_ymax+.2*bar_yrange, 'C.', 'FontSize', 14, 'FontWeight', 'bold');
   text(2, bar_ymax, 'BLAST', 'FontSize', 12, 'FontWeight', 'bold');
@@ -199,7 +220,11 @@ function [] = cafa_plot_duel_fmax(pfile, data, bsl_data, yrange)
   ax_blast.XTickLabel = {'2011', '2014'};
   % }}}
 
-  embed_canvas(h, 8, 5);
+  % put ontology tag {{{
+
+  % }}}
+
+  embed_canvas(h, plot_width, plot_height);
   print(gcf, pfile, device_op, '-r300');
   close;
   % }}}
@@ -258,8 +283,7 @@ function [] = loc_draw_colorbox(pos, color1, color2)
   width = xpos(2) - xpos(1);
   height = pos(4);
   for i = 1 : n
-    rectangle('Position', [xpos(i), ypos, width, height], ...
-    'FaceColor', scale(i,:), 'EdgeColor', scale(i,:));
+    rectangle('Position', [xpos(i), ypos, width, height], 'FaceColor', scale(i,:), 'EdgeColor', scale(i,:));
   end
 return
 % }}}
@@ -268,4 +292,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 23 May 2016 05:07:31 PM E
+% Last modified: Wed 29 Jun 2016 01:30:23 AM E
