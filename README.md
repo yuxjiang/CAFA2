@@ -11,9 +11,11 @@ MATLAB evaluation codes used for the [2nd CAFA](http://arxiv.org/abs/1601.00891)
     - Annotations (MFO terms for exmaple) for each of these sequences. This data
       needs to be prepared ahead of time as a two-column **CSV** file (delimited
       by TAB)
+
       ```
       [sequence ID]\t[GO term ID]
       ```
+
       where `[sequence ID]` would be of any system (e.g., UniProt accession
       number), as long as they are consistant with those used in the FASTA file.
   - NCBI BLAST tool (used 2.2.29+ for this document)
