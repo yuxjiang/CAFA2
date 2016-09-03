@@ -76,7 +76,7 @@ double check the `.ont_type` field of each returning structure.
   See the documentation of `pfp_blast.m` for more details. Thus, `blast` will be
   the *BLAST* predictor in MATLAB for evaluation.
 
-### Naive predictor
+### *Naive* predictor
 
 To build a *naive* predictor, all you need is the ontology annotation structure
 `oa` that you have as in the step 1 of making a *BLAST* predictor. Then run the
