@@ -31,27 +31,26 @@ by *Genome Biology*, and you can find the latest *arXiv* version
 
 * ***STEP 1:*** Load annotations of training sequences.
 
-```matlab
-oa = pfp_oabuild(ont, 'annotation.dat');
-```
+  ```matlab
+  oa = pfp_oabuild(ont, 'annotation.dat');
+  ```
+  where `ont` is a MATLAB structure of ontology which can be built from and OBO
+  file (say, 'ontology.obo') as
 
-where `ont` is a MATLAB structure of ontology which can be built from and OBO
-file (say, 'ontology.obo') as
+  ```matlab
+  ont = pfp_ontbuild('ontology.obo');
+  ```
 
-```matlab
-ont = pfp_ontbuild('ontology.obo');
-```
+  Note that a typical gene ontology OBO file contains all three GO ontologies
+  (i.e., MFO, BPO, and CCO), therefore, `pfp_ontbuild` returns a cell
+  of **THREE** ontology strcutures instead:
 
-Note that a typical gene ontology OBO file contains all three GO ontologies
-(i.e., MFO, BPO, and CCO), therefore, `pfp_ontbuild` returns a cell
-of **THREE** ontology strcutures instead:
+  ```matlab
+  onts = pfp_ontbuild('go.obo')
+  ```
 
-```matlab
-onts = pfp_ontbuild('go.obo')
-```
-
-By default, they are ordered as BPO, CCO, MFO, alphabetically. You can also
-double check the `.ont_type` field of each returning structure.
+  By default, they are ordered as BPO, CCO, MFO, alphabetically. You can also
+  double check the `.ont_type` field of each returning structure.
 
 * ***STEP 2:*** Prepare BLAST results
   - Run `blastp` on the query sequences against the "training" sequences
@@ -84,13 +83,13 @@ double check the `.ont_type` field of each returning structure.
 
 ### *Naive* predictor
 
-To build a *naive* predictor, all you need is the ontology annotation structure
-`oa` that you have as in the step 1 of making a *BLAST* predictor. Then run the
-following in MATLAB:
+  To build a *naive* predictor, all you need is the ontology annotation structure
+  `oa` that you have as in the step 1 of making a *BLAST* predictor. Then run the
+  following in MATLAB:
 
-```matlab
-naive = pfp_naive(qseqid, oa);
-```
+  ```matlab
+  naive = pfp_naive(qseqid, oa);
+  ```
 
 # License
   The source code used in this CAFA2 evaluation package is licensed under the MIT
