@@ -91,6 +91,101 @@ by *Genome Biology*, and you can find the latest *arXiv* version
   naive = pfp_naive(qseqid, oa);
   ```
 
+## How to evaluate your own predictions on CAFA2 benchmarks
+
+   Evaluation codes are provided mainly for reproducing results in CAFA2
+   experiments. However, one may also use a subset of codes under `matlab/` to
+   evaluate their own protein function predictors.
+
+### Prerequisites
+
+* Represent protein sequences using CAFA2 target ID systems (e.g.,
+  `T96060000019`). Please check `benchmark/` folders for lists of benchmark
+  proteins that needs to be covered.
+
+* Save predictions in CAFA2 submission format according to [CAFA
+  rule](https://www.synapse.org/#!Synapse:syn5840147/wiki/402192). Although,
+  headers (including `AUTHOR`, `MODEL`, `KEYWORDS` and `ACCURACY`) and footer
+  (`END`) are optional. (See `cafa_import.m` for details)
+
+### Quick guide
+
+1. Load ontologies into MATLAB structures.
+
+    * You can use pre-built MATLAB structure for the same ontologies used in
+    CAFA2 evaluation, which are located as `*.mat` files under `ontology/`
+    folder.
+
+    * We also provide functions for loading user specified ontologies, see
+    `pfp_ontbuild.m`. Note that it is suggested to use pre-built ontologies in
+    order to compare results against published methods.
+
+2. Prepare ground-truth annotations.
+
+    * Similarly, ground-truth annotations for CAFA2 `3681` benchmark proteins
+      are pre-built and saved as `*.mat*` files under `benchmark/groundtruth/`.
+
+    * User specified annotations can be built using `pfp_oabuild.m`, note that
+      proteins have to use the same ID system as used for predictions. Also, see
+      the comments for input arguments in `pfp_oabuild.m` for details.
+
+      ```matlab
+      oa = pfp_oabuild(ont, <annotation file>);
+      ```
+
+3. Load predictions into MATLAB structures.
+
+    This can be done by execute the following command in MATALB:
+
+    ```matlab
+    pred = cafa_import(<prediction file>, ont, false);
+    ```
+
+    with the 2nd argument `ont` as the ontology structure built in the first
+    step. We specify the 3rd argument to be `false` indicating our `<prediction
+    file>` don't contain headers and footer.
+
+4. Load benchmark protein IDs.
+
+    * Protein IDs must be loaded as a `cell` array. You can use the following
+      function:
+
+      ```matlab
+      benchmark = pfp_loaditem(<benchmark list file>, 'char');
+      ```
+
+    * Various CAFA2 benchmark protein lists are prepared under
+      `benchmark/lists/`, load any one that meets your requirement.
+
+5. Evaluation. (sequence-centered)
+
+    * The easiest way to get an performance evaluation is to use the following
+      function (in the case of **F-max**):
+
+      ```matlab
+      fmax = pfp_seqmetric(benchmark, pred, oa, 'fmax');
+      ```
+
+      See `pfp_seqmetric.m` for other metrics.
+
+    * Alternatively, you can compute confusion matrix so as to expose
+      intermediate variables:
+
+       * Make a confusion matrix structure
+
+         ```matlab
+         cm = pfp_seqcm(benchmark, pred, oa);
+         ```
+
+       * Convert the `cm` structure to metrics of interest, here "precision-recall"
+         `seq_pr.metric` would have 101 precision-recall pairs corresponding to 101
+         thresholds from `0.00` up to `1.00` with step size `0.01`. You can use it
+         to draw a PR curve.
+
+         ```matlab
+         seq_pr = pfp_convcmstruct(cm, 'pr');
+         ```
+
 # License
   The source code used in this CAFA2 evaluation package is licensed under the MIT
   license.
