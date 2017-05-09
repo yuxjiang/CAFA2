@@ -186,6 +186,112 @@ by *Genome Biology*, and you can find the latest *arXiv* version
          seq_pr = pfp_convcmstruct(cm, 'pr');
          ```
 
+## How to "replicate" CAFA2 evaluation experiment
+
+### Caveat
+Due to CAFA rules, the organizers of CAFA cannot release the submitted
+predictions from participants. Therefore, it is technically not possible to
+replicate exact results (figures and tables) in the CAFA2 paper. Also, this
+repository is not originally designed to be a software that is reusable as a
+whole for protein function prediction tasks in general or even for future CAFA
+challenges. As a result, the pipeline is not fully automatized and manual input
+is necessary occasionally.
+
+Please also notice that this pipeline is only tested on Linux version of MATLAB
+(2016b), it is not guaranteed to work on other OS (code might have to be adapted
+accordingly). We also used Bioinformatics toolbox for topological ordering of
+ontology terms (`graphtopoorder`) in some Matlab functions. However, it should
+be fairly easy to implement your own version if this toolbox is not available.
+
+With that being said, we provide scripts along with a minialist guideline to
+assist researchers who would like to evaluate their own methods using CAFA2
+benchmarks (along with their annotations by the time stated in the paper) so as
+to compare their performances against CAFA2 baselines and possibly against other
+methods.
+
+### Step-by-step
+1. Download this repository to your local filesystem, say `/path/to/cafa2_repo`,
+   hereafter `<cafa2repo>`.
+
+2. Prepare an empty folder that have write permission, say
+   `/path/to/another/folder`, hereafter, `<mydir>`, for holding evaluation
+results.
+
+3. In Matlab, change working directory to `<cafa2repo>/matlab` and setup
+   `<mydir>`:
+```matlab
+cd <cafa2repo>/matlab;
+cafa_setup('<cafa2repo>', '<mydir>');
+```
+This command sets up empty folders inside `<mydir>` where intermediate/final
+results will sit.
+
+4. Place your plain-text prediction file into `<mydir>`. Note that prediction
+   files should be using CAFA format: `<target ID> <term ID> <score>` for each
+line but without HEADER (those lines start with `MODEL`, `AUTHOR`, `KEYWORDS`
+etc.) or FOOTER (the `END` line). Filename is suppose to be `M001` (`M` followed
+by three digits) and `M002`, `M003` so on so forth if you have more than one
+methods to be evaluated. Then copy/move them into `<mydir>/consolidated`.
+
+5. Filter predictions. This step will filter out predictions on proteins that
+   are not in any benchmarks, which could greatly reduce the size of
+intermediate files and processing speed. In Matlab
+```matlab
+cafa_driver_filter('<mydir>/consolidated', '<mydir>/filtered', ...
+'<cafa2repo>/benchmark/lists/xxo_all_typex.txt');
+```
+
+6. Import plain-text predictions into Matlab structures, so that they can be
+   reused for different evaluation tasks (e.g., different metrics, different
+benchmarks, etc.) Let's use MFO as an example:
+```matlab
+load <cafa2repo>/ontology/MFO.mat
+cafa_driver_import('<mydir>/filtered', '<mydir>/prediction/mfo', MFO);
+```
+
+**Notice that up until now, these steps only need to be executed once. Each
+following particular evaluation tasks is specified using a single plain-text
+job configuration file**
+
+7. Make a job configuration file according to your needs, please use the
+   example file: `<cafa2repo>/config/example.job` as a template. Basically, you
+need to change <cafa2repo> and <mydir> accordingly; specify what metric you are
+using, which evaluation mode, etc. And save the modified configuration file at
+`/path/to/config.job>`, hereafter, `<config>`.
+
+8. Pre-evaluation. This step is essential for sequence-centric evaluations so as
+   to avoid repeated calculations. It evaluates/stores metrics (e.g.,
+precision/recall) for each protein to `<mydir>/seq-centric`.
+```matlab
+cafa_driver_preeval('<config>');
+```
+
+9. Evaluation. This step performs the actual evaluation, and the runtime depends
+   on how many methods/metrics you specified in the configuration. If the number
+of methods exceeds 8, it will start in parallel mode. Note that all results will
+be saved into a subfolder under `<mydir>/evaluation/<subfolder>`, it will be
+named after `<ontology>_<category>_<type>_<mode>`, let's simply call it
+`<eval_res>`.
+```matlab
+cafa_driver_eval('<config>');
+```
+
+10. Make a register table file according to your needs, please use the example
+    file: `<cafa2repo>/config/register.tab` as a template. You can also look at
+the comments in `<cafa2repo>/matlab/cafa_parse_register.m` for reference. We
+would assume the modified file will be saved somewhere and be refered to as
+`<register>`.
+
+11. Collect results. This step should output figures and tables in `<eval_res>`
+    folder.
+```matlab
+cafa_driver_result('<eval_res>', '<register>', 'BN4S', 'BB4S', 'all');
+```
+
+**As a final note, please refer to the comments part in each Maltab function for
+detailed input/output descriptions. They can be accessed by typing `help
+<function name>` in Matlab console.**
+
 # License
   The source code used in this CAFA2 evaluation package is licensed under the MIT
   license.

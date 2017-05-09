@@ -114,11 +114,13 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % top10 precision-recall curve {{{
-  if strcmp(scheme, 'suppl') || strcmp(scheme, 'all')
+  if config.do_seq_fmax && (strcmp(scheme, 'suppl') || strcmp(scheme, 'all'))
     saveto = strcat(config.eval_dir, saveto_prefix, 'top10_fmax_curve', plot_ext);
     prcurves = cafa_collect(config.eval_dir, 'seq_prcurve');
     [top10, baseline] = cafa_sel_top_seq_prcurve(10, prcurves, naive, blast, reg, isdump);
-    cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline);
+    if ~isempty(top10)
+      cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline);
+    end
 
     % mark alternative points {{{
     % rmcurves = cafa_collect(config.eval_dir, 'seq_rmcurve');
@@ -129,7 +131,7 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % all Fmax sheet {{{
-  if strcmp(scheme, 'all')
+  if config.do_seq_fmax && strcmp(scheme, 'all')
     saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_fmax_sheet', sheet_ext);
     saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_fmax_sheet_disclosed', sheet_ext);
     fmaxs = cafa_collect(config.eval_dir, 'seq_fmax');
@@ -140,17 +142,18 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % top10 weighted precision-recall curve {{{
-  if (strcmp(scheme, 'suppl') && (strcmp(config.cat, 'all') || strcmp(config.ont, 'hpo'))) ...
-    || strcmp(scheme, 'all')
+  if config.do_seq_wfmax && ((strcmp(scheme, 'suppl') && (strcmp(config.cat, 'all') || strcmp(config.ont, 'hpo'))) || strcmp(scheme, 'all'))
     saveto = strcat(config.eval_dir, saveto_prefix, 'top10_wfmax_curve', plot_ext);
     prcurves = cafa_collect(config.eval_dir, 'seq_wprcurve');
     [top10, baseline] = cafa_sel_top_seq_prcurve(10, prcurves, naive, blast, reg, isdump);
-    cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline);
+    if ~isempty(top10)
+      cafa_plot_seq_prcurve(saveto, ont_str, top10, baseline);
+    end
   end
   % }}}
 
   % all weighted Fmax sheet {{{
-  if strcmp(scheme, 'all')
+  if config.do_seq_wfmax && strcmp(scheme, 'all')
     saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_wfmax_sheet', sheet_ext);
     saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_wfmax_sheet_disclosed', sheet_ext);
     fmaxs = cafa_collect(config.eval_dir, 'seq_wfmax');
@@ -161,16 +164,18 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % top10 RU-MI curve {{{
-  if strcmp(scheme, 'all')
+  if config.do_seq_smin && strcmp(scheme, 'all')
     saveto = strcat(config.eval_dir, saveto_prefix, 'top10_smin_curve', plot_ext);
     rmcurves = cafa_collect(config.eval_dir, 'seq_rmcurve');
     [top10, baseline] = cafa_sel_top_seq_rmcurve(10, rmcurves, naive, blast, reg, isdump);
-    cafa_plot_seq_rmcurve(saveto, ont_str, top10, baseline);
+    if ~isempty(top10)
+      cafa_plot_seq_rmcurve(saveto, ont_str, top10, baseline);
+    end
   end
   % }}}
 
   % all Smin sheet {{{
-  if strcmp(scheme, 'all')
+  if config.do_seq_smin && strcmp(scheme, 'all')
     saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_smin_sheet', sheet_ext);
     saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_smin_sheet_disclosed', sheet_ext);
     smins = cafa_collect(config.eval_dir, 'seq_smin');
@@ -181,17 +186,18 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % top10 normalized RU-MI curve {{{
-  if (strcmp(scheme, 'suppl') && (strcmp(config.cat, 'all') || strcmp(config.ont, 'hpo'))) ...
-    || strcmp(scheme, 'all')
+  if config.do_seq_nsmin && ((strcmp(scheme, 'suppl') && (strcmp(config.cat, 'all') || strcmp(config.ont, 'hpo'))) || strcmp(scheme, 'all'))
     saveto = strcat(config.eval_dir, saveto_prefix, 'top10_nsmin_curve', plot_ext);
     rmcurves = cafa_collect(config.eval_dir, 'seq_nrmcurve');
     [top10, baseline] = cafa_sel_top_seq_rmcurve(10, rmcurves, naive, blast, reg, isdump);
-    cafa_plot_seq_rmcurve(saveto, ont_str, top10, baseline);
+    if ~isempty(top10)
+      cafa_plot_seq_rmcurve(saveto, ont_str, top10, baseline);
+    end
   end
   % }}}
 
   % all normalized Smin sheet {{{
-  if strcmp(scheme, 'all')
+  if config.do_seq_nsmin && strcmp(scheme, 'all')
     saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_nsmin_sheet', sheet_ext);
     saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_nsmin_sheet_disclosed', sheet_ext);
     smins = cafa_collect(config.eval_dir, 'seq_nsmin');
@@ -202,18 +208,20 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % top10 Fmax bar {{{
-  if strcmp(scheme, 'paper') || strcmp(scheme, 'suppl') || strcmp(scheme, 'all')
+  if config.do_seq_fmax && (strcmp(scheme, 'paper') || strcmp(scheme, 'suppl') || strcmp(scheme, 'all'))
     saveto = strcat(config.eval_dir, saveto_prefix, 'top10_fmax_bar', plot_ext);
     saveto_team = strcat(config.eval_dir, saveto_prefix, 'fmax_team.txt');
     fmaxs = cafa_collect(config.eval_dir, 'seq_fmax_bst');
     [top10, baseline, info] = cafa_sel_top_seq_fmax(10, fmaxs, naive, blast, reg, isdump);
-    cafa_barplot_seq_fmax(saveto, ont_str, top10, baseline, yaxis_fmax);
-    save_team_info(saveto_team, info, reg);
+    if ~isempty(top10)
+      cafa_barplot_seq_fmax(saveto, ont_str, top10, baseline, yaxis_fmax);
+      save_team_info(saveto_team, info, reg);
+    end
   end
   % }}}
 
   % top10 weighted Fmax bar {{{
-  if strcmp(scheme, 'all')
+  if config.do_seq_wfmax && strcmp(scheme, 'all')
     saveto = strcat(config.eval_dir, saveto_prefix, 'top10_wfmax_bar', plot_ext);
     saveto_team = strcat(config.eval_dir, saveto_prefix, 'wfmax_team.txt');
     fmaxs = cafa_collect(config.eval_dir, 'seq_wfmax_bst');
@@ -224,31 +232,33 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % top10 Smin bar {{{
-  if (strcmp(scheme, 'paper') && (strcmp(config.cat, 'all') || strcmp(config.ont, 'hpo'))) ...
-    || strcmp(scheme, 'all')
+  if config.do_seq_smin && ((strcmp(scheme, 'paper') && (strcmp(config.cat, 'all') || strcmp(config.ont, 'hpo'))) || strcmp(scheme, 'all'))
     saveto = strcat(config.eval_dir, saveto_prefix, 'top10_smin_bar', plot_ext);
     saveto_team = strcat(config.eval_dir, saveto_prefix, 'smin_team.txt');
     smins = cafa_collect(config.eval_dir, 'seq_smin_bst');
     [top10, baseline, info] = cafa_sel_top_seq_smin(10, smins, naive, blast, reg, isdump);
-    cafa_barplot_seq_smin(saveto, ont_str, top10, baseline);
-    save_team_info(saveto_team, info, reg);
+    if ~isempty(top10)
+      cafa_barplot_seq_smin(saveto, ont_str, top10, baseline);
+      save_team_info(saveto_team, info, reg);
+    end
   end
   % }}}
 
   % top10 normalized Smin bar {{{
-  if strcmp(scheme, 'all')
+  if config.do_seq_nsmin && strcmp(scheme, 'all')
     saveto = strcat(config.eval_dir, saveto_prefix, 'top10_nsmin_bar', plot_ext);
     saveto_team = strcat(config.eval_dir, saveto_prefix, 'nsmin_team.txt');
     smins = cafa_collect(config.eval_dir, 'seq_nsmin_bst');
     [top10, baseline, info] = cafa_sel_top_seq_smin(10, smins, naive, blast, reg, isdump);
-    cafa_barplot_seq_smin(saveto, ont_str, top10, baseline);
-    save_team_info(saveto_team, info, reg);
+    if ~isempty(top10)
+      cafa_barplot_seq_smin(saveto, ont_str, top10, baseline);
+      save_team_info(saveto_team, info, reg);
+    end
   end
   % }}}
 
   % averaged AUC (over all teams) {{{
-  if (strcmp(scheme, 'paper') && strcmp(config.ont, 'hpo')) ...
-    || strcmp(scheme, 'all')
+  if config.do_term_auc && ((strcmp(scheme, 'paper') && strcmp(config.ont, 'hpo')) || strcmp(scheme, 'all'))
     saveto = strcat(config.eval_dir, saveto_prefix, 'avg_auc_bar', plot_ext);
     aucs = cafa_collect(config.eval_dir, 'term_auc');
 
@@ -269,7 +279,7 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % [FOR TEST] averaged AUC (over top 5 teams) {{{
-  if strcmp(scheme, 'test')
+  if config.do_term_auc && strcmp(scheme, 'test')
     saveto = strcat(config.eval_dir, saveto_prefix, 'top5avg_auc_bar', plot_ext);
     fmaxs  = cafa_collect(config.eval_dir, 'seq_fmax_bst');
     [~, ~, info] = cafa_sel_top_seq_fmax(5, fmaxs, naive, blast, reg, isdump);
@@ -295,7 +305,7 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % all AUC sheet {{{
-  if strcmp(scheme, 'all')
+  if config.do_term_auc && strcmp(scheme, 'all')
     saveto_A = strcat(config.eval_dir, saveto_prefix, 'all_auc_sheet', sheet_ext);
     saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_auc_sheet_disclosed', sheet_ext);
     aucs = cafa_collect(config.eval_dir, 'term_auc');
@@ -310,8 +320,7 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
   % }}}
 
   % top10 methods in averaged AUC (over all terms) bar {{{
-  if (strcmp(scheme, 'paper') && (strcmp(config.cat, 'all') || strcmp(config.ont, 'hpo'))) ...
-    || strcmp(scheme, 'all')
+  if config.do_term_auc && ((strcmp(scheme, 'paper') && (strcmp(config.cat, 'all') || strcmp(config.ont, 'hpo'))) || strcmp(scheme, 'all'))
     if strcmp(scheme, 'paper')
       yaxis_auc = [0.2, 1.0, 0.1];
     end
@@ -354,4 +363,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sun 22 May 2016 06:27:18 PM E
+% Last modified: Mon 08 May 2017 11:24:26 PM E

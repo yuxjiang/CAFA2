@@ -3,22 +3,22 @@
 # paths to folder/files
 # ----
 # folder for prediction structure files
-pred_dir = ~/cafa/prediction/mfo/
+pred_dir = <mydir>/prediction/mfo/
 
 # folder for pre-evaluation results
-prev_dir = ~/cafa/seq-centric/mfo/
+prev_dir = <mydir>/seq-centric/mfo/
 
 # folder for evaluation results
-eval_dir = ~/cafa/evaluation/mfo_all_type1_mode1/
+eval_dir = <mydir>/evaluation/mfo_all_type1_mode1/
 
 # file for groundtruth annotation
-annotation = ~/cafa/benchmark/groundtruth/mfoa.mat
+annotation = <cafa2repo>/benchmark/groundtruth/mfoa.mat
 
 # file for benchmark protein list
-benchmark = ~/cafa/benchmark/lists/mfo_all_type1.txt
+benchmark = <cafa2repo>/benchmark/lists/mfo_all_type1.txt
 
 # file for bootstrap benchmark index (for repeatable results)
-bootstrap = ~/cafa/bootstrap/mfo_all_type1.mat
+bootstrap = <mydir>/bootstrap/mfo_all_type1.mat
 
 # ontology
 # ----
@@ -49,15 +49,17 @@ mode = 1
 # metric
 # ----
 # choice of metrics of interest, any combination of the following options:
+# sequence-centric:
 # f (F1-max),
 # s (S2-min),
 # wf (weighted F1-max),
 # ns (normalized S2-min),
-# auc (area under the ROC curve)
 metric = f
 metric = wf
 metric = s
 metric = ns
+# term-centric:
+# auc (area under the ROC curve)
 metric = auc
 
 # optional metric specifications:
@@ -73,8 +75,6 @@ metric = auc
 # baseline (Naive/BLAST): B[NB][14][SGUA]
 # note: B[NB]4S is the most typical, which was trained on SwissProt Jan.2014
 model = all
-model = +BN1S
-model = +BB1S
 model = +BN4S
 model = +BB4S
 
@@ -82,4 +82,4 @@ model = +BB4S
 # Yuxiang Jiang (yuxjiang@indiana.edu)
 # Department of Computer Science
 # Indiana University, Bloomington
-# Last modified: Mon 07 Mar 2016 12:13:46 AM E
+# Last modified: Mon 08 May 2017 05:39:10 PM E

@@ -211,7 +211,10 @@ function [sel, bsl, info] = cafa_sel_top_term_auc(K, aucs, naive, blast, reg, is
         break;
       end
     end
-    if nsel < K
+    if nsel == 0
+      warning('cafa_sel_top_term_auc:NoSel', 'None of the models are selected.');
+      sel = [];
+    elseif nsel < K
       warning('cafa_sel_top_term_auc:LessThanK', 'Only selected %d models.', nsel);
       sel(nsel + 1 : end) = [];
     end
@@ -236,4 +239,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 23 May 2016 04:42:53 PM E
+% Last modified: Mon 08 May 2017 11:23:50 PM E

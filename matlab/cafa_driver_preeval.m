@@ -89,6 +89,9 @@ function [] = cafa_driver_preeval(cfg)
   % cfg
   config = cafa_parse_config(cfg);
   if ischar(cfg)
+    if ~exist(config.prev_dir, 'dir')
+      mkdir(config.prev_dir);
+    end
     copyfile(cfg, fullfile(config.prev_dir, 'prev_config.job'));
   end
   % }}}
@@ -137,4 +140,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Tue 24 May 2016 12:25:43 PM E
+% Last modified: Mon 08 May 2017 01:36:17 PM E

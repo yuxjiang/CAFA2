@@ -60,6 +60,7 @@ function [] = cafa_driver_eval(cfg)
 
   % cfg
   config = cafa_parse_config(cfg);
+  copyfile(cfg, fullfile(config.eval_dir, 'eval_config.job'));
   % }}}
 
   % evaluation {{{
@@ -216,4 +217,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 23 May 2016 12:10:37 PM E
+% Last modified: Mon 08 May 2017 07:43:52 PM E

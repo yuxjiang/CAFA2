@@ -8,7 +8,7 @@ function [iid, eid, tname, ttype, dname, dname2, pname, kw, chex] = cafa_team_re
 % Input
 % -----
 % [char]
-% reg:  The team register information file, which has 8 columns:
+% reg:  The team register information file, which has 9 columns:
 %       1. Method ID
 %          Internal ID, starts with 'M' for participating methods and 'B' for
 %          baseline methods.
@@ -94,4 +94,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 23 May 2016 03:46:44 PM E
+% Last modified: Mon 08 May 2017 10:50:44 PM E
