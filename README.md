@@ -3,8 +3,9 @@
 [![](https://img.shields.io/badge/license-MIT-blue.svg)]()
 
 MATLAB evaluation codes used for the 2nd [CAFA
-challenge](http://biofunctionprediction.org/cafa/). Manuscript has been accepted
-by *Genome Biology*, and you can find the latest *arXiv* version
+challenge](http://biofunctionprediction.org/cafa/). The CAFA2
+[paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1037-6)
+is published in *Genome Biology*, and you can also find the latest *arXiv* version
 [here](http://arxiv.org/abs/1601.00891).
 
 ## How to build baseline predictors
