@@ -58,7 +58,7 @@ function [ont] = pfp_loadont(tfile, rfile)
     % }}}
 
     % construct terms {{{
-    ont.term = cell2struct([terms{1}, terms{2}]', {'id', 'term'});
+    ont.term = cell2struct([terms{1}, terms{2}]', {'id', 'name'});
     % }}}
 
     % construct DAG, rel_code {{{
@@ -100,4 +100,4 @@ end
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 21 Sep 2016 02:33:51 PM E
+% Last modified: Mon 29 May 2017 02:56:27 PM E
