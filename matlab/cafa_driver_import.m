@@ -61,7 +61,7 @@ function [] = cafa_driver_import(idir, odir, ont)
     fprintf('importing model [%s]\n', mid);
 
     % Assumes the <CAFA header> of prediction files have been removed
-    pred = cafa_import(fullfile(idir, files.name), ont, false);
+    pred = cafa_import(fullfile(idir, mid), ont, false);
     pfp_savevar(fullfile(odir, mid), pred, 'pred');
   end
   % }}}
@@ -71,4 +71,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Sun 22 May 2016 06:27:47 PM E
+% Last modified: Fri 07 Jul 2017 09:14:58 AM E
