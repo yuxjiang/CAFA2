@@ -297,6 +297,10 @@ is published in *Genome Biology*, and you can also find the latest *arXiv* versi
    to avoid repeated calculations. It evaluates/stores metrics (e.g.,
    precision/recall) for each protein to `<mydir>/seq-centric`.
 
+   Note that if you have multiple benchark lists on which you want to evaluate,
+   it is suggested to create a union of all those lists and to do a
+   pre-evaluation on the union just once.
+
     ```matlab
     cafa_driver_preeval('<config>');
     ```
