@@ -310,11 +310,11 @@ function [] = cafa_driver_result(eval_dir, reg, naive, blast, scheme)
     saveto_N = strcat(config.eval_dir, saveto_prefix, 'all_auc_sheet_disclosed', sheet_ext);
     aucs = cafa_collect(config.eval_dir, 'term_auc');
     if strcmp(config.ont, 'hpo')
-      cafa_sheet_term_auc(saveto_A, aucs, reg, isdump, true, 'BB4H');
-      cafa_sheet_term_auc(saveto_N, aucs, reg, isdump, false, 'BB4H');
+      cafa_sheet_term_auc(saveto_A, aucs, reg, isdump, true);
+      cafa_sheet_term_auc(saveto_N, aucs, reg, isdump, false);
     else % MFO, BPO, CCO
-      cafa_sheet_term_auc(saveto_A, aucs, reg, isdump, true, 'BB4S');
-      cafa_sheet_term_auc(saveto_N, aucs, reg, isdump, false, 'BB4S');
+      cafa_sheet_term_auc(saveto_A, aucs, reg, isdump, true);
+      cafa_sheet_term_auc(saveto_N, aucs, reg, isdump, false);
     end
   end
   % }}}
@@ -363,4 +363,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Mon 08 May 2017 11:24:26 PM E
+% Last modified: Sat 15 Jul 2017 12:19:52 AM E

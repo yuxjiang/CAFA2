@@ -71,7 +71,8 @@ function [] = cafa_sheet_term_auc(sfile, aucs, reg, isdump, anonymous, sort_mid)
   end
 
   if nargin == 5
-    sort_mid = 'BB4S'; % BLAST trained on SwissProt 2014
+    % sort_mid = 'BB4S'; % BLAST trained on SwissProt 2014
+    sort_mid = '';
   end
 
   % sfile
@@ -98,7 +99,7 @@ function [] = cafa_sheet_term_auc(sfile, aucs, reg, isdump, anonymous, sort_mid)
   validateattributes(anonymous, {'logical'}, {'nonempty'}, '', 'anonymous', 5);
 
   % sort_mid
-  validateattributes(sort_mid, {'char'}, {'nonempty'}, '', 'sort_mid', 6);
+  validateattributes(sort_mid, {'char'}, {''}, '', 'sort_mid', 6);
   % }}}
 
   % prepare output {{{
@@ -112,8 +113,15 @@ function [] = cafa_sheet_term_auc(sfile, aucs, reg, isdump, anonymous, sort_mid)
     aucs{i}.team = disp_name{index};
 
     % record the index of blast method for sorting
-    if strcmp(aucs{i}.id, sort_mid) % before: if strcmpi('blast', aucs{i}.team)
-      blast_index = i;
+    if isempty(sort_mid)
+      % use the methods start with 'BB': blast
+      if strcmp(aucs{i}.id([1:2]), 'BB')
+        blast_index = i;
+      end
+    else
+      if strcmp(aucs{i}.id, sort_mid) % before: if strcmpi('blast', aucs{i}.team)
+        blast_index = i;
+      end
     end
   end
   % }}}
@@ -183,4 +191,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 23 May 2016 03:54:33 PM E
+% Last modified: Sat 15 Jul 2017 12:18:50 AM E

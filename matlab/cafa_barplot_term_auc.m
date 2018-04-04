@@ -150,7 +150,7 @@ function [] = cafa_barplot_term_auc(pfile, pttl, data, bsl_data, yaxis)
 
     [ylim, unit] = adapt_yaxis([auc_min, auc_max], [0.0, 1.0], [0.1, 0.05, 0.02, 0.01]);
     ylim_l = ylim(1);
-    ylim_r = ylim(2);
+    ylim_u = ylim(2);
   else
     ylim_l = yaxis(1);
     ylim_u = yaxis(2);
@@ -240,4 +240,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 23 May 2016 12:07:25 PM E
+% Last modified: Thu 13 Jul 2017 08:14:48 AM E
