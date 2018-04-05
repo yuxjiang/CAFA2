@@ -110,7 +110,7 @@ function [config] = cafa_parse_config(cfg)
       elseif strcmp(parsed{1}, 'benchmark')
         config.bm = pfp_loaditem(parsed{2}, 'char');
       elseif strcmp(parsed{1}, 'annotation')
-        data = load(parsed{2});
+        data       = load(parsed{2});
         config.oa  = data.oa;
         config.eia = data.eia;
         clear data;
@@ -174,8 +174,8 @@ function [config] = cafa_parse_config(cfg)
     files  = dir(strcat(config.pred_dir, 'M*'));
     models = union(models, regexprep({files.name}, '\..*', ''));
   end
-  models = union(models, models_plus);
-  models = setdiff(models, models_minus);
+  models       = union(models, models_plus);
+  models       = setdiff(models, models_minus);
   config.model = unique(models);
 
   if ismember('none', models)
@@ -202,10 +202,15 @@ function [config] = cafa_parse_config(cfg)
   % }}}
 
   % create result sub-dir {{{
-  sub_dir = sprintf('%s_%s_type%s_mode%s/', config.ont, config.cat, config.tp, config.md);
-  config.eval_dir = fullfile(config.eval_dir, sub_dir);
-  if ~exist(config.eval_dir, 'dir')
-    mkdir(config.eval_dir);
+  if isfield(config, 'tp') && isfield(config, 'md')
+    sub_dir = sprintf('%s_%s_type%s_mode%s/', config.ont, config.cat, config.tp, config.md);
+  end
+
+  if isfield(config, 'eval_dir') % not required by pre-evaluation
+    config.eval_dir = fullfile(config.eval_dir, sub_dir);
+    if ~exist(config.eval_dir, 'dir')
+      mkdir(config.eval_dir);
+    end
   end
   % }}}
 return
@@ -214,4 +219,4 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University, Bloomington
-% Last modified: Tue 24 May 2016 12:20:53 PM E
+% Last modified: Wed 04 Apr 2018 08:02:19 PM E
