@@ -1,7 +1,7 @@
 pred_dir = ~/cafa/prediction/cco/
 prev_dir = ~/cafa/seq-centric/cco/
 annotation = ~/cafa/benchmark/groundtruth/ccoa.mat
-benchmark = ~/cafa/benchmark/lists/cco_all_type1.txt
+benchmark = ~/cafa/benchmark/lists/cco_all_typex.txt
 
 ontology = cco
 category = all
@@ -21,4 +21,4 @@ model = +BB4S
 # Yuxiang Jiang (yuxjiang@indiana.edu)
 # Department of Computer Science
 # Indiana University, Bloomington
-# Last modified: Mon 07 Mar 2016 12:05:58 AM E
+# Last modified: Wed 04 Apr 2018 08:08:05 PM E
