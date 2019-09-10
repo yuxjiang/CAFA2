@@ -1,6 +1,8 @@
 # CAFA2
 
 [![](https://img.shields.io/badge/license-MIT-blue.svg)]()
+[![DOI](https://zenodo.org/badge/39267609.svg)](https://zenodo.org/badge/latestdoi/39267609)
+
 
 MATLAB evaluation codes used for the 2nd [CAFA
 challenge](http://biofunctionprediction.org/cafa/). The CAFA2
