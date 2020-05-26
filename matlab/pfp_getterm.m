@@ -1,89 +1,94 @@
-function [term] = pfp_getterm(ont, list)
-%PFP_GETTERM Get term
-%
-% [term] = PFP_GETTERM(ont, list);
-%
-%   Returns a term structure array.
-%
-% Note
-% ----
-% 1. If 'alt_list' is presented in the ontology structure, 'list' will also be
-%    searched against that list, and those corresponding "current IDs" will be
-%    returned, if found.
-%
-% 2. For IDs that are not found, an empty string will be returned as a
-%    placeholder for both of the term ID and name.
-%
-% Input
-% -----
-% [struct]
-% ont:  The ontology structure. See pfp_ontbuild.m
-%
-% [cell or char]
-% list: cell  - a cell of (char) term IDs.
-%       char  - a single (char) term ID.
-%
-% Output
-% ------
-% [struct]
-% term: An array of term structures.
-%
-% See Also
-% --------
-%[>]pfp_ontbuild.m
+function [terms, idx] = pfp_getterm(ont, list)
+    %PFP_GETTERM Get terms
+    %
+    % [terms, idx] = PFP_GETTERM(ont, list);
+    %
+    %   Returns an array of terms and their indices.
+    %
+    % Note
+    % ----
+    % 1. If 'alt_list' is presented in the ontology structure, 'list' will also
+    %    be searched against that list, and if hit, their current IDs will be
+    %    returned;
+    % 2. For IDs that are not found, empty strings will be placed at both 'id' and
+    %    'name' of those terms, and 0 will be returned as an index.
+    %
+    % Input
+    % -----
+    % [struct]
+    % ont:  The ontology structure. See pfp_ontbuild.m
+    %
+    % [cell, char or struct]
+    % list: [cell]   - A cell of (char) term IDs.
+    %       [char]   - A single (char) term ID.
+    %       [struct] - An array of term structures.
+    %
+    % Output
+    % ------
+    % [struct]
+    % terms:    An array of term structures.
+    %
+    % [double]
+    % idx:      An array of indices.
+    %
+    % See Also
+    % --------
+    % [>] pfp_ontbuild.m
 
-  % check inputs {{{
-  if nargin ~= 2
-    error('pfp_getterm:InputCount', 'Expected 2 inputs.');
-  end
-
-  % ont
-  validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
-
-  % list
-  validateattributes(list, {'cell', 'char'}, {'nonempty'}, '', 'list', 2);
-
-  if ischar(list)
-    list = {list};
-  end
-  % }}}
-
-  % find ID of requested terms {{{
-  acc  = repmat({''}, numel(list), 1);
-  name = repmat({''}, numel(list), 1);
-
-  if isfield(ont, 'alt_list') % has alternate id list structure
-    [is_new, indexN] = ismember(list, {ont.term.id});
-    [is_old, indexO] = ismember(list, ont.alt_list.old);
-
-    is_conflict = is_new & is_old;
-
-    % check for conflict
-    if any(is_conflict)
-      warning('pfp_getterm:AmbiguousID', 'Ambiguous ID found. They will be mapped to the latest ID.');
-      is_old = is_old & ~is_new;
+    % check inputs {{{
+    if nargin ~= 2
+        error('pfp_getterm:InputCount', 'Expected 2 inputs.');
     end
 
-    acc(is_new) = {ont.term(indexN(is_new)).id};
-    acc(is_old) = ont.alt_list.new(indexO(is_old));
-  else
-    [found, index] = ismember(list, {ont.term.id});
-    acc(found) = {ont.term(index(found)).id};
-  end
-  % }}}
+    % ont
+    validateattributes(ont, {'struct'}, {'nonempty'}, '', 'ont', 1);
 
-  % get term names {{{
-  [found, index] = ismember(acc, {ont.term.id});
-  name(found) = {ont.term(index(found)).name};
-  % }}}
+    % list
+    validateattributes(list, {'cell', 'char', 'struct'}, {'nonempty'}, '', 'list', 2);
+    switch class(list)
+        case 'char'
+            list = {list};
+        case 'struct'
+            list = {list.id};
+        otherwise
+            % case: cell, nothing to do
+    end
+    % }}}
 
-  % prepare output {{{
-  term = cell2struct([acc, name], {'id', 'name'}, 2);
-  % }}}
-return
+    % find ID of requested terms {{{
+    idx = zeros(numel(list), 1);
+
+    if isfield(ont, 'alt_list') % has alternate id list structure
+        [is_new, indexN] = ismember(list, {ont.term.id});
+        [is_old, indexO] = ismember(list, ont.alt_list.old);
+
+        is_conflict = is_new & is_old;
+
+        % checking
+        if any(is_conflict)
+            warning('pfp_getterm:AbmiguousID', 'Some IDs are ambiguous, mapped to the latest ID.');
+            is_old = is_old & ~is_new;
+        end
+
+        idx(is_new) = indexN(is_new);
+        idx(is_old) = indexO(is_old);
+    else
+        [found, index] = ismember(list, {ont.term.id});
+        idx(found) = index(found);
+    end
+    idx   = reshape(idx, 1, []);
+    ids   = repmat({''}, numel(list), 1);
+    names = repmat({''}, numel(list), 1);
+
+    found = idx ~= 0;
+    ids(found)   = {ont.term(idx(found)).id};
+    names(found) = {ont.term(idx(found)).name};
+    terms = cell2struct([ids, names], {'id', 'name'}, 2);
+    % }}}
+end
 
 % -------------
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 23 May 2016 06:59:36 PM E
+% Last modified: Wed 21 Sep 2016 01:12:39 PM E
