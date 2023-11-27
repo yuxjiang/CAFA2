@@ -60,18 +60,20 @@ function [terms, idx] = pfp_getterm(ont, list)
 
     if isfield(ont, 'alt_list') % has alternate id list structure
         [is_new, indexN] = ismember(list, {ont.term.id});
-        [is_old, indexO] = ismember(list, ont.alt_list.old);
+        [is_old, index_alt_in_O] = ismember(list, ont.alt_list.old);
+        [~, indexO] = ismember( ont.alt_list.new(index_alt_in_O(is_old)), {ont.term.id})
 
         is_conflict = is_new & is_old;
 
         % checking
         if any(is_conflict)
             warning('pfp_getterm:AbmiguousID', 'Some IDs are ambiguous, mapped to the latest ID.');
-            is_old = is_old & ~is_new;
+        %    is_old = is_old & ~is_new; 
         end
+ 
+        idx(is_old) = indexO
+	idx(is_new) = indexN(is_new); % IDs which have a conflict, will be overwritten with the latest index; i.e. if is_old and is_new, both are 1, then the index in the GO_list directly is considered, and the alternate mapping for it is not used.
 
-        idx(is_new) = indexN(is_new);
-        idx(is_old) = indexO(is_old);
     else
         [found, index] = ismember(list, {ont.term.id});
         idx(found) = index(found);
@@ -91,4 +93,13 @@ end
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Wed 21 Sep 2016 01:12:39 PM E
+
+% Modified by
+% Rashika Ramola (ramola.r@northeastern.edu)
+% Khoury College of Computer Sciences
+% Northeastern University
+% Modification: Modified the code, so that the terms named with old GO IDs are mapped to the index of their new GO IDs
+% Last modified: Mon 27 Nov 2023 2:06 PM E  
+
+
+
