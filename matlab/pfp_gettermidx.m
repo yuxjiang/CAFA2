@@ -56,18 +56,20 @@ function [idx] = pfp_gettermidx(ont, list)
 
   if isfield(ont, 'alt_list') % has alternate id list structure
     [is_new, indexN] = ismember(list, {ont.term.id});
-    [is_old, indexO] = ismember(list, ont.alt_list.old);
+    [is_old, index_alt_in_O] = ismember(list, ont.alt_list.old);
+    [~, indexO] = ismember( ont.alt_list.new(index_alt_in_O(is_old)), {ont.term.id})
 
     is_conflict = is_new & is_old;
 
     % checking
     if any(is_conflict)
       warning('pfp_gettermidx:AbmiguousID', 'Some IDs are ambiguous, mapped to the latest ID.');
-      is_old = is_old & ~is_new;
+    %  is_old = is_old & ~is_new;
     end
 
-    idx(is_new) = indexN(is_new);
-    idx(is_old) = indexO(is_old);
+    idx(is_old) = indexO
+    idx(is_new) = indexN(is_new); % IDs which have a conflict, will be overwritten with the latest index; i.e. if is_old and is_new, both are 1, then the index in the GO_list directly is considered, and the alternate mapping for it is not used.
+    
   else
     [found, index] = ismember(list, {ont.term.id});
     idx(found) = index(found);
@@ -80,4 +82,8 @@ return
 % Yuxiang Jiang (yuxjiang@indiana.edu)
 % Department of Computer Science
 % Indiana University Bloomington
-% Last modified: Mon 23 May 2016 06:58:19 PM E
+
+% Modified by Rashika Ramola (ramola.r@northeastern.edu)
+% Khoury College of Computer Sciences
+% Northeastern University
+% Last modified: Mon 27 Nov 2023 2:09 PM E 
